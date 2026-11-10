@@ -49,9 +49,9 @@
     }
   ],
   "crowd": {
-    "level": "busy",
-    "wait": 45,
-    "updatedAt": "2026-11-10T21:58:20.067Z"
+    "level": "free",
+    "wait": 0,
+    "updatedAt": "2026-11-10T22:04:17.553Z"
   },
   "reviews": [
     {
