@@ -165,6 +165,17 @@
   .lp small{color:var(--muted);font-size:.75rem}
   .lpi{width:64px;height:64px;border-radius:14px;background:#fff;display:grid;place-items:center;color:#555;font-size:.7rem;font-weight:600;text-align:center;overflow:hidden;padding:6px;box-sizing:border-box}
   .lpi img{width:100%;height:100%;object-fit:contain}
+  .framer{display:grid;gap:6px;margin-bottom:12px}
+  .fr-pick{position:relative;border-radius:12px;overflow:hidden;background:#000;cursor:crosshair;line-height:0}
+  .fr-pick img,.fr-pick video{width:100%;max-height:300px;object-fit:contain;display:block;pointer-events:none}
+  .fr-dot{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--brass),0 2px 8px rgba(0,0,0,.6);pointer-events:none}
+  .fr-out{width:min(100%,260px);margin:0 auto;border-radius:12px;overflow:hidden;background:var(--bg);border:1px solid var(--line);max-height:340px}
+  .fr-out img,.fr-out video{width:100%;height:100%;display:block}
+  .fr-hint{display:block;text-align:center;color:var(--muted);font-size:.78rem}
+  .seg.n4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .seg.n5{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .seg.n2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .seg.n4 span,.seg.n5 span{font-size:.78rem;padding:9px 2px}
   .empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:.9rem}
 </style>
 </head>
@@ -257,7 +268,8 @@
       <div class="card" style="margin-bottom:14px">
         <b style="display:block;margin-bottom:4px">Cover · صورة الغلاف</b>
         <p class="hint" style="margin-bottom:10px">أول حاجة الزبون بيشوفها فوق اللوجو. ممكن صورة، أو فيديو قصير (من غير صوت، بيتكرر لوحده). لو سبتها فاضية بتتاخد أول صورة في الـ Gallery.</p>
-        <div class="groom-prev" id="cvPrev" style="aspect-ratio:3/4;max-height:340px"></div>
+        <div id="cvPrev"></div>
+        <div class="field" style="margin-top:10px"><span>طول الغلاف</span><div id="cvHeight"></div></div>
         <div class="btns" style="margin-top:8px">
           <label class="btn gold" for="cvImg" style="cursor:pointer">📷 صورة</label>
           <label class="btn ghost" for="cvVid" style="cursor:pointer">🎬 فيديو</label>
@@ -296,7 +308,8 @@
           <label class="field"><span>جملة تحت العنوان (اختياري)</span><input data-bind="groom.intro" placeholder="مثلًا: خلّي يومك الكبير يبدأ من عندنا"></label>
           <label class="field"><span>الباكدج فيه إيه؟ (كل حاجة في سطر)</span><textarea id="groomItems" rows="5" placeholder="قصة شعر وتظبيط دقن&#10;تنضيف بشرة&#10;استشوار وتسريحة"></textarea></label>
           <div class="field"><span>صورة الباكدج</span>
-            <div class="groom-prev" id="gAv">مفيش صورة لسه</div>
+            <div id="gAv"></div>
+            <div id="gRatio" style="margin-top:8px"></div>
             <div class="btns" style="margin-top:8px">
               <label class="btn gold" for="groomFile" id="gPick" style="cursor:pointer;flex:1">📷 اختار صورة</label>
               <button class="btn danger" id="gNoImg" type="button" hidden>شيل الصورة</button>
@@ -673,8 +686,11 @@ setInterval(() => DATA && paintCrowd(), 60000);
 function paintGroom(){
   DATA.groom ||= {on:false,title:"باكدج العريس",intro:"",items:[],image:""};
   $("groomItems").value = (DATA.groom.items||[]).join("\n");
-  const img = DATA.groom.image;
-  $("gAv").innerHTML = img ? `<img src="${esc(src(img))}" alt="">` : "مفيش صورة لسه";
+  const img = DATA.groom.image, ratio = DATA.groom.imageRatio || "16/9";
+  $("gAv").innerHTML = img ? framerHTML("gr", img, false, ratio, DATA.groom.imageFocus, "cover") : `<div class="groom-prev">مفيش صورة لسه</div>`;
+  if (img) bindFramer($("gAv"), "gr", f => { DATA.groom.imageFocus = f; markDirty(); });
+  $("gRatio").innerHTML = img ? segHTML("grR", GROOM_R, ratio) : "";
+  $("gRatio").querySelectorAll('input[name="grR"]').forEach(r => r.onchange = () => { DATA.groom.imageRatio = r.value; setFrameRatio($("gAv"), "gr", r.value); markDirty(); });
   $("gNoImg").hidden = !img;
   $("gPick").textContent = img ? "📷 غيّر الصورة" : "📷 اختار صورة";
 }
@@ -685,7 +701,7 @@ $("groomFile").addEventListener("change", async e => {
   try {
     const p = await uploadMedia(f, "image", "uploads/groom");
     if (isUpload(DATA.groom.image)) pendingDeletes.add(DATA.groom.image);
-    DATA.groom.image = p; markDirty(); toast("الصورة اترفعت ✓ دوس حفظ ونشر");
+    DATA.groom.image = p; DATA.groom.imageFocus = {x:50, y:50}; markDirty(); toast("الصورة اترفعت ✓ دوس حفظ ونشر");
   } catch(err) { toast(ghError(err), 3500); }
   paintGroom();
 });
@@ -715,6 +731,7 @@ function openProduct(i){
       <div class="av" id="pAv">${p.photo ? `<img src="${esc(src(p.photo))}" alt="">` : "مفيش<br>صورة"}</div>
       <div><label class="btn ghost" for="pFile" style="cursor:pointer">${p.photo ? "غيّر الصورة" : "ضيف صورة"}</label><input type="file" id="pFile" accept="image/*" hidden></div>
     </div>
+    <div id="pFr">${p.photo ? framerHTML("p", p.photo, false, "1/1", p.focus, "cover") : ""}</div>
     <label class="field"><span>اسم المنتج</span><input id="pName" value="${esc(p.name)}" placeholder="مثلًا: واكس شعر مط"></label>
     <label class="field"><span>وصف قصير (اختياري)</span><input id="pDesc" value="${esc(p.desc)}" placeholder="مثلًا: تثبيت قوي من غير لمعة"></label>
     <div class="field"><span>الحالة</span>
@@ -733,9 +750,11 @@ function openProduct(i){
         try {
           const ph = await uploadMedia(f, "image", "uploads/products");
           if (isUpload(p.photo) && p.photo !== oldPhoto) pendingDeletes.add(p.photo);
-          p.photo = ph; q("#pAv").innerHTML = `<img src="${esc(src(ph))}" alt="">`;
+          p.photo = ph; p.focus = {x:50, y:50}; q("#pAv").innerHTML = `<img src="${esc(src(ph))}" alt="">`;
+          q("#pFr").innerHTML = framerHTML("p", ph, false, "1/1", p.focus, "cover"); bindFramer(root, "p", f => { p.focus = f; });
         } catch(err) { q("#pAv").innerHTML = "مفيش<br>صورة"; q("#pErr").textContent = ghError(err); }
       };
+      bindFramer(root, "p", f => { p.focus = f; });
       q("#pSave").onclick = () => {
         p.name = q("#pName").value.trim(); p.desc = q("#pDesc").value.trim();
         p.status = root.querySelector('input[name="pSt"]:checked')?.value || "available";
@@ -754,21 +773,64 @@ function openProduct(i){
     });
 }
 
+/* ================= Framing: size, focus point and fit for every photo/video ================= */
+const fpos = f => (f && isFinite(f.x) && isFinite(f.y)) ? `${f.x}% ${f.y}%` : "50% 50%";
+function framerHTML(key, s, isVideo, ratio, focus, fit){
+  const st = `object-fit:${fit||"cover"};object-position:${fpos(focus)}`;
+  const media = extra => isVideo ? `<video src="${esc(src(s))}" muted autoplay loop playsinline style="${extra}"></video>` : `<img src="${esc(src(s))}" alt="" style="${extra}">`;
+  return `<div class="framer" data-frbox="${key}">
+    <div class="fr-pick" data-fr="${key}">${media("")}<span class="fr-dot" style="left:${focus?.x ?? 50}%;top:${focus?.y ?? 50}%"></span></div>
+    <small class="fr-hint">👆 دوس على أهم حتة في الصورة (الوش أو القصة)</small>
+    <div class="fr-out" style="aspect-ratio:${ratio}">${media(st)}</div>
+    <small class="fr-hint">ده شكلها في الموقع</small>
+  </div>`;
+}
+function bindFramer(root, key, onFocus){
+  const pick = root.querySelector(`[data-fr="${key}"]`); if (!pick) return;
+  pick.addEventListener("click", e => {
+    const r = pick.getBoundingClientRect();
+    const f = { x: Math.round(Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100))),
+                y: Math.round(Math.min(100, Math.max(0, (e.clientY - r.top) / r.height * 100))) };
+    const dot = pick.querySelector(".fr-dot"); dot.style.left = f.x + "%"; dot.style.top = f.y + "%";
+    const out = root.querySelector(`[data-frbox="${key}"] .fr-out > *`); if (out) out.style.objectPosition = fpos(f);
+    onFocus(f);
+  });
+}
+const setFrameRatio = (root, key, ratio, fit) => {
+  const out = root.querySelector(`[data-frbox="${key}"] .fr-out`); if (!out) return;
+  if (ratio) out.style.aspectRatio = ratio;
+  if (fit) out.firstElementChild.style.objectFit = fit;
+};
+function segHTML(name, opts, cur){
+  return `<div class="seg n${opts.length}">${opts.map(([v,l]) => `<label><input type="radio" name="${name}" value="${v}" ${cur===v?"checked":""}><span>${l}</span></label>`).join("")}</div>`;
+}
+const GSIZES = [["auto","تلقائي"],["s","صغيرة"],["w","عريضة"],["t","طولية"],["l","كبيرة"]];
+const GRATIO = {auto:"1/1", s:"1/1", w:"2/1", t:"1/2", l:"1/1"};
+const COVER_H = [["s","قصير"],["m","متوسط"],["l","طويل"],["full","الشاشة كلها"]];
+const COVER_R = {s:"390/440", m:"390/560", l:"390/680", full:"390/844"};
+const GROOM_R = [["16/9","عريضة"],["4/3","4:3"],["1/1","مربعة"],["4/5","طولية"]];
+
 /* ================= Cover (image or short video) ================= */
 function paintCover(){
   const v = DATA.coverVideo, im = DATA.cover;
   const fallback = (DATA.gallery||[]).find(g => g.type !== "video");
-  $("cvPrev").innerHTML = v ? `<video src="${esc(src(v))}" muted loop autoplay playsinline style="width:100%;height:100%;object-fit:cover"></video>`
-    : im ? `<img src="${esc(src(im))}" alt="">`
-    : fallback ? `<img src="${esc(src(fallback.src))}" alt="" style="opacity:.55"><span style="position:absolute">أول صورة في الـ Gallery</span>`
-    : "مفيش غلاف لسه";
-  $("cvPrev").style.position = "relative";
+  const h = DATA.coverHeight || "l";
+  const box = $("cvPrev");
+  if (v || im) {
+    box.innerHTML = framerHTML("cv", v || im, !!v, COVER_R[h], DATA.coverFocus, "cover");
+    bindFramer(box, "cv", f => { DATA.coverFocus = f; markDirty(); });
+  } else {
+    box.innerHTML = `<div class="groom-prev" style="aspect-ratio:3/4;max-height:300px;position:relative">${fallback ? `<img src="${esc(src(fallback.src))}" alt="" style="opacity:.55"><span style="position:absolute">أول صورة في الـ Gallery</span>` : "مفيش غلاف لسه"}</div>`;
+  }
+  $("cvHeight").innerHTML = segHTML("cvH", COVER_H, h);
+  $("cvHeight").querySelectorAll('input[name="cvH"]').forEach(r => r.onchange = () => { DATA.coverHeight = r.value; setFrameRatio(box, "cv", COVER_R[r.value]); markDirty(); });
   $("cvClear").hidden = !(v || im);
 }
 const coverUpload = async (f, kind) => {
   $("cvPrev").innerHTML = `<span class="spin"></span>`;
   try {
     const p = await uploadMedia(f, kind, "uploads/cover");
+    DATA.coverFocus = {x:50, y:50};
     if (kind === "video") { if (isUpload(DATA.coverVideo)) pendingDeletes.add(DATA.coverVideo); DATA.coverVideo = p; }
     else { if (isUpload(DATA.cover)) pendingDeletes.add(DATA.cover); if (isUpload(DATA.coverVideo)) pendingDeletes.add(DATA.coverVideo); DATA.cover = p; DATA.coverVideo = ""; }
     markDirty(); toast("الغلاف اترفع ✓ دوس حفظ ونشر");
@@ -948,9 +1010,9 @@ function renderGallery(){
   const g = $("ggrid");
   g.innerHTML = DATA.gallery.map((it, i) => `
     <div class="gtile" data-i="${i}">
-      ${it.type === "video" ? `<video src="${esc(src(it.src))}" muted playsinline preload="metadata"></video><span class="badge">🎬 فيديو</span>`
-                            : `<img src="${esc(src(it.src))}" alt="">`}
-      ${it.wide ? `<span class="badge" style="${it.type==='video'?'top:30px':''}">عريضة</span>` : ""}
+      ${it.type === "video" ? `<video src="${esc(src(it.src))}" muted playsinline preload="metadata" style="object-position:${fpos(it.focus)}"></video><span class="badge">🎬 فيديو</span>`
+                            : `<img src="${esc(src(it.src))}" alt="" style="object-position:${fpos(it.focus)}">`}
+      ${(it.size && it.size !== "auto") || it.wide ? `<span class="badge" style="${it.type==='video'?'top:30px':''}">${(GSIZES.find(s => s[0] === (it.size || "w")) || [,""])[1]}</span>` : ""}
       <span class="num">${i+1}</span>
     </div>`).join("") + `
     <label class="gtile add-tile" for="gFile"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>ضيف صور<br>أو Video</span></label>`;
@@ -984,11 +1046,10 @@ function openGalleryItem(i){
   const it = DATA.gallery[i];
   sheet(`
     <h3>تعديل ${it.type==="video"?"الفيديو":"الصورة"} <button class="x" data-close>×</button></h3>
-    <div class="preview">${it.type==="video" ? `<video src="${esc(src(it.src))}" controls playsinline></video>` : `<img src="${esc(src(it.src))}" alt="">`}</div>
+    ${framerHTML("g", it.src, it.type==="video", GRATIO[it.size || (it.wide ? "w" : "auto")], it.focus, it.fit)}
+    <div class="field"><span>الحجم في الـ Gallery</span>${segHTML("gSize", GSIZES, it.size || (it.wide ? "w" : "auto"))}</div>
+    <div class="field"><span>طريقة العرض</span>${segHTML("gFit", [["cover","تملّي المربع"],["contain","الصورة كاملة"]], it.fit || "cover")}</div>
     <label class="field"><span>كلام تحتها (اختياري)</span><input id="gCap" value="${esc(it.caption)}"></label>
-    <div class="card" style="padding:12px 14px">
-      <label class="sw"><span><b>عريضة</b><small>تاخد عرض الصف كله</small></span><input type="checkbox" id="gWide" ${it.wide?"checked":""}><span class="knob"></span></label>
-    </div>
     <div class="btns" style="margin-bottom:8px">
       <button class="btn ghost" id="gUp" ${i===0?"disabled":""}>→ قدّمها</button>
       <button class="btn ghost" id="gDown" ${i===DATA.gallery.length-1?"disabled":""}>أخّرها ←</button>
@@ -997,9 +1058,11 @@ function openGalleryItem(i){
       <button class="btn danger" id="gDel">مسح</button>
       <button class="btn gold" data-close id="gOk">تمام</button>
     </div>`, root => {
-      const commit = () => { it.caption = root.querySelector("#gCap").value.trim(); it.wide = root.querySelector("#gWide").checked; };
+      const commit = () => { it.caption = root.querySelector("#gCap").value.trim(); };
       root.querySelector("#gCap").oninput = () => { commit(); markDirty(); };
-      root.querySelector("#gWide").onchange = () => { commit(); markDirty(); renderGallery(); };
+      bindFramer(root, "g", f => { it.focus = f; markDirty(); renderGallery(); });
+      root.querySelectorAll('input[name="gSize"]').forEach(r => r.onchange = () => { it.size = r.value; it.wide = r.value === "w"; setFrameRatio(root, "g", GRATIO[r.value]); markDirty(); renderGallery(); });
+      root.querySelectorAll('input[name="gFit"]').forEach(r => r.onchange = () => { it.fit = r.value; setFrameRatio(root, "g", null, r.value); markDirty(); renderGallery(); });
       const move = d => { commit(); const j=i+d; [DATA.gallery[i], DATA.gallery[j]] = [DATA.gallery[j], DATA.gallery[i]]; markDirty(); renderGallery(); closeSheet(); openGalleryItem(j); };
       root.querySelector("#gUp").onclick = () => move(-1);
       root.querySelector("#gDown").onclick = () => move(1);
@@ -1042,6 +1105,7 @@ function openBarber(i){
         ${b.photo ? `<button class="btn ghost" id="bNoPhoto" style="margin-top:6px;font-size:.82rem;padding:8px 12px">شيل الصورة</button>` : ""}
       </div>
     </div>
+    <div id="bFr">${b.photo ? framerHTML("b", b.photo, false, "3/4", b.focus, "cover") : ""}</div>
     <label class="field"><span>الاسم</span><input id="bName" value="${esc(b.name)}" placeholder="مثلًا: محمد"></label>
     <label class="field"><span>اللقب / الشغلانة (اختياري)</span><input id="bRole" value="${esc(b.role)}" placeholder="Master Barber · حلاق · متخصص دقن"></label>
     <label class="field"><span>لينك إنستجرام بتاعه (اختياري)</span><input id="bIg" class="ltr" value="${esc(b.instagram)}" placeholder="https://instagram.com/..."></label>
@@ -1061,10 +1125,12 @@ function openBarber(i){
         try {
           const p = await uploadMedia(f, "image", "uploads/team");
           if (isUpload(b.photo) && b.photo !== oldPhoto) pendingDeletes.add(b.photo);
-          b.photo = p; q("#bAv").innerHTML = `<img src="${esc(src(p))}" alt="">`;
+          b.photo = p; b.focus = {x:50, y:30}; q("#bAv").innerHTML = `<img src="${esc(src(p))}" alt="">`;
+          q("#bFr").innerHTML = framerHTML("b", p, false, "3/4", b.focus, "cover"); bindFramer(root, "b", f => { b.focus = f; });
         } catch(err) { q("#bAv").innerHTML = "مفيش<br>صورة"; q("#bErr").textContent = ghError(err); }
       };
-      q("#bNoPhoto") && (q("#bNoPhoto").onclick = () => { b.photo = ""; q("#bAv").innerHTML = "مفيش<br>صورة"; q("#bNoPhoto").remove(); });
+      q("#bNoPhoto") && (q("#bNoPhoto").onclick = () => { b.photo = ""; q("#bAv").innerHTML = "مفيش<br>صورة"; q("#bFr").innerHTML = ""; q("#bNoPhoto").remove(); });
+      bindFramer(root, "b", f => { b.focus = f; });
       q("#bSave").onclick = () => {
         b.name = q("#bName").value.trim(); b.role = q("#bRole").value.trim(); b.instagram = q("#bIg").value.trim();
         b.status = root.querySelector('input[name="bSt"]:checked')?.value || "active";

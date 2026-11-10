@@ -609,8 +609,15 @@
   .review{margin-top:0;border-radius:0 0 18px 18px;border-top:0;background:var(--panel);border-color:var(--line)}
   /* gallery: explore-style mosaic, a big tile every six */
   .page[data-page="gallery"] .gallery{grid-auto-flow:dense}
-  .page[data-page="gallery"] .gallery figure:nth-of-type(6n+1){grid-column:span 2;grid-row:span 2}
-  .page[data-page="gallery"] .gallery figure:nth-of-type(12n+7){grid-column:2 / span 2}
+  .page[data-page="gallery"] .gallery figure.sz-auto:nth-of-type(6n+1){grid-column:span 2;grid-row:span 2}
+  .page[data-page="gallery"] .gallery figure.sz-auto:nth-of-type(12n+7){grid-column:2 / span 2}
+  .page[data-page="gallery"] .gallery figure.sz-s{grid-column:span 1;grid-row:span 1;aspect-ratio:1/1}
+  .page[data-page="gallery"] .gallery figure.sz-w{grid-column:span 2;grid-row:span 1;aspect-ratio:auto}
+  .page[data-page="gallery"] .gallery figure.sz-t{grid-column:span 1;grid-row:span 2;aspect-ratio:auto}
+  .page[data-page="gallery"] .gallery figure.sz-l{grid-column:span 2;grid-row:span 2;aspect-ratio:1/1}
+  .page[data-page="gallery"] .gallery{grid-auto-rows:calc((min(100vw,480px) - 48px) / 3)}
+  .page[data-page="gallery"] .gallery figure{aspect-ratio:auto}
+  .g-item img[style*="contain"],.g-item video[style*="contain"]{background:#0b0a09}
   /* team: tall portrait cards you swipe through */
   .team{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:4px 20px 10px;scrollbar-width:none}
   .team::-webkit-scrollbar{display:none}
@@ -921,6 +928,8 @@
 (async function(){
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const fpos = f => (f && isFinite(f.x) && isFinite(f.y)) ? `${+f.x}% ${+f.y}%` : "50% 50%";
+  const mstyle = (f, fit) => `object-position:${fpos(f)};object-fit:${fit === "contain" ? "contain" : "cover"}`;
   const safeUrl = u => { u = String(u||""); return /^(https?:|tel:|#|img\/|uploads\/)/i.test(u) ? u : "#"; };
 
   // ---------- Load data (data.json, falling back to the built-in copy) ----------
@@ -1126,10 +1135,12 @@
   const ttPath = $("ttLink").querySelector("path").getAttribute("d");
   $("gallery").innerHTML = (SHOP.gallery||[]).map((g, gi) => {
     const cap = g.caption ? `<figcaption>${esc(g.caption)}</figcaption>` : "";
+    const st = mstyle(g.focus, g.fit);
+    const size = ["s","w","t","l"].includes(g.size) ? g.size : (g.wide ? "w" : "auto");
     const media = g.type === "video"
-      ? `<video src="${esc(safeUrl(g.src))}#t=0.1" muted playsinline preload="metadata"></video>`
-      : `<img src="${esc(safeUrl(g.src))}" alt="${esc(g.caption)}" loading="lazy">`;
-    return `<figure class="g-item ${g.wide?"wide":""}" data-gi="${gi}" role="button" tabindex="0" aria-label="${esc(g.caption||"صورة")}">${media}${g.type==="video"?`<span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>`:""}${cap}</figure>`;
+      ? `<video src="${esc(safeUrl(g.src))}#t=0.1" muted playsinline preload="metadata" style="${st}"></video>`
+      : `<img src="${esc(safeUrl(g.src))}" alt="${esc(g.caption)}" loading="lazy" style="${st}">`;
+    return `<figure class="g-item sz-${size}" data-gi="${gi}" role="button" tabindex="0" aria-label="${esc(g.caption||"صورة")}">${media}${g.type==="video"?`<span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>`:""}${cap}</figure>`;
   }).join("") + `
     <a class="g-item g-link tt" href="${esc(safeUrl(SHOP.tiktok))}" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="${ttPath}"/></svg>
@@ -1146,7 +1157,7 @@
     $("teamWrap").hidden = false;
     $("team").innerHTML = team.map(b => `
       <div class="barber ${b.status==="vacation"?"away":""}">
-        <div class="ph">${b.photo?`<img src="${esc(safeUrl(b.photo))}" alt="${esc(b.name)}" loading="lazy">`:`<span class="initial">${esc((b.name||"?").trim().charAt(0))}</span>`}
+        <div class="ph">${b.photo?`<img src="${esc(safeUrl(b.photo))}" alt="${esc(b.name)}" loading="lazy" style="${mstyle(b.focus)}">`:`<span class="initial">${esc((b.name||"?").trim().charAt(0))}</span>`}
           ${b.status==="vacation"?`<span class="away-tag">أجازة</span>`:""}</div>
         <div class="info"><b>${esc(b.name)}</b>${b.role?`<small>${esc(b.role)}</small>`:""}
         ${b.instagram?`<a href="${esc(safeUrl(b.instagram))}" target="_blank" rel="noopener">Instagram</a>`:""}</div>
@@ -1291,7 +1302,10 @@
     $("groomIntro").hidden = !G.intro;
     $("groomList").innerHTML = gItems.map(t => `<li>${esc(t)}</li>`).join("");
     $("groomList").hidden = !gItems.length;
-    if (G.image) { $("groomImg").innerHTML = `<img src="${esc(safeUrl(G.image))}" alt="" loading="lazy">`; $("groomImg").hidden = false; }
+    if (G.image) {
+      const ratio = ["16/9","4/3","1/1","4/5"].includes(G.imageRatio) ? G.imageRatio : "16/9";
+      $("groomImg").innerHTML = `<img src="${esc(safeUrl(G.image))}" alt="" loading="lazy" style="aspect-ratio:${ratio};${mstyle(G.imageFocus)}">`; $("groomImg").hidden = false;
+    }
     const gs = $("groomSheet");
     const showStep = n => { $("gStep1").hidden = n !== 1; $("gStep2").hidden = n !== 2; gs.querySelector(".sheet").scrollTop = 0; };
     $("groomOpen").addEventListener("click", () => { showStep(1); gs.hidden = false; });
@@ -1375,7 +1389,7 @@
       const out = p.status === "out";
       const msg = `السلام عليكم، عايز أطلب "${p.name}" من ${SHOP.name} 🛍️\nممكن تقولّي السعر؟`;
       return `<div class="prod ${out ? "off" : ""}">
-        <div class="pimg">${p.photo ? `<img src="${esc(safeUrl(p.photo))}" alt="${esc(p.name)}" loading="lazy">` : box}</div>
+        <div class="pimg">${p.photo ? `<img src="${esc(safeUrl(p.photo))}" alt="${esc(p.name)}" loading="lazy" style="${mstyle(p.focus)}">` : box}</div>
         <div class="pb"><b>${esc(p.name)}</b>${p.desc ? `<small>${esc(p.desc)}</small>` : ""}
         ${out ? `<span class="out">خلصان دلوقتي</span>` : `<a href="${waBase + encodeURIComponent(msg)}" target="_blank" rel="noopener" data-prod>${waIco} اطلب على واتساب</a>`}</div>
       </div>`;
@@ -1406,8 +1420,8 @@
   if (gal.length) {
     $("galTeaser").hidden = false;
     $("teaserStrip").innerHTML = gal.slice(0,6).map((g,gi) => `<a href="#gallery" data-open="${gi}">${g.type==="video"
-      ? `<video src="${esc(safeUrl(g.src))}#t=0.1" muted playsinline preload="metadata"></video>`
-      : `<img src="${esc(safeUrl(g.src))}" alt="" loading="lazy">`}</a>`).join("");
+      ? `<video src="${esc(safeUrl(g.src))}#t=0.1" muted playsinline preload="metadata" style="${mstyle(g.focus)}"></video>`
+      : `<img src="${esc(safeUrl(g.src))}" alt="" loading="lazy" style="${mstyle(g.focus)}">`}</a>`).join("");
   }
 
   // lightbox: tap a photo to see it big, swipe or use the arrows
@@ -1439,6 +1453,9 @@
   // ---------- Hero cover + quick actions ----------
   const cover = SHOP.cover || ((SHOP.gallery||[]).find(g => g.type !== "video") || {}).src || "img/store.jpg";
   $("heroImg").style.backgroundImage = `url("${safeUrl(cover)}")`;
+  $("heroImg").style.backgroundPosition = SHOP.cover ? fpos(SHOP.coverFocus) : "50% 35%";
+  const HH = {s:"min(56vh,460px)", m:"min(68vh,560px)", l:"min(80vh,640px)", full:"100svh"};
+  document.querySelector(".hero").style.minHeight = HH[SHOP.coverHeight] || HH.l;
   $("qWa").href = $("waLink").href;
   $("qMap").href = $("mapLink").href;
   $("qWa").addEventListener("click", () => track("whatsapp"));
@@ -1448,7 +1465,7 @@
 
   // ---------- v3: video cover, one payment card at a time ----------
   if (SHOP.coverVideo) {
-    $("heroImg").innerHTML = `<video src="${esc(safeUrl(SHOP.coverVideo))}" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>`;
+    $("heroImg").innerHTML = `<video src="${esc(safeUrl(SHOP.coverVideo))}" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="${mstyle(SHOP.coverFocus)}"></video>`;
   }
   const paySeg = document.querySelector(".pay-seg"), payBox = document.querySelector(".pay");
   const pickPay = pm => {
