@@ -49,8 +49,8 @@
     }
   ],
   "crowd": {
-    "level": "medium",
-    "wait": 30,
-    "updatedAt": "2026-11-10T18:53:33.305Z"
+    "level": "off",
+    "wait": 0,
+    "updatedAt": "2026-11-10T19:03:22.241Z"
   }
 }
