@@ -235,6 +235,8 @@
       <button class="tab on" data-tab="gallery">📸 الجاليري</button>
       <button class="tab" data-tab="team">✂️ الحلاقين</button>
       <button class="tab" data-tab="reviews">⭐ الآراء</button>
+      <button class="tab" data-tab="groom">🤵 العرسان</button>
+      <button class="tab" data-tab="products">🛍️ المنتجات</button>
       <button class="tab" data-tab="season">📅 الحجز والمواعيد</button>
       <button class="tab" data-tab="info">📞 البيانات</button>
       <button class="tab" data-tab="stats">📊 الإحصائيات</button>
@@ -263,6 +265,33 @@
       <p class="hint">بتظهر في الموقع تحت الحلاقين. اكتب كلام عملاء حقيقيين بس، زي ما قالوه أو كتبوه.</p>
       <div class="blist" id="rlist"></div>
       <button class="btn gold full" id="addReview" style="margin-top:12px">＋ ضيف رأي</button>
+    </div>
+
+    <!-- Groom package -->
+    <div data-pane="groom" hidden>
+      <h2>باكدج العرسان والمناسبات</h2>
+      <div class="card">
+        <label class="sw"><span><b>اعرض القسم في الموقع</b><small>بيظهر تحت آراء العملاء، وفيه زرار "اطلب الباكدج"</small></span><input type="checkbox" data-bind="groom.on" data-toggle="groomBody"><span class="knob"></span></label>
+        <div class="sw-body" id="groomBody">
+          <label class="field"><span>العنوان</span><input data-bind="groom.title" placeholder="باكدج العريس"></label>
+          <label class="field"><span>جملة تحت العنوان (اختياري)</span><input data-bind="groom.intro" placeholder="مثلًا: خلّي يومك الكبير يبدأ من عندنا"></label>
+          <label class="field"><span>الباكدج فيه إيه؟ (كل حاجة في سطر)</span><textarea id="groomItems" rows="5" placeholder="قصة شعر وتظبيط دقن&#10;تنضيف بشرة&#10;استشوار وتسريحة"></textarea></label>
+          <div class="field"><span>صورة (اختياري)</span>
+            <div class="photo-pick"><div class="av" id="gAv" style="width:120px;height:68px">مفيش<br>صورة</div>
+              <div><label class="btn ghost" for="gFile" style="cursor:pointer">اختار صورة</label><input type="file" id="gFile" accept="image/*" hidden>
+              <button class="btn ghost" id="gNoImg" type="button" style="margin-top:6px;font-size:.82rem;padding:8px 12px" hidden>شيل الصورة</button></div></div>
+          </div>
+          <p class="hint" style="margin:0">طلبات العرسان بتتسجل في ورقة "طلبات العرسان" في شيت الحجوزات، وبتوصلك على الواتساب.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products -->
+    <div data-pane="products" hidden>
+      <h2>منتجات المحل</h2>
+      <p class="hint">من غير أسعار. العميل بيدوس "اطلب على واتساب" وإنت بتردّ عليه بالسعر. <b style="color:var(--amber)">خلصان</b> بيظهر بس من غير زرار الطلب · <b>مخفي</b> مش بيظهر.</p>
+      <div class="blist" id="plist"></div>
+      <button class="btn gold full" id="addProduct" style="margin-top:12px">＋ ضيف منتج</button>
     </div>
 
     <!-- Stats -->
@@ -536,9 +565,9 @@ async function startApp(){
     if (e.status === 401) { sessionStorage.removeItem(SESSION_KEY); toast(ghError(e), 4000); setTimeout(()=>location.reload(), 2500); return; }
     toast(e.status ? ghError(e) : "مقدرتش أحمّل البيانات", 4000); return;
   }
-  DATA.gallery ||= []; DATA.barbers ||= []; DATA.reviews ||= []; DATA.booking ||= {}; DATA.announcement ||= {}; DATA.tempClosed ||= {};
+  DATA.gallery ||= []; DATA.barbers ||= []; DATA.reviews ||= []; DATA.products ||= []; DATA.groom ||= {on:false,title:"باكدج العريس",intro:"",items:[],image:""}; DATA.booking ||= {}; DATA.announcement ||= {}; DATA.tempClosed ||= {};
   SAVED = clone(DATA);
-  bindFields(); renderGallery(); renderTeam(); renderReviews(); paintSheetBtn(); paintCrowd();
+  bindFields(); renderGallery(); renderTeam(); renderReviews(); renderProducts(); paintGroom(); paintSheetBtn(); paintCrowd();
   try { localStorage.setItem("eldob_no_track", "1"); } catch(_) {}
 }
 
@@ -599,6 +628,90 @@ $("crowdBtns").addEventListener("click", e => { const b = e.target.closest("butt
 document.querySelector(".crowd-mins").addEventListener("click", e => { const b = e.target.closest("button"); if (b) saveCrowd({wait: +b.dataset.m}); });
 setInterval(() => DATA && paintCrowd(), 60000);
 
+/* ================= Groom package ================= */
+function paintGroom(){
+  DATA.groom ||= {on:false,title:"باكدج العريس",intro:"",items:[],image:""};
+  $("groomItems").value = (DATA.groom.items||[]).join("\n");
+  const img = DATA.groom.image;
+  $("gAv").innerHTML = img ? `<img src="${esc(src(img))}" alt="">` : "مفيش<br>صورة";
+  $("gNoImg").hidden = !img;
+}
+$("groomItems").addEventListener("input", e => { DATA.groom.items = e.target.value.split("\n").map(s => s.trim()).filter(Boolean); markDirty(); });
+$("gFile").addEventListener("change", async e => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  $("gAv").innerHTML = `<span class="spin"></span>`;
+  try {
+    const p = await uploadMedia(f, "image", "uploads/groom");
+    if (isUpload(DATA.groom.image)) pendingDeletes.add(DATA.groom.image);
+    DATA.groom.image = p; markDirty();
+  } catch(err) { toast(ghError(err), 3500); }
+  paintGroom();
+});
+$("gNoImg").onclick = () => { if (isUpload(DATA.groom.image)) pendingDeletes.add(DATA.groom.image); DATA.groom.image = ""; markDirty(); paintGroom(); };
+
+/* ================= Products ================= */
+const PSTATUS = {available:"متاح", out:"خلصان", hidden:"مخفي"};
+function renderProducts(){
+  const l = $("plist"); DATA.products ||= [];
+  if (!DATA.products.length) { l.innerHTML = `<div class="empty">لسه مفيش منتجات. دوس "ضيف منتج"</div>`; return; }
+  l.innerHTML = DATA.products.map((p,i) => `
+    <div class="bitem" data-i="${i}">
+      <div class="av">${p.photo ? `<img src="${esc(src(p.photo))}" alt="">` : "🛍️"}</div>
+      <div class="t"><b>${esc(p.name||"")}</b><small>${esc(p.desc||"")}</small></div>
+      <span class="pill ${p.status==="out"?"vacation":p.status==="hidden"?"hidden":"active"}">${PSTATUS[p.status||"available"]}</span>
+    </div>`).join("");
+}
+$("plist").addEventListener("click", e => { const t = e.target.closest(".bitem"); if (t) openProduct(+t.dataset.i); });
+$("addProduct").onclick = () => openProduct(-1);
+function openProduct(i){
+  const isNew = i < 0;
+  const p = isNew ? {id:uid(), name:"", desc:"", photo:"", status:"available"} : clone(DATA.products[i]);
+  const oldPhoto = p.photo;
+  sheet(`
+    <h3>${isNew ? "منتج جديد" : "تعديل " + esc(p.name)} <button class="x" data-close>×</button></h3>
+    <div class="photo-pick">
+      <div class="av" id="pAv">${p.photo ? `<img src="${esc(src(p.photo))}" alt="">` : "مفيش<br>صورة"}</div>
+      <div><label class="btn ghost" for="pFile" style="cursor:pointer">${p.photo ? "غيّر الصورة" : "ضيف صورة"}</label><input type="file" id="pFile" accept="image/*" hidden></div>
+    </div>
+    <label class="field"><span>اسم المنتج</span><input id="pName" value="${esc(p.name)}" placeholder="مثلًا: واكس شعر مط"></label>
+    <label class="field"><span>وصف قصير (اختياري)</span><input id="pDesc" value="${esc(p.desc)}" placeholder="مثلًا: تثبيت قوي من غير لمعة"></label>
+    <div class="field"><span>الحالة</span>
+      <div class="seg">${Object.entries(PSTATUS).map(([k,v]) => `<label><input type="radio" name="pSt" value="${k}" ${(p.status||"available")===k?"checked":""}><span>${v}</span></label>`).join("")}</div>
+    </div>
+    <div class="btns">
+      ${isNew ? "" : `<button class="btn danger" id="pDel">مسح</button>`}
+      ${isNew || i===0 ? "" : `<button class="btn ghost" id="pUp">→ قدّمه</button>`}
+      <button class="btn gold" id="pSave">${isNew ? "ضيف" : "تمام"}</button>
+    </div>
+    <div class="err" id="pErr"></div>`, root => {
+      const q = s => root.querySelector(s);
+      q("#pFile").onchange = async e => {
+        const f = e.target.files[0]; if (!f) return;
+        q("#pAv").innerHTML = `<span class="spin"></span>`;
+        try {
+          const ph = await uploadMedia(f, "image", "uploads/products");
+          if (isUpload(p.photo) && p.photo !== oldPhoto) pendingDeletes.add(p.photo);
+          p.photo = ph; q("#pAv").innerHTML = `<img src="${esc(src(ph))}" alt="">`;
+        } catch(err) { q("#pAv").innerHTML = "مفيش<br>صورة"; q("#pErr").textContent = ghError(err); }
+      };
+      q("#pSave").onclick = () => {
+        p.name = q("#pName").value.trim(); p.desc = q("#pDesc").value.trim();
+        p.status = root.querySelector('input[name="pSt"]:checked')?.value || "available";
+        if (!p.name) return q("#pErr").textContent = "اكتب اسم المنتج";
+        if (!isNew && isUpload(oldPhoto) && oldPhoto !== p.photo) pendingDeletes.add(oldPhoto);
+        if (isNew) DATA.products.push(p); else DATA.products[i] = p;
+        markDirty(); renderProducts(); closeSheet(); toast(isNew ? "اتضاف ✓ — دوس حفظ ونشر" : "اتعدّل ✓ — دوس حفظ ونشر");
+      };
+      q("#pUp") && (q("#pUp").onclick = () => { [DATA.products[i-1], DATA.products[i]] = [DATA.products[i], DATA.products[i-1]]; markDirty(); renderProducts(); closeSheet(); });
+      const del = q("#pDel");
+      del && (del.onclick = () => {
+        if (del.dataset.sure !== "1") { del.dataset.sure = "1"; del.textContent = "متأكد؟ دوس تاني"; return; }
+        DATA.products.splice(i, 1); if (isUpload(oldPhoto)) pendingDeletes.add(oldPhoto);
+        markDirty(); renderProducts(); closeSheet(); toast("اتمسح — دوس حفظ ونشر");
+      });
+    });
+}
+
 /* ================= Reviews ================= */
 function renderReviews(){
   const l = $("rlist"); DATA.reviews ||= [];
@@ -646,7 +759,7 @@ function openReview(i){
 
 /* ================= Stats ================= */
 let STATS = null;
-const STAT_ROWS = [["whatsapp","💬 فتحوا الواتساب"],["instapay","💜 داسوا على إنستاباي"],["vodafone","❤️ داسوا على فودافون كاش"],["proof","📸 بعتوا سكرين الدفع"],["booking","📅 حجوزات"],["location","📍 فتحوا اللوكيشن"],["instagram","إنستجرام"],["tiktok","تيك توك"],["facebook","فيسبوك"],["review","⭐ تقييم جوجل"],["share","🔗 شاركوا الموقع"],["install","📲 حطّوه على الموبايل"]];
+const STAT_ROWS = [["whatsapp","💬 فتحوا الواتساب"],["instapay","💜 داسوا على إنستاباي"],["vodafone","❤️ داسوا على فودافون كاش"],["proof","📸 بعتوا سكرين الدفع"],["booking","📅 حجوزات"],["location","📍 فتحوا اللوكيشن"],["instagram","إنستجرام"],["tiktok","تيك توك"],["facebook","فيسبوك"],["review","⭐ تقييم جوجل"],["share","🔗 شاركوا الموقع"],["install","📲 حطّوه على الموبايل"],["groom","🤵 طلبات العرسان"],["product","🛍️ طلبوا منتجات"]];
 async function loadStats(){
   const body = $("statBody"), url = DATA?.booking?.sheetUrl;
   if (!url) { body.innerHTML = `<div class="empty">اربط شيت الحجوزات الأول من 📅 الحجز والمواعيد</div>`; return; }
@@ -890,7 +1003,7 @@ $("saveBtn").onclick = async () => {
   const btn = $("saveBtn"); busy(btn, true, "بنحفظ…");
   try {
     // keep only files still referenced
-    const used = new Set([...DATA.gallery.map(g=>g.src), ...DATA.barbers.map(b=>b.photo)]);
+    const used = new Set([...DATA.gallery.map(g=>g.src), ...DATA.barbers.map(b=>b.photo), ...(DATA.products||[]).map(p=>p.photo), DATA.groom?.image]);
     const latest = await ghGet(DATA_PATH);
     const res = await ghPut(DATA_PATH, utf8b64(JSON.stringify(DATA, null, 2)), "تحديث من لوحة التحكم", latest?.sha);
     SHA = res.content.sha; SAVED = clone(DATA); clearDirty();
@@ -902,7 +1015,7 @@ $("saveBtn").onclick = async () => {
 };
 $("discardBtn").onclick = () => {
   DATA = clone(SAVED); pendingDeletes.clear(); clearDirty();
-  bindFields(); renderGallery(); renderTeam(); renderReviews(); paintSheetBtn(); paintCrowd(); toast("رجّعنا آخر نسخة محفوظة");
+  bindFields(); renderGallery(); renderTeam(); renderReviews(); renderProducts(); paintGroom(); paintSheetBtn(); paintCrowd(); toast("رجّعنا آخر نسخة محفوظة");
 };
 
 /* ================= Settings: change password / token ================= */

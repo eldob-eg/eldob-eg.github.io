@@ -434,6 +434,32 @@
   .crowd.busy{border-color:rgba(224,96,91,.45);background:rgba(224,96,91,.08)} .crowd.busy .cdot{background:#e0605b;box-shadow:0 0 10px #e0605b} .crowd.busy b{color:#f08a86}
   .crowd[hidden]{display:none}
 
+  /* ---------- Groom package ---------- */
+  .groom{background:linear-gradient(160deg,rgba(201,164,106,.14),var(--panel) 45%);border:1px solid rgba(201,164,106,.4);border-radius:18px;overflow:hidden}
+  .groom-img img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+  .groom-body{padding:18px}
+  .groom h3{font-family:"Reem Kufi",sans-serif;font-size:1.35rem;font-weight:700;color:#f6e7c8}
+  .groom p{color:var(--muted);font-size:.92rem;margin-top:4px}
+  .groom-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin:14px 0 16px}
+  .groom-list li{display:flex;gap:10px;align-items:flex-start;font-size:.95rem}
+  .groom-list li::before{content:"✓";flex-shrink:0;width:22px;height:22px;border-radius:50%;background:rgba(201,164,106,.18);color:var(--brass);display:grid;place-items:center;font-size:.75rem;font-weight:700;margin-top:1px}
+  .groom-btn{width:100%;border:0;border-radius:12px;padding:14px;cursor:pointer;font:inherit;font-weight:600;font-size:1rem;background:linear-gradient(135deg,#e2c48e,#a87b3c);color:#1a140b}
+
+  /* ---------- Products ---------- */
+  .prods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .prod{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+  .prod .pimg{aspect-ratio:1/1;background:var(--panel-2);display:grid;place-items:center}
+  .prod .pimg img{width:100%;height:100%;object-fit:cover;display:block}
+  .prod .pimg svg{width:36px;height:36px;stroke:var(--brass-deep);fill:none;stroke-width:1.5}
+  .prod .pb{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1}
+  .prod b{font-weight:600;font-size:.95rem;line-height:1.35}
+  .prod small{color:var(--muted);font-size:.8rem;line-height:1.45}
+  .prod a,.prod span.out{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 6px;border-radius:10px;font-size:.82rem;font-weight:600;text-decoration:none}
+  .prod a{background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.4);color:#6fe39a}
+  .prod a svg{width:15px;height:15px;fill:#6fe39a}
+  .prod span.out{background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+  .prod.off .pimg img{filter:grayscale(.9) brightness(.7)}
+
   footer{text-align:center;color:#6f685f;font-size:.8rem;margin-top:40px}
 
   .toast{
@@ -447,7 +473,7 @@
 </head>
 <body>
 
-<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": [], "crowd": {"level": "off", "wait": 0, "updatedAt": ""}}</script>
+<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": [], "crowd": {"level": "off", "wait": 0, "updatedAt": ""}, "groom": {"on": false, "title": "باكدج العريس", "intro": "", "items": [], "image": ""}, "products": []}</script>
 
 <div class="announce" id="announce" hidden></div>
 <div class="wrap">
@@ -540,6 +566,24 @@
     <div class="reviews" id="reviews"></div>
   </div>
 
+  <div id="groomWrap" hidden>
+    <div class="label">العرسان والمناسبات</div>
+    <div class="groom">
+      <div class="groom-img" id="groomImg" hidden></div>
+      <div class="groom-body">
+        <h3 id="groomTitle"></h3>
+        <p id="groomIntro"></p>
+        <ul class="groom-list" id="groomList"></ul>
+        <button class="groom-btn" id="groomOpen" type="button">اطلب الباكدج</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="prodWrap" hidden>
+    <div class="label">منتجاتنا</div>
+    <div class="prods" id="prods"></div>
+  </div>
+
   <div class="label">مواعيد الشغل</div>
   <div class="panel hours">
     <span class="clock"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a46a" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
@@ -618,6 +662,29 @@
     <button class="later" type="button" data-close>تمام</button>
   </div>
 </div>
+
+<div class="sheet-bg" id="groomSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="gTitle" style="max-height:92vh;overflow:auto">
+    <h3 id="gTitle">اطلب الباكدج</h3>
+    <p class="sub">املا البيانات وهنكلّمك على واتساب نتفق على كل حاجة</p>
+    <div class="row2">
+      <label class="field"><span>الاسم</span><input id="gName" type="text" autocomplete="name" placeholder="اسمك"></label>
+      <label class="field"><span>رقم الموبايل</span><input id="gPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01xxxxxxxxx" style="direction:ltr;text-align:right"></label>
+    </div>
+    <div class="row2">
+      <label class="field"><span>المناسبة</span><select id="gType"><option>فرح</option><option>كتب كتاب</option><option>خطوبة</option><option>مناسبة تانية</option></select></label>
+      <label class="field"><span>التاريخ</span><input id="gDate" type="date"></label>
+    </div>
+    <div class="row2">
+      <label class="field"><span>عدد الأفراد</span><select id="gCount"><option>1 (العريس بس)</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6 أو أكتر</option></select></label>
+      <label class="field"><span>المكان</span><select id="gPlace"><option>في المحل</option><option>في البيت</option></select></label>
+    </div>
+    <label class="field"><span>ملاحظات (اختياري)</span><input id="gNotes" type="text" placeholder="أي حاجة عايز تقولها"></label>
+    <a class="go wa" id="gSend" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"/></svg> ابعت الطلب على واتساب</a>
+    <div class="bk-err" id="gErr"></div>
+    <button class="later" type="button" data-close>مش دلوقتي</button>
+  </div>
+</div>
 <div class="toast" id="toast">اتنسخ ✓</div>
 
 <script>
@@ -640,7 +707,7 @@
 
   // ---------- Visit counter: anonymous counts only, logged to the bookings sheet ----------
   const NO_TRACK = (() => { try { return localStorage.getItem("eldob_no_track") === "1"; } catch(_) { return false; } })();
-  const EVENTS = ["visit","whatsapp","instagram","facebook","tiktok","instapay","vodafone","location","review","proof","share","install"];
+  const EVENTS = ["visit","whatsapp","instagram","facebook","tiktok","instapay","vodafone","location","review","proof","share","install","product"];
   const track = ev => {
     const url = SHOP.booking?.sheetUrl;
     if (NO_TRACK || !EVENTS.includes(ev) || !url || !/^https:\/\/script\.google\.com\//.test(url)) return;
@@ -970,6 +1037,62 @@
     .forEach(([id, ev]) => $(id) && $(id).addEventListener("click", () => track(ev)));
   $("payGo").addEventListener("click", () => track(current === "vf" ? "vodafone" : "instapay"));
   $("proofGo").addEventListener("click", () => track("proof"));
+
+  // ---------- Groom & events package (content + switch from the admin panel) ----------
+  const G = SHOP.groom || {};
+  const gItems = (G.items||[]).map(s => String(s).trim()).filter(Boolean);
+  if (G.on && (G.title || gItems.length)) {
+    $("groomWrap").hidden = false;
+    $("groomTitle").textContent = G.title || "باكدج العريس";
+    $("groomIntro").textContent = G.intro || "";
+    $("groomIntro").hidden = !G.intro;
+    $("groomList").innerHTML = gItems.map(t => `<li>${esc(t)}</li>`).join("");
+    $("groomList").hidden = !gItems.length;
+    if (G.image) { $("groomImg").innerHTML = `<img src="${esc(safeUrl(G.image))}" alt="" loading="lazy">`; $("groomImg").hidden = false; }
+    const gs = $("groomSheet");
+    $("groomOpen").addEventListener("click", () => { gs.hidden = false; });
+    gs.addEventListener("click", e => { if (e.target === gs || e.target.closest("[data-close]")) gs.hidden = true; });
+    $("gDate").min = new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Cairo"}).format(new Date());
+    const gv = id => ($(id).value || "").trim();
+    const gData = () => ({ name: gv("gName"), phone: gv("gPhone"), type: gv("gType"), date: gv("gDate"), count: gv("gCount"), place: gv("gPlace"), notes: gv("gNotes") });
+    const gBuild = () => {
+      const g = gData();
+      const msg = `السلام عليكم، عايز أطلب ${$("groomTitle").textContent} من ${SHOP.name} 🤵\nالاسم: ${g.name}\nالموبايل: ${g.phone}\nالمناسبة: ${g.type}\nالتاريخ: ${g.date || "لسه مش محدد"}\nعدد الأفراد: ${g.count}\nالمكان: ${g.place}${g.notes ? "\nملاحظات: " + g.notes : ""}`;
+      $("gSend").href = "https://wa.me/" + String(SHOP.whatsapp).replace(/\D/g,"") + "?text=" + encodeURIComponent(msg);
+    };
+    ["gName","gPhone","gType","gDate","gCount","gPlace","gNotes"].forEach(id => $(id).addEventListener("input", () => { gBuild(); $("gErr").textContent = ""; }));
+    gBuild();
+    $("gSend").addEventListener("click", e => {
+      const g = gData(), err = $("gErr");
+      if (!g.name) { e.preventDefault(); err.textContent = "اكتب اسمك الأول"; return $("gName").focus(); }
+      if (g.phone.replace(/\D/g,"").length < 10) { e.preventDefault(); err.textContent = "اكتب رقم موبايل صح"; return $("gPhone").focus(); }
+      err.textContent = "";
+      const url = SHOP.booking?.sheetUrl;
+      if (url && /^https:\/\/script\.google\.com\//.test(url)) {
+        try { fetch(url, {method:"POST", mode:"no-cors", keepalive:true, headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify({kind:"groom", ...g})}); } catch(_) {}
+      }
+      setTimeout(() => { gs.hidden = true; const t = $("toast"); t.textContent = "اتبعت طلبك ✓ هنكلّمك قريب"; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"), 2600); }, 80);
+    });
+  }
+
+  // ---------- Products (order on WhatsApp, no fixed prices) ----------
+  const prods = (SHOP.products||[]).filter(p => p.name && p.status !== "hidden");
+  if (prods.length) {
+    $("prodWrap").hidden = false;
+    const waBase = "https://wa.me/" + String(SHOP.whatsapp).replace(/\D/g,"") + "?text=";
+    const box = `<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></svg>`;
+    const waIco = `<svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"/></svg>`;
+    $("prods").innerHTML = prods.map(p => {
+      const out = p.status === "out";
+      const msg = `السلام عليكم، عايز أطلب "${p.name}" من ${SHOP.name} 🛍️\nممكن تقولّي السعر؟`;
+      return `<div class="prod ${out ? "off" : ""}">
+        <div class="pimg">${p.photo ? `<img src="${esc(safeUrl(p.photo))}" alt="${esc(p.name)}" loading="lazy">` : box}</div>
+        <div class="pb"><b>${esc(p.name)}</b>${p.desc ? `<small>${esc(p.desc)}</small>` : ""}
+        ${out ? `<span class="out">خلصان دلوقتي</span>` : `<a href="${waBase + encodeURIComponent(msg)}" target="_blank" rel="noopener" data-prod>${waIco} اطلب على واتساب</a>`}</div>
+      </div>`;
+    }).join("");
+    $("prods").addEventListener("click", e => { if (e.target.closest("[data-prod]")) track("product"); });
+  }
 })();
 </script>
 </body>

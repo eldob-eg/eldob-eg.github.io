@@ -13,8 +13,11 @@ const STATUSES = ['جديد', 'اتأكد', 'حضر', 'ما جاش', 'اتلغى
 
 // عداد الزيارات: أرقام بس، من غير أي بيانات عن الناس
 const STATS_NAME = 'الإحصائيات';
-const EVENTS = ['visit', 'whatsapp', 'instapay', 'vodafone', 'location', 'booking', 'proof', 'instagram', 'facebook', 'tiktok', 'review', 'share', 'install'];
-const EVENT_LABELS = ['التاريخ', 'زيارات', 'واتساب', 'إنستاباي', 'فودافون كاش', 'لوكيشن', 'حجوزات', 'سكرين الدفع', 'إنستجرام', 'فيسبوك', 'تيك توك', 'تقييم جوجل', 'مشاركة', 'تثبيت'];
+const EVENTS = ['visit', 'whatsapp', 'instapay', 'vodafone', 'location', 'booking', 'proof', 'instagram', 'facebook', 'tiktok', 'review', 'share', 'install', 'groom', 'product'];
+const EVENT_LABELS = ['التاريخ', 'زيارات', 'واتساب', 'إنستاباي', 'فودافون كاش', 'لوكيشن', 'حجوزات', 'سكرين الدفع', 'إنستجرام', 'فيسبوك', 'تيك توك', 'تقييم جوجل', 'مشاركة', 'تثبيت', 'طلبات العرسان', 'طلبات منتجات'];
+
+const GROOM_NAME = 'طلبات العرسان';
+const GROOM_HEADERS = ['وقت التسجيل', 'الاسم', 'الموبايل', 'المناسبة', 'التاريخ', 'عدد الأفراد', 'المكان', 'ملاحظات', 'الحالة'];
 const TZ = 'Africa/Cairo';
 
 function doPost(e) {
@@ -23,6 +26,13 @@ function doPost(e) {
   try {
     const d = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     if (d.kind === 'event') { count_(d.event); return reply_({ ok: true }); }
+    if (d.kind === 'groom') {
+      if (!d.name || !d.phone) return reply_({ ok: false, error: 'missing' });
+      groom_().appendRow([new Date(), clean_(d.name), "'" + clean_(d.phone).replace(/^'/, ''), clean_(d.type), clean_(d.date),
+        clean_(d.count), clean_(d.place), clean_(d.notes), 'جديد']);
+      count_('groom');
+      return reply_({ ok: true });
+    }
     if (!d.name || !d.phone) return reply_({ ok: false, error: 'missing' });
     count_('booking');
 
@@ -56,6 +66,7 @@ function doGet(e) {
 function setup() {
   sheet_();
   stats_();
+  groom_();
 }
 
 function sheet_() {
@@ -89,6 +100,28 @@ function stats_() {
     sh.setFrozenRows(1);
     sh.getRange(1, 1, 1, EVENT_LABELS.length).setFontWeight('bold').setBackground('#1b1a18').setFontColor('#c9a46a');
     sh.getRange('A:A').setNumberFormat('@');
+  }
+  // لو اتضافت أعمدة جديدة للعداد، حدّث العناوين
+  if (sh.getLastColumn() < EVENT_LABELS.length) {
+    sh.getRange(1, 1, 1, EVENT_LABELS.length).setValues([EVENT_LABELS])
+      .setFontWeight('bold').setBackground('#1b1a18').setFontColor('#c9a46a');
+  }
+  return sh;
+}
+
+function groom_() {
+  const ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(GROOM_NAME);
+  if (!sh) {
+    sh = ss.insertSheet(GROOM_NAME, 1);
+    sh.setRightToLeft(true);
+    sh.appendRow(GROOM_HEADERS);
+    sh.setFrozenRows(1);
+    sh.getRange(1, 1, 1, GROOM_HEADERS.length).setFontWeight('bold').setBackground('#1b1a18').setFontColor('#c9a46a');
+    sh.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm');
+    sh.setColumnWidths(1, GROOM_HEADERS.length, 140);
+    const rule = SpreadsheetApp.newDataValidation().requireValueInList(['جديد', 'اتكلمنا', 'اتأكد', 'اتلغى'], true).build();
+    sh.getRange(2, 9, 999, 1).setDataValidation(rule);
   }
   return sh;
 }
