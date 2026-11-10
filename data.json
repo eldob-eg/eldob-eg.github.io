@@ -69,7 +69,7 @@
     "items": [],
     "image": "uploads/groom/mwb3f07miyp1.jpg",
     "deposit": {
-      "on": true,
+      "on": false,
       "amount": "100",
       "note": ""
     }
