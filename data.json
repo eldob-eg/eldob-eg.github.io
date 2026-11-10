@@ -19,11 +19,11 @@
     "text": "قافلين النهارده، نشوفكم بكره"
   },
   "announcement": {
-    "on": false,
+    "on": true,
     "text": "كل سنه وانتم طيبين"
   },
   "booking": {
-    "open": false,
+    "open": true,
     "title": "حجوزات العيد مفتوحة",
     "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب",
     "sheetUrl": "https://script.google.com/macros/s/AKfycbzWl-3kn17lvdeLcbRrLRGrpTv7bivxq70ZHO6lAgGDbR8EoC5OfmEnRrp_y9Wlyl-SiQ/exec",
@@ -52,5 +52,14 @@
     "level": "medium",
     "wait": 10,
     "updatedAt": "2026-11-10T19:35:07.717Z"
+  },
+  "reviews": [],
+  "products": [],
+  "groom": {
+    "on": true,
+    "title": "باكدج العريس",
+    "intro": "",
+    "items": [],
+    "image": "uploads/groom/mwb3f07miyp1.jpg"
   }
 }
