@@ -5,6 +5,8 @@
  * الصقه في: Extensions ← Apps Script ← Code.gs ، وبعدين Deploy ← Web app.
  */
 
+// لو الكود مش جوه الشيت نفسه، حط هنا الـ ID بتاع الشيت (الجزء اللي بين /d/ و /edit في اللينك)
+const SPREADSHEET_ID = '';
 const SHEET_NAME = 'الحجوزات';
 const HEADERS = ['وقت التسجيل', 'الاسم', 'الموبايل', 'يوم الحجز', 'الساعة', 'عدد الأفراد', 'الحلاق', 'الحالة', 'ملاحظات'];
 const STATUSES = ['جديد', 'اتأكد', 'حضر', 'ما جاش', 'اتلغى'];
@@ -47,7 +49,7 @@ function setup() {
 }
 
 function sheet_() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
   let sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) {
     sh = ss.insertSheet(SHEET_NAME, 0);
