@@ -30,14 +30,6 @@
   "gallery": [],
   "barbers": [
     {
-      "id": "mwarcnr4u2v3",
-      "name": "mohamed yasser",
-      "role": "حلاق",
-      "photo": "",
-      "instagram": "",
-      "status": "active"
-    },
-    {
       "id": "mwavk02klgvc",
       "name": "ibrahem",
       "role": "حلاق",
