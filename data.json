@@ -19,7 +19,7 @@
     "text": "مقفولين النهارده، نشوفكم بكره"
   },
   "announcement": {
-    "on": false,
+    "on": true,
     "text": ""
   },
   "booking": {
