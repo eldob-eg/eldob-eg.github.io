@@ -360,17 +360,26 @@ const ghError = e => e.status===401 ? "التوكن غلط أو خلص — جد�
   : e.status===422 ? "الملف كبير أو فيه مشكلة في البيانات"
   : "مشكلة في الاتصال، جرّب تاني";
 
+/* Owner/repo from the GitHub Pages address, so renaming the repo or the account keeps working */
+function detectRepo(){
+  const m = location.hostname.match(/^([^.]+)\.github\.io$/i);
+  if (!m) return null;
+  const seg = location.pathname.split("/").filter(Boolean)[0];
+  return { owner: m[1], repo: seg && !seg.endsWith(".html") ? seg : (m[1] + ".github.io") };
+}
+function applyDetected(cfg){ const d = detectRepo(); return d ? {...cfg, owner: d.owner, repo: d.repo} : cfg; }
+
 /* ================= Boot ================= */
 async function boot(){
   // already unlocked in this tab?
-  try { const s = sessionStorage.getItem(SESSION_KEY); if (s) { CFG = JSON.parse(s); return startApp(); } } catch(_){}
+  try { const s = sessionStorage.getItem(SESSION_KEY); if (s) { CFG = applyDetected(JSON.parse(s)); return startApp(); } } catch(_){}
   let vault = null;
   try { const r = await fetch(VAULT_PATH + "?t=" + Date.now(), {cache:"no-store"}); if (r.ok) vault = await r.json(); } catch(_){}
   if (vault && vault.ct) { window.__vault = vault; show("login"); setTimeout(()=>$("liUser").focus(), 50); }
   else {
     // prefill from GitHub Pages URL: owner.github.io/repo/
-    const m = location.hostname.match(/^([^.]+)\.github\.io$/i);
-    if (m) { $("suOwner").value = m[1]; const seg = location.pathname.split("/").filter(Boolean)[0]; $("suRepo").value = seg && !seg.endsWith(".html") ? seg : (m[1]+".github.io"); }
+    const d = detectRepo();
+    if (d) { $("suOwner").value = d.owner; $("suRepo").value = d.repo; }
     show("setup");
   }
 }
@@ -404,7 +413,7 @@ $("suBtn").onclick = async () => {
 const doLogin = async () => {
   const btn=$("liBtn"), err=$("liErr"); err.textContent=""; busy(btn, true);
   try {
-    CFG = await open_(window.__vault, vaultKey($("liUser").value, $("liPass").value));
+    CFG = applyDetected(await open_(window.__vault, vaultKey($("liUser").value, $("liPass").value)));
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(CFG));
     startApp();
   } catch(e) { err.textContent = "اليوزر نيم أو الباسورد غلط"; }
