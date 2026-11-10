@@ -58,9 +58,13 @@
       "id": "mwavhrim7ogp",
       "name": "ibrahem",
       "role": "حلاق",
-      "photo": "uploads/team/mwb8lncthvo5.jpg",
+      "photo": "uploads/team/mwbb43ct96ky.jpg",
       "instagram": "https://www.instagram.com/xx_ibrahim_saied_xx?obrf=eHBtNTQ1NG9hNmJk الحالة شغالأجازةمخفي مسح→ قدّمهتمام اتحفظ ✓ هيظهر في الموقع خلال دقيقة أو اتنين",
-      "status": "active"
+      "status": "active",
+      "focus": {
+        "x": 54,
+        "y": 92
+      }
     }
   ],
   "crowd": {
