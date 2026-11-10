@@ -17,7 +17,8 @@ const EVENTS = ['visit', 'whatsapp', 'instapay', 'vodafone', 'location', 'bookin
 const EVENT_LABELS = ['التاريخ', 'زيارات', 'واتساب', 'إنستاباي', 'فودافون كاش', 'لوكيشن', 'حجوزات', 'سكرين الدفع', 'إنستجرام', 'فيسبوك', 'تيك توك', 'تقييم جوجل', 'مشاركة', 'تثبيت', 'طلبات العرسان', 'طلبات منتجات'];
 
 const GROOM_NAME = 'طلبات العرسان';
-const GROOM_HEADERS = ['وقت التسجيل', 'الاسم', 'الموبايل', 'المناسبة', 'التاريخ', 'عدد الأفراد', 'المكان', 'ملاحظات', 'الحالة'];
+const GROOM_HEADERS = ['وقت التسجيل', 'الاسم', 'الموبايل', 'المناسبة', 'التاريخ', 'عدد الأفراد', 'المكان', 'ملاحظات', 'العربون', 'الحالة'];
+const GROOM_STATUSES = ['جديد', 'مستني العربون', 'العربون اتدفع', 'اتكلمنا', 'اتأكد', 'اتلغى'];
 const TZ = 'Africa/Cairo';
 
 function doPost(e) {
@@ -29,7 +30,7 @@ function doPost(e) {
     if (d.kind === 'groom') {
       if (!d.name || !d.phone) return reply_({ ok: false, error: 'missing' });
       groom_().appendRow([new Date(), clean_(d.name), "'" + clean_(d.phone).replace(/^'/, ''), clean_(d.type), clean_(d.date),
-        clean_(d.count), clean_(d.place), clean_(d.notes), 'جديد']);
+        clean_(d.count), clean_(d.place), clean_(d.notes), clean_(d.deposit), d.deposit ? 'مستني العربون' : 'جديد']);
       count_('groom');
       return reply_({ ok: true });
     }
@@ -120,8 +121,8 @@ function groom_() {
     sh.getRange(1, 1, 1, GROOM_HEADERS.length).setFontWeight('bold').setBackground('#1b1a18').setFontColor('#c9a46a');
     sh.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm');
     sh.setColumnWidths(1, GROOM_HEADERS.length, 140);
-    const rule = SpreadsheetApp.newDataValidation().requireValueInList(['جديد', 'اتكلمنا', 'اتأكد', 'اتلغى'], true).build();
-    sh.getRange(2, 9, 999, 1).setDataValidation(rule);
+    const rule = SpreadsheetApp.newDataValidation().requireValueInList(GROOM_STATUSES, true).build();
+    sh.getRange(2, GROOM_HEADERS.length, 999, 1).setDataValidation(rule);
   }
   return sh;
 }

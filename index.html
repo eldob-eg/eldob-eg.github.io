@@ -460,6 +460,20 @@
   .prod span.out{background:var(--bg);border:1px solid var(--line);color:var(--muted)}
   .prod.off .pimg img{filter:grayscale(.9) brightness(.7)}
 
+  /* ---------- Groom deposit ---------- */
+  .g-steps{display:flex;gap:6px;margin-bottom:12px}
+  .g-steps span{flex:1;text-align:center;font-size:.78rem;padding:6px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+  .g-steps span.on{border-color:var(--brass);color:var(--brass);font-weight:600}
+  .g-steps span.done{color:#6fe39a;border-color:rgba(62,207,110,.35)}
+  .dep-amt{display:flex;align-items:baseline;justify-content:center;gap:8px;margin:10px 0 6px;padding:14px;border-radius:14px;background:rgba(201,164,106,.1);border:1px solid rgba(201,164,106,.35)}
+  .dep-amt b{font-size:2.2rem;font-weight:700;color:#f6e7c8;direction:ltr}
+  .dep-amt span{color:var(--brass);font-weight:600}
+  .dep-note{color:var(--muted);font-size:.85rem;text-align:center;margin-bottom:12px}
+  .dep-pay{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .dep-nums{text-align:center;font-size:.8rem;color:var(--muted);margin:8px 0 12px}
+  .dep-nums b{direction:ltr;display:inline-block;color:var(--ink)}
+  #dSent.nudge{animation:glow 1.6s ease-in-out 3}
+
   footer{text-align:center;color:#6f685f;font-size:.8rem;margin-top:40px}
 
   .toast{
@@ -473,7 +487,7 @@
 </head>
 <body>
 
-<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": [], "crowd": {"level": "off", "wait": 0, "updatedAt": ""}, "groom": {"on": false, "title": "باكدج العريس", "intro": "", "items": [], "image": ""}, "products": []}</script>
+<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": [], "crowd": {"level": "off", "wait": 0, "updatedAt": ""}, "groom": {"on": false, "title": "باكدج العريس", "intro": "", "items": [], "image": "", "deposit": {"on": false, "amount": 0, "note": ""}}, "products": []}</script>
 
 <div class="announce" id="announce" hidden></div>
 <div class="wrap">
@@ -665,24 +679,46 @@
 
 <div class="sheet-bg" id="groomSheet" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="gTitle" style="max-height:92vh;overflow:auto">
-    <h3 id="gTitle">اطلب الباكدج</h3>
-    <p class="sub">املا البيانات وهنكلّمك على واتساب نتفق على كل حاجة</p>
-    <div class="row2">
-      <label class="field"><span>الاسم</span><input id="gName" type="text" autocomplete="name" placeholder="اسمك"></label>
-      <label class="field"><span>رقم الموبايل</span><input id="gPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01xxxxxxxxx" style="direction:ltr;text-align:right"></label>
+    <div id="gStep1">
+      <div class="g-steps" id="gDots" hidden><span class="on">١ البيانات</span><span>٢ العربون</span></div>
+      <h3 id="gTitle">اطلب الباكدج</h3>
+      <p class="sub" id="gSub1">املا البيانات وهنكلّمك على واتساب نتفق على كل حاجة</p>
+      <div class="row2">
+        <label class="field"><span>الاسم</span><input id="gName" type="text" autocomplete="name" placeholder="اسمك"></label>
+        <label class="field"><span>رقم الموبايل</span><input id="gPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01xxxxxxxxx" style="direction:ltr;text-align:right"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>المناسبة</span><select id="gType"><option>فرح</option><option>كتب كتاب</option><option>خطوبة</option><option>مناسبة تانية</option></select></label>
+        <label class="field"><span>التاريخ</span><input id="gDate" type="date"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>عدد الأفراد</span><select id="gCount"><option>1 (العريس بس)</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6 أو أكتر</option></select></label>
+        <label class="field"><span>المكان</span><select id="gPlace"><option>في المحل</option><option>في البيت</option></select></label>
+      </div>
+      <label class="field"><span>ملاحظات (اختياري)</span><input id="gNotes" type="text" placeholder="أي حاجة عايز تقولها"></label>
+      <a class="go wa" id="gSend" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"/></svg> ابعت الطلب على واتساب</a>
+      <div class="bk-err" id="gErr"></div>
+      <button class="later" type="button" data-close>مش دلوقتي</button>
     </div>
-    <div class="row2">
-      <label class="field"><span>المناسبة</span><select id="gType"><option>فرح</option><option>كتب كتاب</option><option>خطوبة</option><option>مناسبة تانية</option></select></label>
-      <label class="field"><span>التاريخ</span><input id="gDate" type="date"></label>
+
+    <div id="gStep2" hidden>
+      <div class="g-steps"><span class="done">١ البيانات ✓</span><span class="on">٢ العربون</span></div>
+      <h3>ادفع العربون عشان نثبّت ميعادك</h3>
+      <div class="dep-amt"><b id="dAmt"></b><span>جنيه</span></div>
+      <p class="dep-note" id="dNote" hidden></p>
+      <ol class="steps">
+        <li><span>حوّل العربون بـ <b>إنستاباي</b> أو <b>فودافون كاش</b></span></li>
+        <li><span>أول ما التحويل يتم، <b>خد سكرين شوت</b> لصفحة نجاح العملية</span></li>
+        <li><span>ارجع هنا ودوس <b>"دفعت، ابعت السكرين"</b></span></li>
+      </ol>
+      <div class="dep-pay">
+        <a class="go pay-ip" id="dIp" rel="noopener">إنستاباي</a>
+        <a class="go pay-vf" id="dVf" rel="noopener">فودافون كاش</a>
+      </div>
+      <p class="dep-nums">إنستاباي: <b id="dIpNum"></b> · فودافون كاش: <b id="dVfNum"></b></p>
+      <a class="go wa" id="dSent" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"/></svg> دفعت، ابعت السكرين على واتساب</a>
+      <a class="later" id="dLater" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">هدفع بعدين، ابعت الطلب بس</a>
     </div>
-    <div class="row2">
-      <label class="field"><span>عدد الأفراد</span><select id="gCount"><option>1 (العريس بس)</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6 أو أكتر</option></select></label>
-      <label class="field"><span>المكان</span><select id="gPlace"><option>في المحل</option><option>في البيت</option></select></label>
-    </div>
-    <label class="field"><span>ملاحظات (اختياري)</span><input id="gNotes" type="text" placeholder="أي حاجة عايز تقولها"></label>
-    <a class="go wa" id="gSend" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"/></svg> ابعت الطلب على واتساب</a>
-    <div class="bk-err" id="gErr"></div>
-    <button class="later" type="button" data-close>مش دلوقتي</button>
   </div>
 </div>
 <div class="toast" id="toast">اتنسخ ✓</div>
@@ -1041,6 +1077,9 @@
   // ---------- Groom & events package (content + switch from the admin panel) ----------
   const G = SHOP.groom || {};
   const gItems = (G.items||[]).map(s => String(s).trim()).filter(Boolean);
+  const DEP = G.deposit || {};
+  const depAmount = Math.max(0, Math.round(+DEP.amount || 0));
+  const depOn = !!DEP.on && depAmount > 0;
   if (G.on && (G.title || gItems.length)) {
     $("groomWrap").hidden = false;
     $("groomTitle").textContent = G.title || "باكدج العريس";
@@ -1050,29 +1089,75 @@
     $("groomList").hidden = !gItems.length;
     if (G.image) { $("groomImg").innerHTML = `<img src="${esc(safeUrl(G.image))}" alt="" loading="lazy">`; $("groomImg").hidden = false; }
     const gs = $("groomSheet");
-    $("groomOpen").addEventListener("click", () => { gs.hidden = false; });
+    const showStep = n => { $("gStep1").hidden = n !== 1; $("gStep2").hidden = n !== 2; gs.querySelector(".sheet").scrollTop = 0; };
+    $("groomOpen").addEventListener("click", () => { showStep(1); gs.hidden = false; });
     gs.addEventListener("click", e => { if (e.target === gs || e.target.closest("[data-close]")) gs.hidden = true; });
     $("gDate").min = new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Cairo"}).format(new Date());
+    const wa = msg => "https://wa.me/" + String(SHOP.whatsapp).replace(/\D/g,"") + "?text=" + encodeURIComponent(msg);
     const gv = id => ($(id).value || "").trim();
     const gData = () => ({ name: gv("gName"), phone: gv("gPhone"), type: gv("gType"), date: gv("gDate"), count: gv("gCount"), place: gv("gPlace"), notes: gv("gNotes") });
-    const gBuild = () => {
-      const g = gData();
-      const msg = `السلام عليكم، عايز أطلب ${$("groomTitle").textContent} من ${SHOP.name} 🤵\nالاسم: ${g.name}\nالموبايل: ${g.phone}\nالمناسبة: ${g.type}\nالتاريخ: ${g.date || "لسه مش محدد"}\nعدد الأفراد: ${g.count}\nالمكان: ${g.place}${g.notes ? "\nملاحظات: " + g.notes : ""}`;
-      $("gSend").href = "https://wa.me/" + String(SHOP.whatsapp).replace(/\D/g,"") + "?text=" + encodeURIComponent(msg);
-    };
+    const details = g => `الاسم: ${g.name}\nالموبايل: ${g.phone}\nالمناسبة: ${g.type}\nالتاريخ: ${g.date || "لسه مش محدد"}\nعدد الأفراد: ${g.count}\nالمكان: ${g.place}${g.notes ? "\nملاحظات: " + g.notes : ""}`;
+    const head = () => `السلام عليكم، عايز أحجز ${$("groomTitle").textContent} من ${SHOP.name} 🤵`;
+    const gBuild = () => { $("gSend").href = wa(`${head()}\n${details(gData())}`); };
     ["gName","gPhone","gType","gDate","gCount","gPlace","gNotes"].forEach(id => $(id).addEventListener("input", () => { gBuild(); $("gErr").textContent = ""; }));
     gBuild();
+
+    // deposit step setup
+    if (depOn) {
+      $("gDots").hidden = false;
+      $("gSub1").textContent = "املا البيانات، وبعدها تدفع العربون عشان ميعادك يتثبّت";
+      $("gSend").innerHTML = "كمّل لدفع العربون ←";
+      $("gSend").removeAttribute("target");
+      $("gSend").className = "go pay-ip";
+      $("dAmt").textContent = depAmount.toLocaleString("en");
+      if (DEP.note) { $("dNote").textContent = DEP.note; $("dNote").hidden = false; }
+      $("dIpNum").textContent = SHOP.instapayId; $("dVfNum").textContent = SHOP.vodafoneCash;
+      const vfDigits = String(SHOP.vodafoneCash).replace(/\D/g,"");
+      $("dVf").href = `tel:*9*7*${vfDigits}*${depAmount}%23`;
+      if (SHOP.instapayLink) { $("dIp").href = safeUrl(SHOP.instapayLink); $("dIp").target = "_blank"; }
+      else $("dIp").href = "#";
+    }
+    let depMethod = "", depLeft = false;
+    const gSubmit = () => {
+      const g = gData();
+      const url = SHOP.booking?.sheetUrl;
+      if (url && /^https:\/\/script\.google\.com\//.test(url)) {
+        try { fetch(url, {method:"POST", mode:"no-cors", keepalive:true, headers:{"Content-Type":"text/plain;charset=utf-8"},
+          body: JSON.stringify({kind:"groom", ...g, deposit: depOn ? `${depAmount} جنيه — مستني الدفع` : ""})}); } catch(_) {}
+      }
+    };
+    const paintStep2Links = () => {
+      const g = gData();
+      $("dSent").href = wa(`${head()}\n${details(g)}\n\n✅ دفعت العربون ${depAmount} جنيه${depMethod ? " عن طريق " + depMethod : ""}.\nودي صورة التحويل 👇`);
+      $("dLater").href = wa(`${head()}\n${details(g)}\n\n⏳ هدفع العربون (${depAmount} جنيه) بعدين.`);
+    };
     $("gSend").addEventListener("click", e => {
       const g = gData(), err = $("gErr");
       if (!g.name) { e.preventDefault(); err.textContent = "اكتب اسمك الأول"; return $("gName").focus(); }
       if (g.phone.replace(/\D/g,"").length < 10) { e.preventDefault(); err.textContent = "اكتب رقم موبايل صح"; return $("gPhone").focus(); }
       err.textContent = "";
-      const url = SHOP.booking?.sheetUrl;
-      if (url && /^https:\/\/script\.google\.com\//.test(url)) {
-        try { fetch(url, {method:"POST", mode:"no-cors", keepalive:true, headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify({kind:"groom", ...g})}); } catch(_) {}
-      }
+      gSubmit();
+      if (depOn) { e.preventDefault(); paintStep2Links(); showStep(2); return; }
       setTimeout(() => { gs.hidden = true; const t = $("toast"); t.textContent = "اتبعت طلبك ✓ هنكلّمك قريب"; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"), 2600); }, 80);
     });
+    $("dIp").addEventListener("click", e => {
+      depMethod = "إنستاباي"; depLeft = true; paintStep2Links(); track("instapay");
+      if (!SHOP.instapayLink) { e.preventDefault(); copyText(SHOP.instapayId, `الرقم اتنسخ ✓ حوّل ${depAmount} جنيه من إنستاباي وخد سكرين شوت`); }
+      $("dSent").classList.add("nudge");
+    });
+    $("dVf").addEventListener("click", () => {
+      depMethod = "فودافون كاش"; depLeft = true; paintStep2Links(); track("vodafone");
+      copyText(SHOP.vodafoneCash, `الرقم اتنسخ ✓ لو التحويل ما فتحش، حوّل ${depAmount} جنيه من الأبلكيشن`);
+      $("dSent").classList.add("nudge");
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && depLeft && !gs.hidden && !$("gStep2").hidden) {
+        depLeft = false; $("dSent").scrollIntoView({block:"center", behavior:"smooth"});
+      }
+    });
+    const doneToast = msg => setTimeout(() => { gs.hidden = true; const t = $("toast"); t.textContent = msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"), 2800); }, 80);
+    $("dSent").addEventListener("click", () => { track("proof"); doneToast("تمام ✓ هنأكّد ميعادك بعد ما نشوف التحويل"); });
+    $("dLater").addEventListener("click", () => doneToast("اتبعت طلبك ✓ ادفع العربون عشان الميعاد يتثبّت"));
   }
 
   // ---------- Products (order on WhatsApp, no fixed prices) ----------

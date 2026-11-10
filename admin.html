@@ -289,6 +289,16 @@
           <p class="hint" style="margin:0">طلبات العرسان بتتسجل في ورقة "طلبات العرسان" في شيت الحجوزات، وبتوصلك على الواتساب.</p>
         </div>
       </div>
+
+      <h2>العربون</h2>
+      <div class="card">
+        <label class="sw"><span><b>اطلب عربون للحجز</b><small>بعد ما العريس يملا بياناته، بيطلعله يدفع العربون ويبعت السكرين</small></span><input type="checkbox" data-bind="groom.deposit.on" data-toggle="depBody"><span class="knob"></span></label>
+        <div class="sw-body" id="depBody">
+          <label class="field"><span>مبلغ العربون (جنيه)</span><input data-bind="groom.deposit.amount" type="number" inputmode="numeric" min="0" step="50" class="ltr" placeholder="500"></label>
+          <label class="field"><span>ملاحظة تحت المبلغ (اختياري)</span><input data-bind="groom.deposit.note" placeholder="مثلًا: العربون بيتخصم من الحساب"></label>
+          <p class="hint" style="margin:0">الدفع بيروح على نفس رقم إنستاباي وفودافون كاش اللي في 📞 البيانات. والموقع مش بيقدر يعرف إن التحويل تم، فراجع السكرين اللي بيوصلك على الواتساب قبل ما تأكّد الميعاد.</p>
+        </div>
+      </div>
     </div>
 
     <!-- Products -->
@@ -570,7 +580,7 @@ async function startApp(){
     if (e.status === 401) { sessionStorage.removeItem(SESSION_KEY); toast(ghError(e), 4000); setTimeout(()=>location.reload(), 2500); return; }
     toast(e.status ? ghError(e) : "مقدرتش أحمّل البيانات", 4000); return;
   }
-  DATA.gallery ||= []; DATA.barbers ||= []; DATA.reviews ||= []; DATA.products ||= []; DATA.groom ||= {on:false,title:"باكدج العريس",intro:"",items:[],image:""}; DATA.booking ||= {}; DATA.announcement ||= {}; DATA.tempClosed ||= {};
+  DATA.gallery ||= []; DATA.barbers ||= []; DATA.reviews ||= []; DATA.products ||= []; DATA.groom ||= {on:false,title:"باكدج العريس",intro:"",items:[],image:""}; DATA.groom.deposit ||= {on:false,amount:0,note:""}; DATA.booking ||= {}; DATA.announcement ||= {}; DATA.tempClosed ||= {};
   SAVED = clone(DATA);
   bindFields(); renderGallery(); renderTeam(); renderReviews(); renderProducts(); paintGroom(); paintSheetBtn(); paintCrowd();
   try { localStorage.setItem("eldob_no_track", "1"); } catch(_) {}
