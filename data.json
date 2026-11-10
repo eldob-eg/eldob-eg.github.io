@@ -28,5 +28,22 @@
     "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب"
   },
   "gallery": [],
-  "barbers": []
+  "barbers": [
+    {
+      "id": "mwarcnr4u2v3",
+      "name": "mohamed yasser",
+      "role": "حلاق",
+      "photo": "",
+      "instagram": "",
+      "status": "active"
+    },
+    {
+      "id": "mwavhrim7ogp",
+      "name": "ibrahem",
+      "role": "حلاق",
+      "photo": "",
+      "instagram": "",
+      "status": "active"
+    }
+  ]
 }
