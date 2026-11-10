@@ -1,6 +1,6 @@
 // El-Dob: lets the site open as an app and load fast. Always tries the network first,
 // so edits from the admin panel show right away; the saved copy is only used offline.
-const CACHE = "eldob-v1";
+const CACHE = "eldob-v2";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 
 self.addEventListener("install", e => {
@@ -14,8 +14,11 @@ self.addEventListener("fetch", e => {
   const url = new URL(req.url);
   // never touch the admin panel, other sites, or anything that isn't a plain GET
   if (req.method !== "GET" || url.origin !== location.origin || url.pathname.endsWith("admin.html") || url.pathname.includes("admin-vault")) return;
+  // pages always ask the server for the newest version (skips the browser's 10-minute page cache)
+  const isPage = req.mode === "navigate" || url.pathname.endsWith("/") || url.pathname.endsWith(".html");
+  const net = isPage ? fetch(url.href, {cache: "no-cache", credentials: "same-origin"}) : fetch(req);
   e.respondWith(
-    fetch(req).then(res => {
+    net.then(res => {
       if (res.ok && (req.mode === "navigate" || SHELL.some(s => url.pathname.endsWith(s.replace("./", ""))) || url.pathname.includes("/uploads/") || url.pathname.includes("/img/"))) {
         const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy));
       }
