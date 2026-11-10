@@ -1,6 +1,6 @@
 // El-Dob: lets the site open as an app and load fast. Always tries the network first,
 // so edits from the admin panel show right away; the saved copy is only used offline.
-const CACHE = "eldob-v2";
+const CACHE = "eldob-v3";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 
 self.addEventListener("install", e => {

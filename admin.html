@@ -254,6 +254,18 @@
     <div data-pane="gallery">
       <h2>Gallery</h2>
       <p class="hint">دوس على أي صورة عشان تعدّلها أو تمسحها أو تغيّر مكانها. الصور بتتصغّر لوحدها قبل الرفع.</p>
+      <div class="card" style="margin-bottom:14px">
+        <b style="display:block;margin-bottom:4px">Cover · صورة الغلاف</b>
+        <p class="hint" style="margin-bottom:10px">أول حاجة الزبون بيشوفها فوق اللوجو. ممكن صورة، أو فيديو قصير (من غير صوت، بيتكرر لوحده). لو سبتها فاضية بتتاخد أول صورة في الـ Gallery.</p>
+        <div class="groom-prev" id="cvPrev" style="aspect-ratio:3/4;max-height:340px"></div>
+        <div class="btns" style="margin-top:8px">
+          <label class="btn gold" for="cvImg" style="cursor:pointer">📷 صورة</label>
+          <label class="btn ghost" for="cvVid" style="cursor:pointer">🎬 فيديو</label>
+          <button class="btn danger" id="cvClear" type="button" hidden>شيل الغلاف</button>
+        </div>
+        <input type="file" id="cvImg" accept="image/*" hidden>
+        <input type="file" id="cvVid" accept="video/mp4,video/quicktime,video/webm" hidden>
+      </div>
       <div class="ggrid" id="ggrid"></div>
       <input type="file" id="gFile" accept="image/*,video/mp4,video/quicktime,video/webm" multiple hidden>
     </div>
@@ -596,7 +608,7 @@ async function startApp(){
   }
   DATA.gallery ||= []; DATA.barbers ||= []; DATA.reviews ||= []; DATA.products ||= []; DATA.groom ||= {on:false,title:"باكدج العريس",intro:"",items:[],image:""}; DATA.groom.deposit ||= {on:false,amount:0,note:""}; DATA.booking ||= {}; DATA.announcement ||= {}; DATA.tempClosed ||= {};
   SAVED = clone(DATA);
-  bindFields(); renderGallery(); renderTeam(); renderReviews(); renderProducts(); paintGroom(); paintLogos(); paintSheetBtn(); paintCrowd();
+  bindFields(); renderGallery(); renderTeam(); renderReviews(); renderProducts(); paintGroom(); paintLogos(); paintCover(); paintSheetBtn(); paintCrowd();
   try { localStorage.setItem("eldob_no_track", "1"); } catch(_) {}
 }
 
@@ -741,6 +753,34 @@ function openProduct(i){
       });
     });
 }
+
+/* ================= Cover (image or short video) ================= */
+function paintCover(){
+  const v = DATA.coverVideo, im = DATA.cover;
+  const fallback = (DATA.gallery||[]).find(g => g.type !== "video");
+  $("cvPrev").innerHTML = v ? `<video src="${esc(src(v))}" muted loop autoplay playsinline style="width:100%;height:100%;object-fit:cover"></video>`
+    : im ? `<img src="${esc(src(im))}" alt="">`
+    : fallback ? `<img src="${esc(src(fallback.src))}" alt="" style="opacity:.55"><span style="position:absolute">أول صورة في الـ Gallery</span>`
+    : "مفيش غلاف لسه";
+  $("cvPrev").style.position = "relative";
+  $("cvClear").hidden = !(v || im);
+}
+const coverUpload = async (f, kind) => {
+  $("cvPrev").innerHTML = `<span class="spin"></span>`;
+  try {
+    const p = await uploadMedia(f, kind, "uploads/cover");
+    if (kind === "video") { if (isUpload(DATA.coverVideo)) pendingDeletes.add(DATA.coverVideo); DATA.coverVideo = p; }
+    else { if (isUpload(DATA.cover)) pendingDeletes.add(DATA.cover); if (isUpload(DATA.coverVideo)) pendingDeletes.add(DATA.coverVideo); DATA.cover = p; DATA.coverVideo = ""; }
+    markDirty(); toast("الغلاف اترفع ✓ دوس حفظ ونشر");
+  } catch(err) { toast(err.big ? `الفيديو أكبر من ${MAX_VIDEO_MB} ميجا — قصّره (٥–١٠ ثواني كفاية)` : ghError(err), 3800); }
+  paintCover();
+};
+$("cvImg").addEventListener("change", e => { const f = e.target.files[0]; e.target.value = ""; if (f) coverUpload(f, "image"); });
+$("cvVid").addEventListener("change", e => { const f = e.target.files[0]; e.target.value = ""; if (f) coverUpload(f, "video"); });
+$("cvClear").onclick = () => {
+  [DATA.cover, DATA.coverVideo].forEach(p => { if (isUpload(p)) pendingDeletes.add(p); });
+  DATA.cover = ""; DATA.coverVideo = ""; markDirty(); paintCover();
+};
 
 /* ================= Payment logos ================= */
 function paintLogos(){
@@ -904,6 +944,7 @@ const isUpload = p => typeof p === "string" && p.startsWith("uploads/");
 
 /* ================= Gallery ================= */
 function renderGallery(){
+  if (typeof paintCover === "function" && DATA) try { paintCover(); } catch(_) {}
   const g = $("ggrid");
   g.innerHTML = DATA.gallery.map((it, i) => `
     <div class="gtile" data-i="${i}">
@@ -1059,7 +1100,7 @@ $("saveBtn").onclick = async () => {
   const btn = $("saveBtn"); busy(btn, true, "بنحفظ…");
   try {
     // keep only files still referenced
-    const used = new Set([...DATA.gallery.map(g=>g.src), ...DATA.barbers.map(b=>b.photo), ...(DATA.products||[]).map(p=>p.photo), DATA.groom?.image, DATA.paymentLogos?.instapay, DATA.paymentLogos?.vodafone]);
+    const used = new Set([...DATA.gallery.map(g=>g.src), ...DATA.barbers.map(b=>b.photo), ...(DATA.products||[]).map(p=>p.photo), DATA.groom?.image, DATA.paymentLogos?.instapay, DATA.paymentLogos?.vodafone, DATA.cover, DATA.coverVideo]);
     const latest = await ghGet(DATA_PATH);
     const res = await ghPut(DATA_PATH, utf8b64(JSON.stringify(DATA, null, 2)), "تحديث من لوحة التحكم", latest?.sha);
     SHA = res.content.sha; SAVED = clone(DATA); clearDirty();
@@ -1071,7 +1112,7 @@ $("saveBtn").onclick = async () => {
 };
 $("discardBtn").onclick = () => {
   DATA = clone(SAVED); pendingDeletes.clear(); clearDirty();
-  bindFields(); renderGallery(); renderTeam(); renderReviews(); renderProducts(); paintGroom(); paintLogos(); paintSheetBtn(); paintCrowd(); toast("رجّعنا آخر نسخة محفوظة");
+  bindFields(); renderGallery(); renderTeam(); renderReviews(); renderProducts(); paintGroom(); paintLogos(); paintCover(); paintSheetBtn(); paintCrowd(); toast("رجّعنا آخر نسخة محفوظة");
 };
 
 /* ================= Settings: change password / token ================= */
