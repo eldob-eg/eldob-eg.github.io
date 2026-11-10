@@ -424,6 +424,16 @@
   .x-btn small{display:block;color:var(--muted);font-size:.8rem}
   .x-btn[hidden]{display:none}
 
+  /* ---------- Crowd level ---------- */
+  .crowd{display:inline-flex;align-items:center;gap:10px;margin-top:10px;padding:9px 16px;border-radius:14px;text-align:right;border:1px solid var(--line);background:var(--panel)}
+  .crowd .cdot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+  .crowd b{display:block;font-weight:600;font-size:.95rem}
+  .crowd small{display:block;color:var(--muted);font-size:.78rem}
+  .crowd.free{border-color:rgba(62,207,110,.4);background:rgba(62,207,110,.08)} .crowd.free .cdot{background:#3ecf6e;box-shadow:0 0 10px #3ecf6e} .crowd.free b{color:#6fe39a}
+  .crowd.medium{border-color:rgba(240,173,78,.45);background:rgba(240,173,78,.08)} .crowd.medium .cdot{background:#f0ad4e;box-shadow:0 0 10px #f0ad4e} .crowd.medium b{color:#f5c27a}
+  .crowd.busy{border-color:rgba(224,96,91,.45);background:rgba(224,96,91,.08)} .crowd.busy .cdot{background:#e0605b;box-shadow:0 0 10px #e0605b} .crowd.busy b{color:#f08a86}
+  .crowd[hidden]{display:none}
+
   footer{text-align:center;color:#6f685f;font-size:.8rem;margin-top:40px}
 
   .toast{
@@ -437,7 +447,7 @@
 </head>
 <body>
 
-<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": []}</script>
+<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": [], "crowd": {"level": "off", "wait": 0, "updatedAt": ""}}</script>
 
 <div class="announce" id="announce" hidden></div>
 <div class="wrap">
@@ -456,6 +466,7 @@
       <div class="since"><i></i><span class="star">★</span> SINCE 2021 <span class="star">★</span><i></i></div>
     </div>
     <div><div class="status" id="status"><span class="dot"></span><b></b><span></span></div></div>
+    <div><div class="crowd" id="crowd" hidden><span class="cdot"></span><span class="ct"><b></b><small></small></span></div></div>
   </header>
 
   <div class="label">تابعنا وكلمنا</div>
@@ -782,7 +793,26 @@
       ? "• بيقفل " + fmt12(SHOP.closeAt).ar
       : "• بيفتح " + fmt12(SHOP.openAt).ar;
   };
-  paintStatus(); setInterval(paintStatus, 30000);
+  // ---------- Crowd level (set from the admin panel; hidden when off, stale, or closed) ----------
+  const paintCrowd = () => {
+    const c = SHOP.crowd || {}, el = $("crowd");
+    const age = c.updatedAt ? (Date.now() - Date.parse(c.updatedAt)) / 60000 : Infinity;
+    const shopOpen = !SHOP.tempClosed?.on && isOpenAt(cairoMinutes());
+    if (!["free","medium","busy"].includes(c.level) || age > 6*60 || !shopOpen) { el.hidden = true; return; }
+    const wait = +c.wait || 0;
+    const T = {
+      free:   ["فاضي، تعالى على طول", "مفيش انتظار دلوقتي"],
+      medium: ["زحمة متوسطة", wait ? `الانتظار حوالي ${wait} دقيقة` : "فيه انتظار بسيط"],
+      busy:   ["زحمة", wait ? `الانتظار حوالي ${wait} دقيقة` : "الانتظار طويل شوية"]
+    }[c.level];
+    const ago = age < 2 ? "دلوقتي" : age < 60 ? `من ${Math.round(age)} دقيقة` : `من ${Math.round(age/60)} ساعة`;
+    el.className = "crowd " + c.level;
+    el.querySelector("b").textContent = T[0];
+    el.querySelector("small").textContent = `${T[1]} · اتحدّث ${ago}`;
+    el.hidden = false;
+  };
+  const paintAll = () => { paintStatus(); paintCrowd(); };
+  paintAll(); setInterval(paintAll, 30000);
 
   // ---------- Gallery ----------
   const igPath = $("igLink").querySelector("path").getAttribute("d");

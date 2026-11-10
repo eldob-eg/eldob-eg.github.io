@@ -149,6 +149,15 @@
   .stars-in{direction:ltr;display:flex;gap:4px;justify-content:flex-end}
   .stars-in button{background:none;border:0;font-size:1.6rem;cursor:pointer;color:#3a352e;padding:0 2px;line-height:1}
   .stars-in button.on{color:#f5c04e}
+  .crowd-btns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .crowd-btns button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:12px;background:var(--bg);border:1px solid var(--line);cursor:pointer;font-size:.88rem}
+  .crowd-btns i{width:14px;height:14px;border-radius:50%;display:block}
+  .crowd-btns button.on{border-color:var(--brass);background:rgba(201,164,106,.12);font-weight:600}
+  .crowd-btns button:disabled{opacity:.5}
+  .crowd-wait{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:.88rem;color:var(--muted);flex-wrap:wrap}
+  .crowd-mins{display:flex;gap:4px}
+  .crowd-mins button{padding:7px 10px;border-radius:8px;background:var(--bg);border:1px solid var(--line);cursor:pointer;direction:ltr;font-size:.85rem}
+  .crowd-mins button.on{border-color:var(--brass);color:var(--brass);font-weight:600}
   .empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:.9rem}
 </style>
 </head>
@@ -204,6 +213,24 @@
   </div></div>
 
   <div class="wrap">
+    <div class="card crowd-card" style="margin-top:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px">
+        <b style="font-size:1.05rem">الزحمة دلوقتي</b>
+        <small id="crowdInfo" style="color:var(--muted);font-size:.78rem"></small>
+      </div>
+      <div class="crowd-btns" id="crowdBtns">
+        <button type="button" data-l="free"><i style="background:#3ecf6e"></i>فاضي</button>
+        <button type="button" data-l="medium"><i style="background:#f0ad4e"></i>متوسطة</button>
+        <button type="button" data-l="busy"><i style="background:#e0605b"></i>زحمة</button>
+        <button type="button" data-l="off"><i style="background:#6f685f"></i>مخفي</button>
+      </div>
+      <div id="crowdWait" class="crowd-wait" hidden>
+        <span>الانتظار حوالي</span>
+        <div class="crowd-mins"><button type="button" data-m="10">10</button><button type="button" data-m="20">20</button><button type="button" data-m="30">30</button><button type="button" data-m="45">45</button><button type="button" data-m="60">60</button></div>
+        <span>دقيقة</span>
+      </div>
+      <p class="hint" style="margin:8px 0 0">بيتحفظ لوحده وبيظهر في الموقع خلال دقيقة. لو ما حدّثتهاش ٦ ساعات، بتختفي لوحدها.</p>
+    </div>
     <div class="tabs" id="tabs">
       <button class="tab on" data-tab="gallery">📸 الجاليري</button>
       <button class="tab" data-tab="team">✂️ الحلاقين</button>
@@ -511,7 +538,7 @@ async function startApp(){
   }
   DATA.gallery ||= []; DATA.barbers ||= []; DATA.reviews ||= []; DATA.booking ||= {}; DATA.announcement ||= {}; DATA.tempClosed ||= {};
   SAVED = clone(DATA);
-  bindFields(); renderGallery(); renderTeam(); renderReviews(); paintSheetBtn();
+  bindFields(); renderGallery(); renderTeam(); renderReviews(); paintSheetBtn(); paintCrowd();
   try { localStorage.setItem("eldob_no_track", "1"); } catch(_) {}
 }
 
@@ -538,6 +565,39 @@ function bindFields(){
     }
   });
 }
+
+/* ================= Crowd level (quick, saves immediately) ================= */
+function paintCrowd(){
+  const c = DATA.crowd ||= {level:"off", wait:0, updatedAt:""};
+  document.querySelectorAll("#crowdBtns button").forEach(b => b.classList.toggle("on", b.dataset.l === (c.level||"off")));
+  document.querySelectorAll(".crowd-mins button").forEach(b => b.classList.toggle("on", +b.dataset.m === +c.wait));
+  $("crowdWait").hidden = !["medium","busy"].includes(c.level);
+  const age = c.updatedAt ? Math.round((Date.now() - Date.parse(c.updatedAt))/60000) : null;
+  $("crowdInfo").textContent = age == null || c.level === "off" ? "" : age < 1 ? "اتحدّثت دلوقتي" : age < 60 ? `اتحدّثت من ${age} دقيقة` : `اتحدّثت من ${Math.round(age/60)} ساعة`;
+}
+let crowdBusy = false;
+async function saveCrowd(patch){
+  if (crowdBusy) return; crowdBusy = true;
+  document.querySelectorAll("#crowdBtns button, .crowd-mins button").forEach(b => b.disabled = true);
+  const prev = clone(DATA.crowd || {});
+  DATA.crowd = {...(DATA.crowd||{}), ...patch, updatedAt: new Date().toISOString()};
+  if (!["medium","busy"].includes(DATA.crowd.level)) DATA.crowd.wait = 0;
+  else if (patch.level && !patch.wait && !prev.wait) DATA.crowd.wait = DATA.crowd.level === "busy" ? 30 : 15;
+  paintCrowd();
+  try {
+    // save only the crowd field on top of the latest saved copy, so other unsaved edits stay as drafts
+    const latest = await ghGet(DATA_PATH);
+    const base = latest ? JSON.parse(fromB64utf8(latest.content)) : clone(SAVED);
+    base.crowd = DATA.crowd;
+    const res = await ghPut(DATA_PATH, utf8b64(JSON.stringify(base, null, 2)), "تحديث الزحمة", latest?.sha);
+    SHA = res.content.sha; SAVED.crowd = clone(DATA.crowd);
+    toast("اتحدّثت ✓ هتظهر في الموقع خلال دقيقة");
+  } catch(e) { DATA.crowd = prev; paintCrowd(); toast(ghError(e), 3500); }
+  finally { crowdBusy = false; document.querySelectorAll("#crowdBtns button, .crowd-mins button").forEach(b => b.disabled = false); }
+}
+$("crowdBtns").addEventListener("click", e => { const b = e.target.closest("button"); if (b) saveCrowd({level: b.dataset.l}); });
+document.querySelector(".crowd-mins").addEventListener("click", e => { const b = e.target.closest("button"); if (b) saveCrowd({wait: +b.dataset.m}); });
+setInterval(() => DATA && paintCrowd(), 60000);
 
 /* ================= Reviews ================= */
 function renderReviews(){
@@ -842,7 +902,7 @@ $("saveBtn").onclick = async () => {
 };
 $("discardBtn").onclick = () => {
   DATA = clone(SAVED); pendingDeletes.clear(); clearDirty();
-  bindFields(); renderGallery(); renderTeam(); renderReviews(); paintSheetBtn(); toast("رجّعنا آخر نسخة محفوظة");
+  bindFields(); renderGallery(); renderTeam(); renderReviews(); paintSheetBtn(); paintCrowd(); toast("رجّعنا آخر نسخة محفوظة");
 };
 
 /* ================= Settings: change password / token ================= */
