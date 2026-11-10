@@ -73,5 +73,9 @@
       "amount": "100",
       "note": ""
     }
+  },
+  "paymentLogos": {
+    "instapay": "uploads/brand/mwb9gkgkyg5a.png",
+    "vodafone": "uploads/brand/mwb9gpcqk27u.png"
   }
 }
