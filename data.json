@@ -1,0 +1,32 @@
+{
+  "name": "El-Dob",
+  "facebook": "https://www.facebook.com/share/1A8EnZZnTm/",
+  "instagram": "https://www.instagram.com/eldop.10",
+  "tiktok": "https://www.tiktok.com/@eldop.10",
+  "whatsapp": "201016679635",
+  "instapayLink": "",
+  "instapayId": "01016679635",
+  "vodafoneCash": "01016679635",
+  "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6",
+  "address": "اضغط وهيوديك على المحل على طول",
+  "reviewLink": "",
+  "openAt": "14:00",
+  "closeAt": "04:00",
+  "daysText": "متواجدين كل يوم",
+  "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد",
+  "tempClosed": {
+    "on": false,
+    "text": "مقفولين النهارده، نشوفكم بكره"
+  },
+  "announcement": {
+    "on": false,
+    "text": ""
+  },
+  "booking": {
+    "open": false,
+    "title": "حجوزات العيد مفتوحة",
+    "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب"
+  },
+  "gallery": [],
+  "barbers": []
+}
