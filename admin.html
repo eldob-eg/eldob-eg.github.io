@@ -132,6 +132,23 @@
   .toast.show{opacity:1;transform:translate(-50%,0)}
   .spin{width:18px;height:18px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
   @keyframes sp{to{transform:rotate(360deg)}}
+  .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  .kpi small{display:block;color:var(--muted);font-size:.78rem}
+  .kpi b{display:block;font-size:1.6rem;font-weight:600;line-height:1.2;direction:ltr;text-align:right}
+  .kpi.main{grid-column:1/-1;border-color:rgba(201,164,106,.4)}
+  .kpi.main b{color:var(--brass);font-size:2rem}
+  .bars{display:flex;align-items:flex-end;gap:4px;height:110px;padding:8px 2px 0;direction:ltr}
+  .bars div{flex:1;background:linear-gradient(180deg,var(--brass),var(--brass-deep));border-radius:4px 4px 0 0;min-height:2px;position:relative}
+  .bars div span{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:.62rem;color:var(--muted)}
+  .bar-days{display:flex;gap:4px;direction:ltr;margin-top:4px}
+  .bar-days span{flex:1;text-align:center;font-size:.6rem;color:var(--muted)}
+  .clicks{width:100%;border-collapse:collapse;font-size:.9rem}
+  .clicks td{padding:9px 4px;border-bottom:1px solid var(--line)}
+  .clicks td:last-child{text-align:left;font-weight:600;direction:ltr}
+  .stars-in{direction:ltr;display:flex;gap:4px;justify-content:flex-end}
+  .stars-in button{background:none;border:0;font-size:1.6rem;cursor:pointer;color:#3a352e;padding:0 2px;line-height:1}
+  .stars-in button.on{color:#f5c04e}
   .empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:.9rem}
 </style>
 </head>
@@ -190,8 +207,10 @@
     <div class="tabs" id="tabs">
       <button class="tab on" data-tab="gallery">📸 الجاليري</button>
       <button class="tab" data-tab="team">✂️ الحلاقين</button>
+      <button class="tab" data-tab="reviews">⭐ الآراء</button>
       <button class="tab" data-tab="season">📅 الحجز والمواعيد</button>
       <button class="tab" data-tab="info">📞 البيانات</button>
+      <button class="tab" data-tab="stats">📊 الإحصائيات</button>
       <button class="tab" data-tab="settings">⚙️ الإعدادات</button>
     </div>
 
@@ -209,6 +228,26 @@
       <p class="hint"><b style="color:#6fe39a">شغال</b> بيظهر عادي · <b style="color:var(--amber)">أجازة</b> بيظهر وعليه علامة أجازة · <b>مخفي</b> مش بيظهر خالص (لو حد ساب الشغل امسحه أو خبّيه)</p>
       <div class="blist" id="blist"></div>
       <button class="btn gold full" id="addBarber" style="margin-top:12px">＋ ضيف حلاق</button>
+    </div>
+
+    <!-- Reviews -->
+    <div data-pane="reviews" hidden>
+      <h2>آراء العملاء</h2>
+      <p class="hint">بتظهر في الموقع تحت الحلاقين. اكتب كلام عملاء حقيقيين بس، زي ما قالوه أو كتبوه.</p>
+      <div class="blist" id="rlist"></div>
+      <button class="btn gold full" id="addReview" style="margin-top:12px">＋ ضيف رأي</button>
+    </div>
+
+    <!-- Stats -->
+    <div data-pane="stats" hidden>
+      <h2>الإحصائيات</h2>
+      <p class="hint">أرقام بس، من غير أي بيانات عن الناس. زياراتك إنت من الجهاز ده مش بتتحسب.</p>
+      <div class="seg" id="statRange" style="margin-bottom:12px">
+        <label><input type="radio" name="sr" value="1"><span>النهارده</span></label>
+        <label><input type="radio" name="sr" value="7" checked><span>آخر ٧ أيام</span></label>
+        <label><input type="radio" name="sr" value="30"><span>آخر ٣٠ يوم</span></label>
+      </div>
+      <div id="statBody"><div class="empty"><span class="spin"></span></div></div>
     </div>
 
     <!-- Season: booking, hours, announcement -->
@@ -470,9 +509,10 @@ async function startApp(){
     if (e.status === 401) { sessionStorage.removeItem(SESSION_KEY); toast(ghError(e), 4000); setTimeout(()=>location.reload(), 2500); return; }
     toast(e.status ? ghError(e) : "مقدرتش أحمّل البيانات", 4000); return;
   }
-  DATA.gallery ||= []; DATA.barbers ||= []; DATA.booking ||= {}; DATA.announcement ||= {}; DATA.tempClosed ||= {};
+  DATA.gallery ||= []; DATA.barbers ||= []; DATA.reviews ||= []; DATA.booking ||= {}; DATA.announcement ||= {}; DATA.tempClosed ||= {};
   SAVED = clone(DATA);
-  bindFields(); renderGallery(); renderTeam(); paintSheetBtn();
+  bindFields(); renderGallery(); renderTeam(); renderReviews(); paintSheetBtn();
+  try { localStorage.setItem("eldob_no_track", "1"); } catch(_) {}
 }
 
 /* ---------- Tabs ---------- */
@@ -498,6 +538,98 @@ function bindFields(){
     }
   });
 }
+
+/* ================= Reviews ================= */
+function renderReviews(){
+  const l = $("rlist"); DATA.reviews ||= [];
+  if (!DATA.reviews.length) { l.innerHTML = `<div class="empty">لسه مفيش آراء. دوس "ضيف رأي"</div>`; return; }
+  l.innerHTML = DATA.reviews.map((r,i) => `
+    <div class="bitem" data-i="${i}">
+      <div class="av" style="color:#f5c04e;font-size:.8rem;direction:ltr">${"★".repeat(Math.max(1,Math.min(5,+r.stars||5)))}</div>
+      <div class="t"><b>${esc(r.name||"")}</b><small>${esc((r.text||"").slice(0,70))}${(r.text||"").length>70?"…":""}</small></div>
+    </div>`).join("");
+}
+$("rlist").addEventListener("click", e => { const t = e.target.closest(".bitem"); if (t) openReview(+t.dataset.i); });
+$("addReview").onclick = () => openReview(-1);
+function openReview(i){
+  const isNew = i < 0;
+  const r = isNew ? {id:uid(), name:"", text:"", stars:5} : clone(DATA.reviews[i]);
+  sheet(`
+    <h3>${isNew ? "رأي جديد" : "تعديل الرأي"} <button class="x" data-close>×</button></h3>
+    <div class="field"><span>التقييم</span><div class="stars-in" id="rStars">${[1,2,3,4,5].map(n=>`<button type="button" data-n="${n}" aria-label="${n}">★</button>`).join("")}</div></div>
+    <label class="field"><span>اسم العميل</span><input id="rName" value="${esc(r.name)}" placeholder="مثلًا: أحمد م."></label>
+    <label class="field"><span>رأيه</span><textarea id="rText" placeholder="اللي قاله العميل">${esc(r.text)}</textarea></label>
+    <div class="btns">
+      ${isNew ? "" : `<button class="btn danger" id="rDel">مسح</button>`}
+      ${isNew || i===0 ? "" : `<button class="btn ghost" id="rUp">→ قدّمه</button>`}
+      <button class="btn gold" id="rSave">${isNew ? "ضيف" : "تمام"}</button>
+    </div>
+    <div class="err" id="rErr"></div>`, root => {
+      const q = s => root.querySelector(s);
+      const paint = () => root.querySelectorAll("#rStars button").forEach(b => b.classList.toggle("on", +b.dataset.n <= r.stars));
+      paint();
+      q("#rStars").onclick = e => { const b = e.target.closest("button"); if (b) { r.stars = +b.dataset.n; paint(); } };
+      q("#rSave").onclick = () => {
+        r.name = q("#rName").value.trim(); r.text = q("#rText").value.trim();
+        if (!r.name || !r.text) return q("#rErr").textContent = "اكتب الاسم والرأي";
+        if (isNew) DATA.reviews.push(r); else DATA.reviews[i] = r;
+        markDirty(); renderReviews(); closeSheet(); toast(isNew ? "اتضاف ✓ — دوس حفظ ونشر" : "اتعدّل ✓ — دوس حفظ ونشر");
+      };
+      q("#rUp") && (q("#rUp").onclick = () => { [DATA.reviews[i-1], DATA.reviews[i]] = [DATA.reviews[i], DATA.reviews[i-1]]; markDirty(); renderReviews(); closeSheet(); });
+      const del = q("#rDel");
+      del && (del.onclick = () => {
+        if (del.dataset.sure !== "1") { del.dataset.sure = "1"; del.textContent = "متأكد؟ دوس تاني"; return; }
+        DATA.reviews.splice(i, 1); markDirty(); renderReviews(); closeSheet(); toast("اتمسح — دوس حفظ ونشر");
+      });
+    });
+}
+
+/* ================= Stats ================= */
+let STATS = null;
+const STAT_ROWS = [["whatsapp","💬 فتحوا الواتساب"],["instapay","💜 داسوا على إنستاباي"],["vodafone","❤️ داسوا على فودافون كاش"],["proof","📸 بعتوا سكرين الدفع"],["booking","📅 حجوزات"],["location","📍 فتحوا اللوكيشن"],["instagram","إنستجرام"],["tiktok","تيك توك"],["facebook","فيسبوك"],["review","⭐ تقييم جوجل"],["share","🔗 شاركوا الموقع"],["install","📲 حطّوه على الموبايل"]];
+async function loadStats(){
+  const body = $("statBody"), url = DATA?.booking?.sheetUrl;
+  if (!url) { body.innerHTML = `<div class="empty">اربط شيت الحجوزات الأول من 📅 الحجز والمواعيد</div>`; return; }
+  body.innerHTML = `<div class="empty"><span class="spin"></span></div>`;
+  try {
+    const r = await fetch(url + "?stats=1&days=60&t=" + Date.now());
+    const j = await r.json();
+    STATS = j.days || []; paintStats();
+  } catch(e) {
+    body.innerHTML = `<div class="empty">مقدرتش أجيب الإحصائيات. لو لسه مركّب العداد، الأرقام هتبدأ تظهر بعد أول زيارة.<br><button class="btn ghost" style="margin-top:10px" onclick="this.closest('[data-pane]').dispatchEvent(new Event('reload'))">جرّب تاني</button></div>`;
+  }
+}
+function paintStats(){
+  const days = +(document.querySelector('input[name="sr"]:checked')?.value || 7);
+  const fmt = d => new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Cairo"}).format(d);
+  const want = []; for (let i = days-1; i >= 0; i--) want.push(fmt(new Date(Date.now() - i*864e5)));
+  const byDate = Object.fromEntries((STATS||[]).map(d => [d.date, d]));
+  const rows = want.map(d => byDate[d] || {date:d});
+  const sum = k => rows.reduce((a,r) => a + (r[k]||0), 0);
+  const n = x => x.toLocaleString("en");
+  const visits = sum("visit"), pays = sum("instapay") + sum("vodafone");
+  const chart = rows.length > 1 ? (() => {
+    const max = Math.max(1, ...rows.map(r => r.visit||0));
+    const last = rows.slice(-14);
+    return `<div class="card"><b style="display:block;margin-bottom:6px">الزيارات كل يوم</b>
+      <div class="bars">${last.map(r => `<div style="height:${Math.round((r.visit||0)/max*100)}%"><span>${r.visit||0}</span></div>`).join("")}</div>
+      <div class="bar-days">${last.map(r => `<span>${r.date.slice(8)}</span>`).join("")}</div></div>`;
+  })() : "";
+  $("statBody").innerHTML = `
+    <div class="kpis">
+      <div class="kpi main"><small>زيارات الموقع</small><b>${n(visits)}</b></div>
+      <div class="kpi"><small>فتحوا الواتساب</small><b>${n(sum("whatsapp"))}</b></div>
+      <div class="kpi"><small>داسوا على الدفع</small><b>${n(pays)}</b></div>
+      <div class="kpi"><small>حجوزات</small><b>${n(sum("booking"))}</b></div>
+      <div class="kpi"><small>فتحوا اللوكيشن</small><b>${n(sum("location"))}</b></div>
+    </div>
+    ${chart}
+    <div class="card"><b style="display:block;margin-bottom:4px">كل الدوسات</b>
+      <table class="clicks">${STAT_ROWS.map(([k,l]) => `<tr><td>${l}</td><td>${n(sum(k))}</td></tr>`).join("")}</table></div>`;
+}
+$("statRange").addEventListener("change", () => STATS ? paintStats() : loadStats());
+document.querySelector('[data-pane="stats"]').addEventListener("reload", loadStats);
+$("tabs").addEventListener("click", e => { if (e.target.closest('.tab')?.dataset.tab === "stats" && !STATS) loadStats(); });
 
 /* ================= Booking sheet ================= */
 function paintSheetBtn(){
@@ -710,7 +842,7 @@ $("saveBtn").onclick = async () => {
 };
 $("discardBtn").onclick = () => {
   DATA = clone(SAVED); pendingDeletes.clear(); clearDirty();
-  bindFields(); renderGallery(); renderTeam(); paintSheetBtn(); toast("رجّعنا آخر نسخة محفوظة");
+  bindFields(); renderGallery(); renderTeam(); renderReviews(); paintSheetBtn(); toast("رجّعنا آخر نسخة محفوظة");
 };
 
 /* ================= Settings: change password / token ================= */

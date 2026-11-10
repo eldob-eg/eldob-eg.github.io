@@ -11,12 +11,20 @@ const SHEET_NAME = 'الحجوزات';
 const HEADERS = ['وقت التسجيل', 'الاسم', 'الموبايل', 'يوم الحجز', 'الساعة', 'عدد الأفراد', 'الحلاق', 'الحالة', 'ملاحظات'];
 const STATUSES = ['جديد', 'اتأكد', 'حضر', 'ما جاش', 'اتلغى'];
 
+// عداد الزيارات: أرقام بس، من غير أي بيانات عن الناس
+const STATS_NAME = 'الإحصائيات';
+const EVENTS = ['visit', 'whatsapp', 'instapay', 'vodafone', 'location', 'booking', 'proof', 'instagram', 'facebook', 'tiktok', 'review', 'share', 'install'];
+const EVENT_LABELS = ['التاريخ', 'زيارات', 'واتساب', 'إنستاباي', 'فودافون كاش', 'لوكيشن', 'حجوزات', 'سكرين الدفع', 'إنستجرام', 'فيسبوك', 'تيك توك', 'تقييم جوجل', 'مشاركة', 'تثبيت'];
+const TZ = 'Africa/Cairo';
+
 function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(15000);
   try {
     const d = JSON.parse((e && e.postData && e.postData.contents) || '{}');
+    if (d.kind === 'event') { count_(d.event); return reply_({ ok: true }); }
     if (!d.name || !d.phone) return reply_({ ok: false, error: 'missing' });
+    count_('booking');
 
     const sh = sheet_();
     sh.appendRow([
@@ -39,13 +47,15 @@ function doPost(e) {
 }
 
 // فتح اللينك في المتصفح بيقول إن الشيت شغال
-function doGet() {
+function doGet(e) {
+  if (e && e.parameter && e.parameter.stats) return reply_({ ok: true, days: statsDays_(Number(e.parameter.days) || 60) });
   return reply_({ ok: true, service: 'El-Dob bookings' });
 }
 
 // شغّل الدالة دي مرة واحدة من جوه Apps Script عشان تجهّز الشيت وتدّي الإذن
 function setup() {
   sheet_();
+  stats_();
 }
 
 function sheet_() {
@@ -67,6 +77,48 @@ function sheet_() {
     sh.getRange(2, 8, 999, 1).setDataValidation(rule);
   }
   return sh;
+}
+
+function stats_() {
+  const ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(STATS_NAME);
+  if (!sh) {
+    sh = ss.insertSheet(STATS_NAME);
+    sh.setRightToLeft(true);
+    sh.appendRow(EVENT_LABELS);
+    sh.setFrozenRows(1);
+    sh.getRange(1, 1, 1, EVENT_LABELS.length).setFontWeight('bold').setBackground('#1b1a18').setFontColor('#c9a46a');
+    sh.getRange('A:A').setNumberFormat('@');
+  }
+  return sh;
+}
+
+// بيزوّد العدد في سطر النهارده (سطر لكل يوم)
+function count_(ev) {
+  const col = EVENTS.indexOf(ev);
+  if (col < 0) return;
+  const sh = stats_();
+  const today = Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd');
+  let row = sh.getLastRow();
+  if (row < 2 || String(sh.getRange(row, 1).getDisplayValue()) !== today) {
+    const blank = [today].concat(EVENTS.map(function () { return 0; }));
+    sh.appendRow(blank);
+    row = sh.getLastRow();
+  }
+  const cell = sh.getRange(row, col + 2);
+  cell.setValue((Number(cell.getValue()) || 0) + 1);
+}
+
+function statsDays_(n) {
+  const sh = stats_();
+  const last = sh.getLastRow();
+  if (last < 2) return [];
+  const from = Math.max(2, last - Math.min(n, 400) + 1);
+  return sh.getRange(from, 1, last - from + 1, EVENTS.length + 1).getDisplayValues().map(function (r) {
+    const o = { date: r[0] };
+    EVENTS.forEach(function (k, i) { o[k] = Number(r[i + 1]) || 0; });
+    return o;
+  });
 }
 
 // يمنع أي حد يكتب معادلات في الشيت، ويقصّر النص الطويل

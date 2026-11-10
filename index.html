@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>محل الحلاقة</title>
+<title>El-Dob — Men's Grooming Lounge</title>
+<meta name="description" content="El-Dob Men's Grooming Lounge — صالون حلاقة رجالي. المواعيد، اللوكيشن، الدفع بإنستاباي وفودافون كاش، والحجز في المواسم.">
+<meta name="theme-color" content="#121110">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="El-Dob">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
@@ -394,6 +403,27 @@
   .shot-tip{display:flex;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:16px;font-size:.85rem;color:var(--muted)}
   .shot-tip svg{width:22px;height:22px;flex-shrink:0;stroke:var(--brass);fill:none;stroke-width:1.7}
 
+  /* ---------- Reviews ---------- */
+  .reviews{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none;margin:0 -20px;padding-inline:20px}
+  .reviews::-webkit-scrollbar{display:none}
+  .rev{flex:0 0 82%;scroll-snap-align:center;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px}
+  .rev:only-child{flex-basis:100%}
+  .rev .st{color:#f5c04e;letter-spacing:2px;font-size:.95rem;direction:ltr;text-align:right}
+  .rev .st i{color:#3a352e;font-style:normal}
+  .rev p{font-size:.95rem;line-height:1.65;color:var(--ink)}
+  .rev .who{display:flex;align-items:center;gap:8px;margin-top:auto;color:var(--muted);font-size:.85rem}
+  .rev .who span{width:28px;height:28px;border-radius:50%;background:rgba(201,164,106,.15);color:var(--brass);display:grid;place-items:center;font-weight:600;font-size:.85rem}
+
+  /* ---------- Share + install ---------- */
+  .extras{display:grid;grid-template-columns:1fr;gap:10px}
+  .x-btn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-radius:14px;background:var(--panel);border:1px solid var(--line);color:var(--ink);font:inherit;text-align:right;cursor:pointer;transition:border-color .15s ease}
+  .x-btn:hover{border-color:var(--brass-deep)}
+  .x-btn .xi{width:40px;height:40px;border-radius:11px;background:rgba(201,164,106,.12);border:1px solid rgba(201,164,106,.25);display:grid;place-items:center;flex-shrink:0}
+  .x-btn .xi svg{width:21px;height:21px;fill:none;stroke:var(--brass);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .x-btn b{display:block;font-weight:600;font-size:.95rem}
+  .x-btn small{display:block;color:var(--muted);font-size:.8rem}
+  .x-btn[hidden]{display:none}
+
   footer{text-align:center;color:#6f685f;font-size:.8rem;margin-top:40px}
 
   .toast{
@@ -407,7 +437,7 @@
 </head>
 <body>
 
-<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": []}</script>
+<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": []}</script>
 
 <div class="announce" id="announce" hidden></div>
 <div class="wrap">
@@ -494,6 +524,11 @@
     <div class="team" id="team"></div>
   </div>
 
+  <div id="revWrap" hidden>
+    <div class="label">آراء عملائنا</div>
+    <div class="reviews" id="reviews"></div>
+  </div>
+
   <div class="label">مواعيد الشغل</div>
   <div class="panel hours">
     <span class="clock"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a46a" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
@@ -523,6 +558,18 @@
     <span><b>قيّمنا على جوجل</b><small>رأيك بيفرق معانا وبيساعد ناس تانية تلاقينا</small></span>
   </a>
 
+  <div class="label">شارك المحل</div>
+  <div class="extras">
+    <button class="x-btn" id="shareBtn" type="button">
+      <span class="xi"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></span>
+      <span><b>ابعت El-Dob لصاحبك</b><small>شارك لينك المحل على واتساب أو أي مكان</small></span>
+    </button>
+    <button class="x-btn" id="installBtn" type="button">
+      <span class="xi"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 7v7M9 11l3 3 3-3M10 18h4"/></svg></span>
+      <span><b>حطّ El-Dob على موبايلك</b><small>أيقونة على الشاشة الرئيسية، يفتح كأنه أبلكيشن</small></span>
+    </button>
+  </div>
+
   <footer id="foot"></footer>
 </div>
 
@@ -551,6 +598,15 @@
     <button class="later" type="button" data-close>لسه ما دفعتش</button>
   </div>
 </div>
+
+<div class="sheet-bg" id="installSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="instTitle">
+    <h3 id="instTitle">حطّ El-Dob على موبايلك</h3>
+    <p class="sub" id="instSub"></p>
+    <ol class="steps" id="instSteps"></ol>
+    <button class="later" type="button" data-close>تمام</button>
+  </div>
+</div>
 <div class="toast" id="toast">اتنسخ ✓</div>
 
 <script>
@@ -570,6 +626,18 @@
     const r = await fetch("data.json?v=" + Date.now(), {cache:"no-store"});
     if (r.ok) SHOP = merge(DEFAULTS, await r.json());
   } catch(e) {}
+
+  // ---------- Visit counter: anonymous counts only, logged to the bookings sheet ----------
+  const NO_TRACK = (() => { try { return localStorage.getItem("eldob_no_track") === "1"; } catch(_) { return false; } })();
+  const EVENTS = ["visit","whatsapp","instagram","facebook","tiktok","instapay","vodafone","location","review","proof","share","install"];
+  const track = ev => {
+    const url = SHOP.booking?.sheetUrl;
+    if (NO_TRACK || !EVENTS.includes(ev) || !url || !/^https:\/\/script\.google\.com\//.test(url)) return;
+    const body = JSON.stringify({kind:"event", event:ev});
+    try { if (navigator.sendBeacon && navigator.sendBeacon(url, new Blob([body], {type:"text/plain;charset=utf-8"}))) return; } catch(_) {}
+    try { fetch(url, {method:"POST", mode:"no-cors", keepalive:true, headers:{"Content-Type":"text/plain;charset=utf-8"}, body}); } catch(_) {}
+  };
+  try { if (!sessionStorage.getItem("eldob_seen")) { sessionStorage.setItem("eldob_seen","1"); track("visit"); } } catch(_) { track("visit"); }
 
   // ---------- Toast + copy ----------
   let toastTimer;
@@ -815,6 +883,63 @@
       setTimeout(() => { const t = $("toast"); t.textContent = "اتسجل حجزك ✓"; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"), 2500); }, 50);
     });
   }
+
+  // ---------- Reviews (managed from the admin panel) ----------
+  const revs = (SHOP.reviews||[]).filter(r => r.text && r.name);
+  if (revs.length) {
+    $("revWrap").hidden = false;
+    $("reviews").innerHTML = revs.map(r => {
+      const n = Math.max(1, Math.min(5, +r.stars || 5));
+      return `<figure class="rev"><div class="st" aria-label="${n} من 5">${"★".repeat(n)}<i>${"★".repeat(5-n)}</i></div>
+        <p>${esc(r.text)}</p>
+        <figcaption class="who"><span>${esc(r.name.trim().charAt(0))}</span>${esc(r.name)}</figcaption></figure>`;
+    }).join("");
+  }
+
+  // ---------- Share with a friend ----------
+  const siteUrl = location.origin + location.pathname.replace(/index\.html$/, "");
+  $("shareBtn").addEventListener("click", async () => {
+    track("share");
+    const text = `${SHOP.name} — Men's Grooming Lounge ✂️\nالمواعيد، اللوكيشن، والدفع كله هنا:`;
+    if (navigator.share) { try { await navigator.share({title: SHOP.name, text, url: siteUrl}); return; } catch(e) { if (e && e.name === "AbortError") return; } }
+    const a = document.createElement("a");
+    a.href = "https://wa.me/?text=" + encodeURIComponent(text + "\n" + siteUrl); a.target = "_blank"; a.rel = "noopener";
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+
+  // ---------- Install as an app ----------
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if (standalone) $("installBtn").hidden = true;
+  let deferredPrompt = null;
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredPrompt = e; });
+  addEventListener("appinstalled", () => { $("installBtn").hidden = true; track("install"); });
+  $("installSheet").addEventListener("click", e => { if (e.target.id === "installSheet" || e.target.closest("[data-close]")) $("installSheet").hidden = true; });
+  $("installBtn").addEventListener("click", async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      try { await deferredPrompt.userChoice; } catch(_) {}
+      deferredPrompt = null; return;
+    }
+    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    $("instSub").textContent = ios ? "من Safari على الآيفون:" : "من Chrome على الموبايل:";
+    $("instSteps").innerHTML = ios
+      ? `<li><span>دوس على زرار <b>المشاركة</b> اللي تحت (المربع اللي طالع منه سهم)</span></li>
+         <li><span>انزل واختار <b>Add to Home Screen</b> (إضافة إلى الشاشة الرئيسية)</span></li>
+         <li><span>دوس <b>Add</b>، وهتلاقي لوجو El-Dob على شاشتك</span></li>`
+      : `<li><span>دوس على <b>⋮</b> فوق على الجنب</span></li>
+         <li><span>اختار <b>Install app</b> أو <b>Add to Home screen</b></span></li>
+         <li><span>دوس <b>Install</b>، وهتلاقي لوجو El-Dob على شاشتك</span></li>`;
+    $("installSheet").hidden = false;
+  });
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  }
+
+  // ---------- Count clicks ----------
+  [["waLink","whatsapp"],["igLink","instagram"],["fbLink","facebook"],["ttLink","tiktok"],["mapLink","location"],["reviewLink","review"]]
+    .forEach(([id, ev]) => $(id) && $(id).addEventListener("click", () => track(ev)));
+  $("payGo").addEventListener("click", () => track(current === "vf" ? "vodafone" : "instapay"));
+  $("proofGo").addEventListener("click", () => track("proof"));
 })();
 </script>
 </body>
