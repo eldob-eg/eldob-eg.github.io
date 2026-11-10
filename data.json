@@ -25,7 +25,9 @@
   "booking": {
     "open": false,
     "title": "حجوزات العيد مفتوحة",
-    "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب"
+    "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب",
+    "sheetUrl": "https://script.google.com/macros/s/AKfycbzWl-3kn17lvdeLcbRrLRGrpTv7bivxq70ZHO6lAgGDbR8EoC5OfmEnRrp_y9Wlyl-SiQ/exec",
+    "sheetView": "https://docs.google.com/spreadsheets/d/1crQZbPEI0M5xB8YjiOOfjwTQR5kqbmUB-JiBleiioac/edit"
   },
   "gallery": [],
   "barbers": [
