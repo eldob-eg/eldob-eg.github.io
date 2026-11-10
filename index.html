@@ -352,6 +352,48 @@
   .admin-link svg{width:13px;height:13px;display:block}
   .admin-link:hover{color:var(--brass);opacity:1}
 
+  /* ---------- Payment proof flow ---------- */
+  .proof-bar{
+    display:flex;align-items:center;gap:12px;width:100%;margin-top:2px;
+    padding:13px 16px;border-radius:14px;cursor:pointer;font:inherit;text-align:right;
+    background:rgba(37,211,102,.08);border:1px dashed rgba(37,211,102,.45);color:var(--ink);
+  }
+  .proof-bar .pi{width:38px;height:38px;border-radius:10px;background:#25d366;display:grid;place-items:center;flex-shrink:0}
+  .proof-bar .pi svg{width:20px;height:20px;fill:none;stroke:#06301a;stroke-width:2}
+  .proof-bar b{display:block;font-weight:600;font-size:.95rem}
+  .proof-bar small{display:block;color:var(--muted);font-size:.8rem}
+  .proof-bar.nudge{animation:glow 1.6s ease-in-out 3}
+  @keyframes glow{50%{box-shadow:0 0 0 4px rgba(37,211,102,.25)}}
+  .sheet-bg{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.65);display:flex;align-items:flex-end;justify-content:center}
+  .sheet-bg[hidden]{display:none}
+  .sheet{
+    width:100%;max-width:480px;background:var(--panel);border:1px solid var(--line);border-bottom:0;
+    border-radius:22px 22px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom));
+    animation:sheetUp .22s ease;
+  }
+  @keyframes sheetUp{from{transform:translateY(40px);opacity:0}}
+  .sheet h3{font-family:"Reem Kufi",sans-serif;font-size:1.25rem;font-weight:700;margin-bottom:4px}
+  .sheet .sub{color:var(--muted);font-size:.9rem;margin-bottom:16px}
+  .steps{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:18px;counter-reset:s}
+  .steps li{display:flex;gap:12px;align-items:flex-start;font-size:.95rem;line-height:1.5;counter-increment:s}
+  .steps li::before{
+    content:counter(s);flex-shrink:0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+    background:rgba(201,164,106,.15);color:var(--brass);font-weight:600;font-size:.85rem;margin-top:1px;
+  }
+  .steps li b{color:var(--brass);font-weight:600}
+  .sheet .go{
+    display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    padding:14px;border-radius:12px;border:0;cursor:pointer;font:inherit;font-weight:600;font-size:1rem;text-decoration:none;
+  }
+  .sheet .go svg{width:20px;height:20px}
+  .go.pay-ip{background:linear-gradient(135deg,#5b2a86,#3b1a5c);color:#fff}
+  .go.pay-vf{background:linear-gradient(135deg,#e60000,#9e0000);color:#fff}
+  .go.wa{background:#25d366;color:#06301a}
+  .go.wa svg{fill:#06301a}
+  .sheet .later{display:block;width:100%;margin-top:10px;background:none;border:0;color:var(--muted);font:inherit;font-size:.9rem;cursor:pointer;padding:8px}
+  .shot-tip{display:flex;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:16px;font-size:.85rem;color:var(--muted)}
+  .shot-tip svg{width:22px;height:22px;flex-shrink:0;stroke:var(--brass);fill:none;stroke-width:1.7}
+
   footer{text-align:center;color:#6f685f;font-size:.8rem;margin-top:40px}
 
   .toast{
@@ -437,6 +479,11 @@
       </div>
     </div>
 
+    <button class="proof-bar" id="proofBar" type="button">
+      <span class="pi"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2.5h5L16 6"/></svg></span>
+      <span><b>دفعت؟ ابعتلنا سكرين شوت التحويل</b><small>على واتساب، عشان نأكّد الدفع على طول</small></span>
+    </button>
+
   </div>
 
   <div class="label">من شغلنا</div>
@@ -479,6 +526,31 @@
   <footer id="foot"></footer>
 </div>
 
+
+<div class="sheet-bg" id="paySheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+    <h3 id="payTitle"></h3>
+    <p class="sub">قبل ما تحوّل، خلّي بالك من الخطوة دي 👇</p>
+    <ol class="steps">
+      <li><span>حوّل المبلغ على <b id="payNum"></b></span></li>
+      <li><span>أول ما التحويل يتم، <b>خد سكرين شوت</b> لصفحة نجاح العملية</span></li>
+      <li><span>ارجع هنا وابعت السكرين على <b>واتساب</b> بدوسة واحدة</span></li>
+    </ol>
+    <a class="go" id="payGo" rel="noopener"></a>
+    <button class="later" type="button" data-close>مش دلوقتي</button>
+  </div>
+</div>
+
+<div class="sheet-bg" id="proofSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="proofTitle">
+    <h3 id="proofTitle">خلّصت الدفع؟ 👌</h3>
+    <p class="sub" id="proofSub">ابعتلنا سكرين شوت التحويل عشان نأكّد الدفع</p>
+    <div class="shot-tip"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.6 12.2 20.8a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg>
+      <span>الواتساب هيفتح على شات المحل والرسالة جاهزة. دوس 📎 واختار سكرين شوت التحويل وابعت.</span></div>
+    <a class="go wa" id="proofGo" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"/></svg> ابعت السكرين على واتساب</a>
+    <button class="later" type="button" data-close>لسه ما دفعتش</button>
+  </div>
+</div>
 <div class="toast" id="toast">اتنسخ ✓</div>
 
 <script>
@@ -530,18 +602,70 @@
   $("fbLink").href = safeUrl(SHOP.facebook);
   $("ttLink").href = safeUrl(SHOP.tiktok);
 
-  // ---------- InstaPay ----------
+  // ---------- Payments: warn before paying, then ask for a screenshot on WhatsApp ----------
   $("ipId").textContent = SHOP.instapayId;
-  $("ipLink").addEventListener("click", e => { e.preventDefault(); copyText(SHOP.instapayId, "الرقم اتنسخ ✓ افتح إنستاباي وحوّل"); });
-  // optional direct payment link (set from the admin panel)
-  if (SHOP.instapayLink) { $("ipPay").href = safeUrl(SHOP.instapayLink); $("ipPay").hidden = false; }
-
-  // ---------- Vodafone Cash: *9*7*number*amount# ----------
   $("vfNum").textContent = SHOP.vodafoneCash;
-  const vf = $("vfLink");
-  vf.href = "tel:*9*7*" + String(SHOP.vodafoneCash).replace(/\D/g,"") + "%23";
-  // copy the number too, in case the phone blocks the transfer code
-  vf.addEventListener("click", () => copyText(SHOP.vodafoneCash, "الرقم اتنسخ ✓ لو ما فتحش، حوّل عليه من أبلكيشن فودافون كاش"));
+  if (SHOP.instapayLink) { $("ipPay").href = safeUrl(SHOP.instapayLink); $("ipPay").hidden = false; }
+  const vfTel = "tel:*9*7*" + String(SHOP.vodafoneCash).replace(/\D/g,"") + "%23";
+  $("vfLink").href = vfTel;
+
+  const PENDING_KEY = "eldob_pay_pending";
+  let pending = null;
+  try { const p = JSON.parse(sessionStorage.getItem(PENDING_KEY) || "null"); if (p && Date.now() - p.t < 3*3600e3) pending = p; } catch(_) {}
+  const setPending = method => { pending = {method, t: Date.now(), left: false}; try { sessionStorage.setItem(PENDING_KEY, JSON.stringify(pending)); } catch(_) {} };
+  const clearPending = () => { pending = null; try { sessionStorage.removeItem(PENDING_KEY); } catch(_) {} };
+
+  const openSheet = id => { $(id).hidden = false; };
+  const closeSheet = id => { $(id).hidden = true; };
+  ["paySheet","proofSheet"].forEach(id => $(id).addEventListener("click", e => {
+    if (e.target.id === id || e.target.closest("[data-close]")) closeSheet(id);
+  }));
+
+  const METHODS = {
+    ip:     { name: "إنستاباي",     num: () => SHOP.instapayId,   cls: "pay-ip", label: "تمام، انسخ الرقم وكمّل", href: () => "#" },
+    iplink: { name: "إنستاباي",     num: () => SHOP.instapayId,   cls: "pay-ip", label: "تمام، افتح إنستاباي",    href: () => safeUrl(SHOP.instapayLink) },
+    vf:     { name: "فودافون كاش",  num: () => SHOP.vodafoneCash, cls: "pay-vf", label: "تمام، افتح التحويل",      href: () => vfTel }
+  };
+  let current = null;
+  const startPay = key => {
+    current = key; const m = METHODS[key], go = $("payGo");
+    $("payTitle").textContent = "الدفع بـ " + m.name;
+    $("payNum").textContent = m.num();
+    go.className = "go " + m.cls; go.textContent = m.label; go.href = m.href();
+    if (key === "iplink") go.target = "_blank"; else go.removeAttribute("target");
+    openSheet("paySheet");
+  };
+  $("payGo").addEventListener("click", e => {
+    const m = METHODS[current];
+    if (current === "ip") { e.preventDefault(); copyText(m.num(), "الرقم اتنسخ ✓ افتح إنستاباي وحوّل، وخد سكرين شوت"); }
+    if (current === "vf") copyText(m.num(), "الرقم اتنسخ ✓ لو التحويل ما فتحش، حوّل من أبلكيشن فودافون كاش");
+    setPending(m.name);
+    closeSheet("paySheet");
+    $("proofBar").classList.add("nudge");
+  });
+  $("ipLink").addEventListener("click", e => { e.preventDefault(); startPay("ip"); });
+  $("ipPay").addEventListener("click", e => { e.preventDefault(); startPay("iplink"); });
+  $("vfLink").addEventListener("click", e => { e.preventDefault(); startPay("vf"); });
+
+  const showProof = () => {
+    const method = pending?.method;
+    $("proofSub").textContent = method
+      ? `ابعتلنا سكرين شوت تحويل ${method} عشان نأكّد الدفع`
+      : "ابعتلنا سكرين شوت التحويل عشان نأكّد الدفع";
+    const msg = `السلام عليكم 👋\nأنا لسه دافع لـ ${SHOP.name}${method ? " عن طريق " + method : ""}.\nودي صورة التحويل 👇`;
+    $("proofGo").href = "https://wa.me/" + String(SHOP.whatsapp).replace(/\D/g,"") + "?text=" + encodeURIComponent(msg);
+    openSheet("proofSheet");
+  };
+  $("proofBar").addEventListener("click", showProof);
+  $("proofGo").addEventListener("click", () => { clearPending(); closeSheet("proofSheet"); $("proofBar").classList.remove("nudge"); });
+
+  // when the customer comes back from the payment app, remind them to send the screenshot
+  document.addEventListener("visibilitychange", () => {
+    if (!pending) return;
+    if (document.visibilityState === "hidden") { pending.left = true; return; }
+    if (pending.left) { pending.left = false; setTimeout(showProof, 350); }
+  });
+  if (pending) setTimeout(showProof, 600);   // came back after a reload
 
   document.querySelectorAll(".copy").forEach(btn=>{
     btn.addEventListener("click", ()=> copyText(SHOP[btn.dataset.copy]));
