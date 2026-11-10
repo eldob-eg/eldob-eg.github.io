@@ -15,7 +15,7 @@
   "daysText": "متواجدين كل يوم",
   "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد",
   "tempClosed": {
-    "on": true,
+    "on": false,
     "text": "قافلين النهارده، نشوفكم بكره"
   },
   "announcement": {
