@@ -217,7 +217,7 @@
   <div class="wrap">
     <div class="card crowd-card" style="margin-top:14px">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px">
-        <b style="font-size:1.05rem">الزحمة دلوقتي</b>
+        <b style="font-size:1.05rem">الزحمة دلوقتي · Live</b>
         <small id="crowdInfo" style="color:var(--muted);font-size:.78rem"></small>
       </div>
       <div class="crowd-btns" id="crowdBtns">
@@ -234,20 +234,20 @@
       <p class="hint" style="margin:8px 0 0">بيتحفظ لوحده وبيظهر في الموقع خلال دقيقة. لو ما حدّثتهاش ٦ ساعات، بتختفي لوحدها.</p>
     </div>
     <div class="tabs" id="tabs">
-      <button class="tab on" data-tab="gallery">📸 الجاليري</button>
-      <button class="tab" data-tab="team">✂️ الحلاقين</button>
-      <button class="tab" data-tab="reviews">⭐ الآراء</button>
-      <button class="tab" data-tab="groom">🤵 العرسان</button>
-      <button class="tab" data-tab="products">🛍️ المنتجات</button>
-      <button class="tab" data-tab="season">📅 الحجز والمواعيد</button>
-      <button class="tab" data-tab="info">📞 البيانات</button>
-      <button class="tab" data-tab="stats">📊 الإحصائيات</button>
-      <button class="tab" data-tab="settings">⚙️ الإعدادات</button>
+      <button class="tab on" data-tab="gallery">📸 Gallery</button>
+      <button class="tab" data-tab="team">✂️ Team</button>
+      <button class="tab" data-tab="reviews">⭐ Reviews</button>
+      <button class="tab" data-tab="groom">🤵 Groom</button>
+      <button class="tab" data-tab="products">🛍️ Products</button>
+      <button class="tab" data-tab="season">📅 Booking & Hours</button>
+      <button class="tab" data-tab="info">📞 Info</button>
+      <button class="tab" data-tab="stats">📊 Stats</button>
+      <button class="tab" data-tab="settings">⚙️ Settings</button>
     </div>
 
     <!-- Gallery -->
     <div data-pane="gallery">
-      <h2>الجاليري</h2>
+      <h2>Gallery</h2>
       <p class="hint">دوس على أي صورة عشان تعدّلها أو تمسحها أو تغيّر مكانها. الصور بتتصغّر لوحدها قبل الرفع.</p>
       <div class="ggrid" id="ggrid"></div>
       <input type="file" id="gFile" accept="image/*,video/mp4,video/quicktime,video/webm" multiple hidden>
@@ -255,7 +255,7 @@
 
     <!-- Team -->
     <div data-pane="team" hidden>
-      <h2>فريق الحلاقين</h2>
+      <h2>Team · الحلاقين</h2>
       <p class="hint"><b style="color:#6fe39a">شغال</b> بيظهر عادي · <b style="color:var(--amber)">أجازة</b> بيظهر وعليه علامة أجازة · <b>مخفي</b> مش بيظهر خالص (لو حد ساب الشغل امسحه أو خبّيه)</p>
       <div class="blist" id="blist"></div>
       <button class="btn gold full" id="addBarber" style="margin-top:12px">＋ ضيف حلاق</button>
@@ -263,7 +263,7 @@
 
     <!-- Reviews -->
     <div data-pane="reviews" hidden>
-      <h2>آراء العملاء</h2>
+      <h2>Reviews · آراء العملاء</h2>
       <p class="hint">بتظهر في الموقع تحت الحلاقين. اكتب كلام عملاء حقيقيين بس، زي ما قالوه أو كتبوه.</p>
       <div class="blist" id="rlist"></div>
       <button class="btn gold full" id="addReview" style="margin-top:12px">＋ ضيف رأي</button>
@@ -271,7 +271,7 @@
 
     <!-- Groom package -->
     <div data-pane="groom" hidden>
-      <h2>باكدج العرسان والمناسبات</h2>
+      <h2>Groom Package</h2>
       <div class="card">
         <label class="sw"><span><b>اعرض القسم في الموقع</b><small>بيظهر تحت آراء العملاء، وفيه زرار "اطلب الباكدج"</small></span><input type="checkbox" data-bind="groom.on"><span class="knob"></span></label>
         <div class="sw-body" id="groomBody">
@@ -281,29 +281,29 @@
           <div class="field"><span>صورة الباكدج</span>
             <div class="groom-prev" id="gAv">مفيش صورة لسه</div>
             <div class="btns" style="margin-top:8px">
-              <label class="btn gold" for="gFile" id="gPick" style="cursor:pointer;flex:1">📷 اختار صورة</label>
+              <label class="btn gold" for="groomFile" id="gPick" style="cursor:pointer;flex:1">📷 اختار صورة</label>
               <button class="btn danger" id="gNoImg" type="button" hidden>شيل الصورة</button>
             </div>
-            <input type="file" id="gFile" accept="image/*" hidden>
+            <input type="file" id="groomFile" accept="image/*" hidden>
           </div>
           <p class="hint" style="margin:0">طلبات العرسان بتتسجل في ورقة "طلبات العرسان" في شيت الحجوزات، وبتوصلك على الواتساب.</p>
         </div>
       </div>
 
-      <h2>العربون</h2>
+      <h2>Deposit</h2>
       <div class="card">
-        <label class="sw"><span><b>اطلب عربون للحجز</b><small>بعد ما العريس يملا بياناته، بيطلعله يدفع العربون ويبعت السكرين</small></span><input type="checkbox" data-bind="groom.deposit.on" data-toggle="depBody"><span class="knob"></span></label>
+        <label class="sw"><span><b>اطلب Deposit للحجز</b><small>بعد ما العريس يملا بياناته، بيطلعله يدفع الـ Deposit ويبعت الـ Screenshot</small></span><input type="checkbox" data-bind="groom.deposit.on" data-toggle="depBody"><span class="knob"></span></label>
         <div class="sw-body" id="depBody">
-          <label class="field"><span>مبلغ العربون (جنيه)</span><input data-bind="groom.deposit.amount" type="number" inputmode="numeric" min="0" step="50" class="ltr" placeholder="500"></label>
-          <label class="field"><span>ملاحظة تحت المبلغ (اختياري)</span><input data-bind="groom.deposit.note" placeholder="مثلًا: العربون بيتخصم من الحساب"></label>
-          <p class="hint" style="margin:0">الدفع بيروح على نفس رقم إنستاباي وفودافون كاش اللي في 📞 البيانات. والموقع مش بيقدر يعرف إن التحويل تم، فراجع السكرين اللي بيوصلك على الواتساب قبل ما تأكّد الميعاد.</p>
+          <label class="field"><span>مبلغ الـ Deposit (جنيه)</span><input data-bind="groom.deposit.amount" type="number" inputmode="numeric" min="0" step="50" class="ltr" placeholder="500"></label>
+          <label class="field"><span>ملاحظة تحت المبلغ (اختياري)</span><input data-bind="groom.deposit.note" placeholder="مثلًا: الـ Deposit بيتخصم من الحساب"></label>
+          <p class="hint" style="margin:0">الدفع بيروح على نفس رقم إنستاباي وفودافون كاش اللي في 📞 البيانات. والموقع مش بيقدر يعرف إن التحويل تم، فراجع الـ Screenshot اللي بيوصلك على الواتساب قبل ما تأكّد الميعاد.</p>
         </div>
       </div>
     </div>
 
     <!-- Products -->
     <div data-pane="products" hidden>
-      <h2>منتجات المحل</h2>
+      <h2>Products</h2>
       <p class="hint">من غير أسعار. العميل بيدوس "اطلب على واتساب" وإنت بتردّ عليه بالسعر. <b style="color:var(--amber)">خلصان</b> بيظهر بس من غير زرار الطلب · <b>مخفي</b> مش بيظهر.</p>
       <div class="blist" id="plist"></div>
       <button class="btn gold full" id="addProduct" style="margin-top:12px">＋ ضيف منتج</button>
@@ -311,7 +311,7 @@
 
     <!-- Stats -->
     <div data-pane="stats" hidden>
-      <h2>الإحصائيات</h2>
+      <h2>Stats</h2>
       <p class="hint">أرقام بس، من غير أي بيانات عن الناس. زياراتك إنت من الجهاز ده مش بتتحسب.</p>
       <div class="seg" id="statRange" style="margin-bottom:12px">
         <label><input type="radio" name="sr" value="1"><span>النهارده</span></label>
@@ -323,19 +323,19 @@
 
     <!-- Season: booking, hours, announcement -->
     <div data-pane="season" hidden>
-      <h2>الحجز</h2>
+      <h2>Booking</h2>
       <div class="card">
-        <label class="sw"><span><b>افتح الحجز</b><small>شغّله في العيد والمناسبات بس</small></span><input type="checkbox" data-bind="booking.open" data-toggle="bkBody"><span class="knob"></span></label>
+        <label class="sw"><span><b>افتح الـ Booking</b><small>شغّله في العيد والمناسبات بس</small></span><input type="checkbox" data-bind="booking.open" data-toggle="bkBody"><span class="knob"></span></label>
         <div class="sw-body" id="bkBody">
           <label class="field"><span>عنوان الحجز</span><input data-bind="booking.title"></label>
           <label class="field"><span>ملاحظة تحت العنوان</span><input data-bind="booking.note"></label>
         </div>
       </div>
 
-      <h2>شيت الحجوزات</h2>
+      <h2>Booking Sheet</h2>
       <div class="card">
         <p class="hint">كل حجز من الموقع بيتسجل لوحده كسطر في شيت Google: الاسم، والموبايل، والحلاق، واليوم، والساعة.</p>
-        <a class="btn gold full" id="openSheet" target="_blank" rel="noopener" style="text-decoration:none;margin-bottom:12px" hidden>📋 افتح شيت الحجوزات</a>
+        <a class="btn gold full" id="openSheet" target="_blank" rel="noopener" style="text-decoration:none;margin-bottom:12px" hidden>📋 افتح الـ Booking Sheet</a>
         <label class="field"><span>لينك الشيت (اللي بتفتحه إنت)</span><input data-bind="booking.sheetView" class="ltr" placeholder="https://docs.google.com/spreadsheets/..."></label>
         <label class="field"><span>لينك الربط (Web app URL)</span><input data-bind="booking.sheetUrl" class="ltr" placeholder="https://script.google.com/macros/s/.../exec"></label>
         <details>
@@ -351,7 +351,7 @@
         </details>
       </div>
 
-      <h2>شريط إعلان فوق الموقع</h2>
+      <h2>Announcement · شريط إعلان</h2>
       <div class="card">
         <label class="sw"><span><b>اعرض الإعلان</b><small>مثلًا: عروض العيد، فتحنا فرع جديد…</small></span><input type="checkbox" data-bind="announcement.on" data-toggle="anBody"><span class="knob"></span></label>
         <div class="sw-body" id="anBody">
@@ -359,7 +359,7 @@
         </div>
       </div>
 
-      <h2>مواعيد الشغل</h2>
+      <h2>Working Hours</h2>
       <div class="card">
         <div class="row2">
           <label class="field"><span>بنفتح الساعة</span><input type="time" data-bind="openAt" class="ltr"></label>
@@ -378,7 +378,7 @@
 
     <!-- Info -->
     <div data-pane="info" hidden>
-      <h2>البيانات واللينكات</h2>
+      <h2>Info · البيانات واللينكات</h2>
       <div class="card">
         <label class="field"><span>اسم المحل</span><input data-bind="name" class="ltr"></label>
         <label class="field"><span>رقم الواتساب (بالكود الدولي، مثال 2010…)</span><input data-bind="whatsapp" class="ltr" inputmode="numeric"></label>
@@ -392,7 +392,7 @@
         <label class="field"><span>تيك توك</span><input data-bind="tiktok" class="ltr"></label>
       </div>
       <div class="card">
-        <label class="field"><span>لينك اللوكيشن (جوجل مابس)</span><input data-bind="mapsLink" class="ltr"></label>
+        <label class="field"><span>لينك الـ Location (Google Maps)</span><input data-bind="mapsLink" class="ltr"></label>
         <label class="field"><span>العنوان المكتوب</span><input data-bind="address"></label>
         <label class="field"><span>لينك التقييم على جوجل (اختياري)</span><input data-bind="reviewLink" class="ltr"></label>
       </div>
@@ -400,7 +400,7 @@
 
     <!-- Settings -->
     <div data-pane="settings" hidden>
-      <h2>الإعدادات</h2>
+      <h2>Settings</h2>
       <div class="card">
         <b style="display:block;margin-bottom:8px">تغيير اليوزر نيم أو الباسورد</b>
         <label class="field"><span>يوزر نيم جديد</span><input id="stUser" autocapitalize="off" autocomplete="username"></label>
@@ -653,7 +653,7 @@ function paintGroom(){
   $("gPick").textContent = img ? "📷 غيّر الصورة" : "📷 اختار صورة";
 }
 $("groomItems").addEventListener("input", e => { DATA.groom.items = e.target.value.split("\n").map(s => s.trim()).filter(Boolean); markDirty(); });
-$("gFile").addEventListener("change", async e => {
+$("groomFile").addEventListener("change", async e => {
   const f = e.target.files[0]; e.target.value = ""; if (!f) return;
   $("gAv").innerHTML = `<span class="spin"></span>`;
   try {
@@ -775,7 +775,7 @@ function openReview(i){
 
 /* ================= Stats ================= */
 let STATS = null;
-const STAT_ROWS = [["whatsapp","💬 فتحوا الواتساب"],["instapay","💜 داسوا على إنستاباي"],["vodafone","❤️ داسوا على فودافون كاش"],["proof","📸 بعتوا سكرين الدفع"],["booking","📅 حجوزات"],["location","📍 فتحوا اللوكيشن"],["instagram","إنستجرام"],["tiktok","تيك توك"],["facebook","فيسبوك"],["review","⭐ تقييم جوجل"],["share","🔗 شاركوا الموقع"],["install","📲 حطّوه على الموبايل"],["groom","🤵 طلبات العرسان"],["product","🛍️ طلبوا منتجات"]];
+const STAT_ROWS = [["whatsapp","💬 فتحوا الواتساب"],["instapay","💜 داسوا على إنستاباي"],["vodafone","❤️ داسوا على فودافون كاش"],["proof","📸 بعتوا Screenshot الدفع"],["booking","📅 حجوزات"],["location","📍 فتحوا الـ Location"],["instagram","إنستجرام"],["tiktok","تيك توك"],["facebook","فيسبوك"],["review","⭐ تقييم جوجل"],["share","🔗 شاركوا الموقع"],["install","📲 حطّوه على الموبايل"],["groom","🤵 طلبات العرسان"],["product","🛍️ طلبوا منتجات"]];
 async function loadStats(){
   const body = $("statBody"), url = DATA?.booking?.sheetUrl;
   if (!url) { body.innerHTML = `<div class="empty">اربط شيت الحجوزات الأول من 📅 الحجز والمواعيد</div>`; return; }
@@ -810,7 +810,7 @@ function paintStats(){
       <div class="kpi"><small>فتحوا الواتساب</small><b>${n(sum("whatsapp"))}</b></div>
       <div class="kpi"><small>داسوا على الدفع</small><b>${n(pays)}</b></div>
       <div class="kpi"><small>حجوزات</small><b>${n(sum("booking"))}</b></div>
-      <div class="kpi"><small>فتحوا اللوكيشن</small><b>${n(sum("location"))}</b></div>
+      <div class="kpi"><small>فتحوا الـ Location</small><b>${n(sum("location"))}</b></div>
     </div>
     ${chart}
     <div class="card"><b style="display:block;margin-bottom:4px">كل الدوسات</b>
@@ -872,7 +872,7 @@ function renderGallery(){
       ${it.wide ? `<span class="badge" style="${it.type==='video'?'top:30px':''}">عريضة</span>` : ""}
       <span class="num">${i+1}</span>
     </div>`).join("") + `
-    <label class="gtile add-tile" for="gFile"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>ضيف صور<br>أو فيديو</span></label>`;
+    <label class="gtile add-tile" for="gFile"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>ضيف صور<br>أو Video</span></label>`;
   if (!DATA.gallery.length) g.insertAdjacentHTML("afterbegin", `<div class="empty" style="grid-column:1/-1">الجاليري فاضي — ضيف أول صورة</div>`);
 }
 $("ggrid").addEventListener("click", e => { const t = e.target.closest(".gtile[data-i]"); if (t) openGalleryItem(+t.dataset.i); });

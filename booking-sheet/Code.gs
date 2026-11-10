@@ -14,11 +14,11 @@ const STATUSES = ['جديد', 'اتأكد', 'حضر', 'ما جاش', 'اتلغى
 // عداد الزيارات: أرقام بس، من غير أي بيانات عن الناس
 const STATS_NAME = 'الإحصائيات';
 const EVENTS = ['visit', 'whatsapp', 'instapay', 'vodafone', 'location', 'booking', 'proof', 'instagram', 'facebook', 'tiktok', 'review', 'share', 'install', 'groom', 'product'];
-const EVENT_LABELS = ['التاريخ', 'زيارات', 'واتساب', 'إنستاباي', 'فودافون كاش', 'لوكيشن', 'حجوزات', 'سكرين الدفع', 'إنستجرام', 'فيسبوك', 'تيك توك', 'تقييم جوجل', 'مشاركة', 'تثبيت', 'طلبات العرسان', 'طلبات منتجات'];
+const EVENT_LABELS = ['التاريخ', 'زيارات', 'واتساب', 'إنستاباي', 'فودافون كاش', 'لوكيشن', 'حجوزات', 'Screenshot الدفع', 'إنستجرام', 'فيسبوك', 'تيك توك', 'تقييم جوجل', 'مشاركة', 'تثبيت', 'طلبات العرسان', 'طلبات منتجات'];
 
 const GROOM_NAME = 'طلبات العرسان';
-const GROOM_HEADERS = ['وقت التسجيل', 'الاسم', 'الموبايل', 'المناسبة', 'التاريخ', 'عدد الأفراد', 'المكان', 'ملاحظات', 'العربون', 'الحالة'];
-const GROOM_STATUSES = ['جديد', 'مستني العربون', 'العربون اتدفع', 'اتكلمنا', 'اتأكد', 'اتلغى'];
+const GROOM_HEADERS = ['وقت التسجيل', 'الاسم', 'الموبايل', 'المناسبة', 'التاريخ', 'عدد الأفراد', 'المكان', 'ملاحظات', 'Deposit', 'الحالة'];
+const GROOM_STATUSES = ['جديد', 'مستني الـ Deposit', 'الـ Deposit اتدفع', 'اتكلمنا', 'اتأكد', 'اتلغى'];
 const TZ = 'Africa/Cairo';
 
 function doPost(e) {
@@ -30,7 +30,7 @@ function doPost(e) {
     if (d.kind === 'groom') {
       if (!d.name || !d.phone) return reply_({ ok: false, error: 'missing' });
       groom_().appendRow([new Date(), clean_(d.name), "'" + clean_(d.phone).replace(/^'/, ''), clean_(d.type), clean_(d.date),
-        clean_(d.count), clean_(d.place), clean_(d.notes), clean_(d.deposit), d.deposit ? 'مستني العربون' : 'جديد']);
+        clean_(d.count), clean_(d.place), clean_(d.notes), clean_(d.deposit), d.deposit ? 'مستني الـ Deposit' : 'جديد']);
       count_('groom');
       return reply_({ ok: true });
     }
