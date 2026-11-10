@@ -53,7 +53,14 @@
     "wait": 45,
     "updatedAt": "2026-11-10T21:58:20.067Z"
   },
-  "reviews": [],
+  "reviews": [
+    {
+      "id": "mwb8git3lmyn",
+      "name": "اسلام الفرماوى",
+      "text": "مشاء الله تحفه خدمه مميزه جدا",
+      "stars": 5
+    }
+  ],
   "products": [],
   "groom": {
     "on": false,
