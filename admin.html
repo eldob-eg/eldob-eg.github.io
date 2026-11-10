@@ -158,6 +158,8 @@
   .crowd-mins{display:flex;gap:4px}
   .crowd-mins button{padding:7px 10px;border-radius:8px;background:var(--bg);border:1px solid var(--line);cursor:pointer;direction:ltr;font-size:.85rem}
   .crowd-mins button.on{border-color:var(--brass);color:var(--brass);font-weight:600}
+  .groom-prev{width:100%;aspect-ratio:16/9;border-radius:12px;background:var(--bg);border:1px dashed var(--line);display:grid;place-items:center;color:var(--muted);font-size:.85rem;overflow:hidden}
+  .groom-prev img{width:100%;height:100%;object-fit:cover;display:block}
   .empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:.9rem}
 </style>
 </head>
@@ -271,15 +273,18 @@
     <div data-pane="groom" hidden>
       <h2>باكدج العرسان والمناسبات</h2>
       <div class="card">
-        <label class="sw"><span><b>اعرض القسم في الموقع</b><small>بيظهر تحت آراء العملاء، وفيه زرار "اطلب الباكدج"</small></span><input type="checkbox" data-bind="groom.on" data-toggle="groomBody"><span class="knob"></span></label>
+        <label class="sw"><span><b>اعرض القسم في الموقع</b><small>بيظهر تحت آراء العملاء، وفيه زرار "اطلب الباكدج"</small></span><input type="checkbox" data-bind="groom.on"><span class="knob"></span></label>
         <div class="sw-body" id="groomBody">
           <label class="field"><span>العنوان</span><input data-bind="groom.title" placeholder="باكدج العريس"></label>
           <label class="field"><span>جملة تحت العنوان (اختياري)</span><input data-bind="groom.intro" placeholder="مثلًا: خلّي يومك الكبير يبدأ من عندنا"></label>
           <label class="field"><span>الباكدج فيه إيه؟ (كل حاجة في سطر)</span><textarea id="groomItems" rows="5" placeholder="قصة شعر وتظبيط دقن&#10;تنضيف بشرة&#10;استشوار وتسريحة"></textarea></label>
-          <div class="field"><span>صورة (اختياري)</span>
-            <div class="photo-pick"><div class="av" id="gAv" style="width:120px;height:68px">مفيش<br>صورة</div>
-              <div><label class="btn ghost" for="gFile" style="cursor:pointer">اختار صورة</label><input type="file" id="gFile" accept="image/*" hidden>
-              <button class="btn ghost" id="gNoImg" type="button" style="margin-top:6px;font-size:.82rem;padding:8px 12px" hidden>شيل الصورة</button></div></div>
+          <div class="field"><span>صورة الباكدج</span>
+            <div class="groom-prev" id="gAv">مفيش صورة لسه</div>
+            <div class="btns" style="margin-top:8px">
+              <label class="btn gold" for="gFile" id="gPick" style="cursor:pointer;flex:1">📷 اختار صورة</label>
+              <button class="btn danger" id="gNoImg" type="button" hidden>شيل الصورة</button>
+            </div>
+            <input type="file" id="gFile" accept="image/*" hidden>
           </div>
           <p class="hint" style="margin:0">طلبات العرسان بتتسجل في ورقة "طلبات العرسان" في شيت الحجوزات، وبتوصلك على الواتساب.</p>
         </div>
@@ -633,8 +638,9 @@ function paintGroom(){
   DATA.groom ||= {on:false,title:"باكدج العريس",intro:"",items:[],image:""};
   $("groomItems").value = (DATA.groom.items||[]).join("\n");
   const img = DATA.groom.image;
-  $("gAv").innerHTML = img ? `<img src="${esc(src(img))}" alt="">` : "مفيش<br>صورة";
+  $("gAv").innerHTML = img ? `<img src="${esc(src(img))}" alt="">` : "مفيش صورة لسه";
   $("gNoImg").hidden = !img;
+  $("gPick").textContent = img ? "📷 غيّر الصورة" : "📷 اختار صورة";
 }
 $("groomItems").addEventListener("input", e => { DATA.groom.items = e.target.value.split("\n").map(s => s.trim()).filter(Boolean); markDirty(); });
 $("gFile").addEventListener("change", async e => {
@@ -643,7 +649,7 @@ $("gFile").addEventListener("change", async e => {
   try {
     const p = await uploadMedia(f, "image", "uploads/groom");
     if (isUpload(DATA.groom.image)) pendingDeletes.add(DATA.groom.image);
-    DATA.groom.image = p; markDirty();
+    DATA.groom.image = p; markDirty(); toast("الصورة اترفعت ✓ دوس حفظ ونشر");
   } catch(err) { toast(ghError(err), 3500); }
   paintGroom();
 });
