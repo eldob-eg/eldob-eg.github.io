@@ -365,7 +365,7 @@
 </head>
 <body>
 
-<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب"}, "gallery": [], "barbers": []}</script>
+<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": []}</script>
 
 <div class="announce" id="announce" hidden></div>
 <div class="wrap">
@@ -640,31 +640,55 @@
     for (let t = OPEN; t < end; t += 60) { const h = Math.floor(t/60)%24; slots.push(String(h).padStart(2,"0")+":00"); }
     const df = new Intl.DateTimeFormat("ar-EG",{timeZone:"Africa/Cairo",weekday:"long",day:"numeric",month:"long"});
     const days = []; for (let i=0;i<10;i++) days.push(df.format(new Date(Date.now()+i*864e5)));
+    // barbers come from the admin panel: active ones can be picked, vacation ones show but can't be picked, hidden ones don't show
+    const crew = (SHOP.barbers||[]).filter(b => b.status !== "hidden" && b.name);
+    const crewOpts = `<option value="">أي حلاق متاح</option>` + crew.map(b =>
+      b.status === "vacation"
+        ? `<option value="${esc(b.name)}" disabled>${esc(b.name)} (أجازة)</option>`
+        : `<option value="${esc(b.name)}">${esc(b.name)}${b.role ? " — " + esc(b.role) : ""}</option>`).join("");
     bk.className = "panel booking-on";
     bk.innerHTML = `
       <div class="bk-head"><b>${esc(SHOP.booking.title)}</b><span class="live">مفتوح</span></div>
       <p class="bk-note">${esc(SHOP.booking.note)}</p>
-      <label class="field"><span>الاسم</span><input id="bkName" type="text" placeholder="اسمك"></label>
-      <label class="field"><span>اليوم</span><select id="bkDay">${days.map((d,i)=>`<option>${i===0?"النهارده — ":i===1?"بكره — ":""}${d}</option>`).join("")}</select></label>
+      <div class="row2">
+        <label class="field"><span>الاسم</span><input id="bkName" type="text" placeholder="اسمك" autocomplete="name"></label>
+        <label class="field"><span>رقم الموبايل</span><input id="bkPhone" type="tel" inputmode="tel" placeholder="01xxxxxxxxx" autocomplete="tel" style="direction:ltr;text-align:right"></label>
+      </div>
+      ${crew.length ? `<label class="field"><span>عايز تحجز مع مين؟</span><select id="bkBarber">${crewOpts}</select></label>` : ""}
+      <label class="field"><span>اليوم</span><select id="bkDay">${days.map((d,i)=>`<option value="${d}">${i===0?"النهارده — ":i===1?"بكره — ":""}${d}</option>`).join("")}</select></label>
       <div class="row2">
         <label class="field"><span>الساعة</span><select id="bkTime">${slots.map(s=>`<option>${fmt12(s).ar}</option>`).join("")}</select></label>
         <label class="field"><span>عدد الأفراد</span><select id="bkCount"><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></label>
       </div>
       <a class="bk-btn" id="bkSend" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"/></svg>
-        ابعت الحجز على واتساب
+        احجز وابعت التأكيد على واتساب
       </a>
       <div class="bk-err" id="bkErr"></div>`;
     const send = $("bkSend");
+    const val = id => ($(id)?.value || "").trim();
+    const booking = () => ({
+      name: val("bkName"), phone: val("bkPhone"), barber: val("bkBarber"),
+      day: val("bkDay"), time: val("bkTime"), count: val("bkCount")
+    });
     const build = () => {
-      const msg = `السلام عليكم، عايز أحجز في ${SHOP.name} ✂️\nالاسم: ${$("bkName").value.trim()}\nاليوم: ${$("bkDay").value}\nالساعة: ${$("bkTime").value}\nعدد الأفراد: ${$("bkCount").value}`;
+      const b = booking();
+      const msg = `السلام عليكم، عايز أحجز في ${SHOP.name} ✂️\nالاسم: ${b.name}\nالموبايل: ${b.phone}\nمع: ${b.barber || "أي حلاق متاح"}\nاليوم: ${b.day}\nالساعة: ${b.time}\nعدد الأفراد: ${b.count}`;
       send.href = "https://wa.me/" + String(SHOP.whatsapp).replace(/\D/g,"") + "?text=" + encodeURIComponent(msg);
     };
-    ["bkName","bkDay","bkTime","bkCount"].forEach(id => $(id).addEventListener("input", build));
+    ["bkName","bkPhone","bkBarber","bkDay","bkTime","bkCount"].forEach(id => $(id) && $(id).addEventListener("input", build));
     build();
     send.addEventListener("click", e => {
-      if (!$("bkName").value.trim()) { e.preventDefault(); $("bkErr").textContent = "اكتب اسمك الأول"; $("bkName").focus(); }
-      else $("bkErr").textContent = "";
+      const b = booking(), err = $("bkErr");
+      if (!b.name) { e.preventDefault(); err.textContent = "اكتب اسمك الأول"; return $("bkName").focus(); }
+      if (b.phone.replace(/\D/g,"").length < 10) { e.preventDefault(); err.textContent = "اكتب رقم موبايل صح"; return $("bkPhone").focus(); }
+      err.textContent = "";
+      // log the booking in the Google Sheet (set from the admin panel); WhatsApp still opens as before
+      const url = SHOP.booking?.sheetUrl;
+      if (url && /^https:\/\/script\.google\.com\//.test(url)) {
+        try { fetch(url, {method:"POST", mode:"no-cors", keepalive:true, headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(b)}); } catch(_) {}
+      }
+      setTimeout(() => { const t = $("toast"); t.textContent = "اتسجل حجزك ✓"; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"), 2500); }, 50);
     });
   }
 })();

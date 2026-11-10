@@ -222,6 +222,25 @@
         </div>
       </div>
 
+      <h2>شيت الحجوزات</h2>
+      <div class="card">
+        <p class="hint">كل حجز من الموقع بيتسجل لوحده كسطر في شيت Google: الاسم، والموبايل، والحلاق، واليوم، والساعة.</p>
+        <a class="btn gold full" id="openSheet" target="_blank" rel="noopener" style="text-decoration:none;margin-bottom:12px" hidden>📋 افتح شيت الحجوزات</a>
+        <label class="field"><span>لينك الشيت (اللي بتفتحه إنت)</span><input data-bind="booking.sheetView" class="ltr" placeholder="https://docs.google.com/spreadsheets/..."></label>
+        <label class="field"><span>لينك الربط (Web app URL)</span><input data-bind="booking.sheetUrl" class="ltr" placeholder="https://script.google.com/macros/s/.../exec"></label>
+        <details>
+          <summary class="hint" style="cursor:pointer;margin:0;color:var(--brass)">إزاي أعمل الشيت؟ (مرة واحدة بس)</summary>
+          <ol class="steps" style="margin-top:10px">
+            <li>افتح <b>sheets.new</b> واعمل شيت جديد، وسمّيه "حجوزات El-Dob"، وانسخ لينكه في الخانة الأولى فوق.</li>
+            <li>من فوق: <b>Extensions ← Apps Script</b>.</li>
+            <li>امسح الكلام اللي في الصفحة، ودوس الزرار ده والصق مكانه: <button class="btn ghost" id="copyGs" type="button" style="padding:6px 12px;font-size:.82rem;margin-top:4px">انسخ الكود</button></li>
+            <li>دوس 💾 <b>Save</b>، واختار <b>setup</b> من القايمة فوق ودوس <b>Run</b>، ووافق على الإذن: <b>Advanced ← Go to … ← Allow</b>.</li>
+            <li><b>Deploy ← New deployment</b> ← اختار ⚙️ <b>Web app</b>. خلي <b>Execute as: Me</b> و<b>Who has access: Anyone</b>، ودوس <b>Deploy</b>.</li>
+            <li>انسخ <b>Web app URL</b> والصقه في الخانة التانية فوق، ودوس <b>حفظ ونشر</b>.</li>
+          </ol>
+        </details>
+      </div>
+
       <h2>شريط إعلان فوق الموقع</h2>
       <div class="card">
         <label class="sw"><span><b>اعرض الإعلان</b><small>مثلًا: عروض العيد، فتحنا فرع جديد…</small></span><input type="checkbox" data-bind="announcement.on" data-toggle="anBody"><span class="knob"></span></label>
@@ -453,7 +472,7 @@ async function startApp(){
   }
   DATA.gallery ||= []; DATA.barbers ||= []; DATA.booking ||= {}; DATA.announcement ||= {}; DATA.tempClosed ||= {};
   SAVED = clone(DATA);
-  bindFields(); renderGallery(); renderTeam();
+  bindFields(); renderGallery(); renderTeam(); paintSheetBtn();
 }
 
 /* ---------- Tabs ---------- */
@@ -479,6 +498,21 @@ function bindFields(){
     }
   });
 }
+
+/* ================= Booking sheet ================= */
+function paintSheetBtn(){
+  const v = DATA?.booking?.sheetView || "", b = $("openSheet");
+  b.hidden = !/^https:\/\/docs\.google\.com\//.test(v); b.href = v || "#";
+}
+document.addEventListener("input", e => { if (e.target.dataset?.bind === "booking.sheetView") paintSheetBtn(); });
+$("copyGs").onclick = async () => {
+  try {
+    const code = await (await fetch("booking-sheet/Code.gs?t=" + Date.now(), {cache:"no-store"})).text();
+    try { await navigator.clipboard.writeText(code); }
+    catch(_) { const ta=document.createElement("textarea"); ta.value=code; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
+    toast("الكود اتنسخ ✓ الصقه في Apps Script");
+  } catch(e) { toast("مقدرتش أنسخ الكود، جرّب تاني"); }
+};
 
 /* ================= Media helpers ================= */
 const MAX_VIDEO_MB = 25;
@@ -676,7 +710,7 @@ $("saveBtn").onclick = async () => {
 };
 $("discardBtn").onclick = () => {
   DATA = clone(SAVED); pendingDeletes.clear(); clearDirty();
-  bindFields(); renderGallery(); renderTeam(); toast("رجّعنا آخر نسخة محفوظة");
+  bindFields(); renderGallery(); renderTeam(); paintSheetBtn(); toast("رجّعنا آخر نسخة محفوظة");
 };
 
 /* ================= Settings: change password / token ================= */
