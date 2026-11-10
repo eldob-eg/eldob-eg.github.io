@@ -475,6 +475,10 @@
   .dep-nums b{direction:ltr;display:inline-block;color:var(--ink)}
   #dSent.nudge{animation:glow 1.6s ease-in-out 3}
 
+  .badge.has-logo{background:#fff;padding:6px}
+  .badge.has-logo img{width:100%;height:100%;object-fit:contain;display:block}
+  .go .plogo{width:26px;height:26px;border-radius:7px;background:#fff;padding:3px;object-fit:contain}
+
   footer{text-align:center;color:#6f685f;font-size:.8rem;margin-top:40px}
 
   .toast{
@@ -488,7 +492,7 @@
 </head>
 <body>
 
-<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": [], "crowd": {"level": "off", "wait": 0, "updatedAt": ""}, "groom": {"on": false, "title": "باكدج العريس", "intro": "", "items": [], "image": "", "deposit": {"on": false, "amount": 0, "note": ""}}, "products": []}</script>
+<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": [], "crowd": {"level": "off", "wait": 0, "updatedAt": ""}, "groom": {"on": false, "title": "باكدج العريس", "intro": "", "items": [], "image": "", "deposit": {"on": false, "amount": 0, "note": ""}}, "products": [], "paymentLogos": {"instapay": "", "vodafone": ""}}</script>
 
 <div class="announce" id="announce" hidden></div>
 <div class="wrap">
@@ -535,7 +539,7 @@
 
     <div class="card instapay">
       <a class="card-main" id="ipLink" href="#">
-        <span class="badge">Insta<br>Pay</span>
+        <span class="badge" id="ipBadge">Insta<br>Pay</span>
         <span class="t"><b>InstaPay</b><span>اضغط ينسخ الرقم وحوّل عليه من إنستاباي</span></span>
         <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
       </a>
@@ -551,7 +555,7 @@
 
     <div class="card vfcash">
       <a class="card-main" id="vfLink">
-        <span class="badge"><svg viewBox="0 0 24 24"><path d="M21 7H5a2 2 0 0 1 0-4h13v2h2V3a2 2 0 0 0-2-2H5a4 4 0 0 0-4 4v14a4 4 0 0 0 4 4h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm-3 8.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg></span>
+        <span class="badge" id="vfBadge"><svg viewBox="0 0 24 24"><path d="M21 7H5a2 2 0 0 1 0-4h13v2h2V3a2 2 0 0 0-2-2H5a4 4 0 0 0-4 4v14a4 4 0 0 0 4 4h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm-3 8.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg></span>
         <span class="t"><b>Vodafone Cash</b><span>اضغط وهيفتحلك التحويل على طول</span></span>
         <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
       </a>
@@ -784,6 +788,14 @@
   $("igLink").href = safeUrl(SHOP.instagram);
   $("fbLink").href = safeUrl(SHOP.facebook);
   $("ttLink").href = safeUrl(SHOP.tiktok);
+
+  // ---------- Official payment logos (uploaded by the shop from the admin panel) ----------
+  const PL = SHOP.paymentLogos || {};
+  [["ipBadge", PL.instapay, "InstaPay"], ["vfBadge", PL.vodafone, "Vodafone Cash"]].forEach(([id, src, alt]) => {
+    if (src) { $(id).classList.add("has-logo"); $(id).innerHTML = `<img src="${esc(safeUrl(src))}" alt="${alt}">`; }
+  });
+  const addLogo = (id, src, alt) => { if (src && $(id)) $(id).insertAdjacentHTML("afterbegin", `<img class="plogo" src="${esc(safeUrl(src))}" alt="${alt}">`); };
+  addLogo("dIp", PL.instapay, "InstaPay"); addLogo("dVf", PL.vodafone, "Vodafone Cash");
 
   // ---------- Payments: warn before paying, then ask for a screenshot on WhatsApp ----------
   $("ipId").textContent = SHOP.instapayId;
