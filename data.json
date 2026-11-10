@@ -29,7 +29,22 @@
     "sheetUrl": "https://script.google.com/macros/s/AKfycbzWl-3kn17lvdeLcbRrLRGrpTv7bivxq70ZHO6lAgGDbR8EoC5OfmEnRrp_y9Wlyl-SiQ/exec",
     "sheetView": "https://docs.google.com/spreadsheets/d/1crQZbPEI0M5xB8YjiOOfjwTQR5kqbmUB-JiBleiioac/edit"
   },
-  "gallery": [],
+  "gallery": [
+    {
+      "id": "mwb9htaq1puq",
+      "type": "image",
+      "src": "uploads/gallery/mwb9hrdvimaj.jpg",
+      "caption": "",
+      "wide": false
+    },
+    {
+      "id": "mwb9hyw2kflo",
+      "type": "image",
+      "src": "uploads/gallery/mwb9hwk2w7pt.jpg",
+      "caption": "",
+      "wide": false
+    }
+  ],
   "barbers": [
     {
       "id": "mwarcnr4u2v3",
