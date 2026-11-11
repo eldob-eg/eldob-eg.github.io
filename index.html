@@ -675,6 +675,20 @@
   .barber .cnt{position:absolute;top:10px;inset-inline-start:10px;padding:3px 9px;border-radius:999px;background:rgba(10,9,8,.7);backdrop-filter:blur(6px);font-size:.72rem;color:#e7dccb}
   a.barber:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 
+  /* barber working days */
+  .barber .today{display:inline-flex;align-items:center;gap:5px;margin-top:4px;font-size:.74rem;color:#cfc6b8}
+  .barber .today::before{content:"";width:7px;height:7px;border-radius:50%;background:#6f685f}
+  .barber .today.in{color:#8ff0b0}
+  .barber .today.in::before{background:#3ecf6e;box-shadow:0 0 0 3px rgba(62,207,110,.2)}
+  .bp-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+  .bp-days span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 2px;border-radius:12px;background:var(--panel);border:1px solid var(--line);color:#6f685f;font-size:.76rem;text-decoration:line-through;text-decoration-color:rgba(111,104,95,.6)}
+  .bp-days span.on{color:var(--ink);background:rgba(201,164,106,.12);border-color:rgba(201,164,106,.45);text-decoration:none}
+  .bp-days span.now{outline:2px solid var(--brass);outline-offset:1px}
+  .bp-days small{font-size:.6rem;color:var(--muted);text-decoration:none}
+  .bp-when{margin-top:10px;font-size:.88rem;color:var(--muted)}
+  .bp-when b{color:var(--ink);font-weight:600}
+  .bp-when.in b{color:#8ff0b0}
+
   /* barber page */
   .ph-back{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--brass);flex-shrink:0}
   .ph-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -807,6 +821,7 @@
     .bp-name{font-size:2.8rem}
     .bp-actions{max-width:420px}
     .bp-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+    .bp-days{max-width:620px}
     .bp-grid figure{border-radius:12px}
     .bp-crew{margin:0;padding:0;flex-wrap:wrap}
 
@@ -1419,6 +1434,15 @@
     el.hidden = false;
   };
   const paintAll = () => { paintStatus(); paintCrowd(); };
+
+  // ---------- Barber working days (0 = Sunday … 6 = Saturday), set per barber from the admin panel ----------
+  const DAY_AR = ["الأحد","الاتنين","التلات","الأربع","الخميس","الجمعة","السبت"];
+  const WEEK = [6,0,1,2,3,4,5];            // the Egyptian week starts on Saturday
+  const cairoWeekday = (t = Date.now()) => ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(new Intl.DateTimeFormat("en-US",{timeZone:"Africa/Cairo",weekday:"short"}).format(new Date(t)));
+  // after midnight (before closing) we're still on the previous day's shift
+  const shiftDay = () => { const d = cairoWeekday(); return (CLOSE < OPEN && cairoMinutes() < CLOSE) ? (d + 6) % 7 : d; };
+  const daysOf = b => Array.isArray(b.days) && b.days.length ? b.days.map(Number).filter(d => d >= 0 && d <= 6) : null;
+  const worksOn = (b, d) => { const ds = daysOf(b); return !ds || ds.includes(d); };
   paintAll(); setInterval(paintAll, 30000);
 
   // ---------- Gallery ----------
@@ -1455,6 +1479,7 @@
           ${b.status==="vacation"?`<span class="away-tag">أجازة</span>`:""}
           ${n ? `<span class="cnt">${plural(n, "صورة", "صورتين", "صور")}</span>` : ""}</div>
         <div class="info"><b>${esc(b.name)}</b>${b.role?`<small>${esc(b.role)}</small>`:""}
+          ${daysOf(b) && b.status !== "vacation" ? (worksOn(b, shiftDay()) ? `<span class="today in">موجود النهارده</span>` : `<span class="today">مش موجود النهارده</span>`) : ""}
           <span class="more">شوف شغله ←</span></div>
       </a>`;
     }).join("");
@@ -1475,13 +1500,16 @@
     const slots = []; const end = CLOSE > OPEN ? CLOSE : CLOSE + 1440;
     for (let t = OPEN; t < end; t += 60) { const h = Math.floor(t/60)%24; slots.push(String(h).padStart(2,"0")+":00"); }
     const df = new Intl.DateTimeFormat("ar-EG",{timeZone:"Africa/Cairo",weekday:"long",day:"numeric",month:"long"});
-    const days = []; for (let i=0;i<10;i++) days.push(df.format(new Date(Date.now()+i*864e5)));
+    const days = []; for (let i=0;i<10;i++) { const t = Date.now()+i*864e5; days.push({label: df.format(new Date(t)), wd: cairoWeekday(t)}); }
     // barbers come from the admin panel: active ones can be picked, vacation ones show but can't be picked, hidden ones don't show
     const crew = (SHOP.barbers||[]).filter(b => b.status !== "hidden" && b.name);
-    const crewOpts = `<option value="">أي حلاق متاح</option>` + crew.map(b =>
+    const crewOptsFor = wd => `<option value="">أي حلاق متاح</option>` + crew.map(b =>
       b.status === "vacation"
         ? `<option value="${esc(b.name)}" disabled>${esc(b.name)} (أجازة)</option>`
+        : !worksOn(b, wd)
+        ? `<option value="${esc(b.name)}" disabled>${esc(b.name)} (مش موجود اليوم ده)</option>`
         : `<option value="${esc(b.name)}">${esc(b.name)}${b.role ? " — " + esc(b.role) : ""}</option>`).join("");
+    const crewOpts = crewOptsFor(days[0].wd);
     bk.className = "panel booking-on";
     bk.innerHTML = `
       <div class="bk-head"><b>${esc(SHOP.booking.title)}</b><span class="live">مفتوح</span></div>
@@ -1491,7 +1519,7 @@
         <label class="field"><span>رقم الموبايل</span><input id="bkPhone" type="tel" inputmode="tel" placeholder="01xxxxxxxxx" autocomplete="tel" style="direction:ltr;text-align:right"></label>
       </div>
       ${crew.length ? `<label class="field"><span>عايز تحجز مع مين؟</span><select id="bkBarber">${crewOpts}</select></label>` : ""}
-      <label class="field"><span>اليوم</span><select id="bkDay">${days.map((d,i)=>`<option value="${d}">${i===0?"النهارده — ":i===1?"بكره — ":""}${d}</option>`).join("")}</select></label>
+      <label class="field"><span>اليوم</span><select id="bkDay">${days.map((d,i)=>`<option value="${d.label}" data-wd="${d.wd}">${i===0?"النهارده — ":i===1?"بكره — ":""}${d.label}</option>`).join("")}</select></label>
       <div class="row2">
         <label class="field"><span>الساعة</span><select id="bkTime">${slots.map(s=>`<option>${fmt12(s).ar}</option>`).join("")}</select></label>
         <label class="field"><span>عدد الأفراد</span><select id="bkCount"><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></label>
@@ -1512,6 +1540,13 @@
       const msg = `السلام عليكم، عايز أحجز في ${SHOP.name} ✂️\nالاسم: ${b.name}\nالموبايل: ${b.phone}\nمع: ${b.barber || "أي حلاق متاح"}\nاليوم: ${b.day}\nالساعة: ${b.time}\nعدد الأفراد: ${b.count}`;
       send.href = "https://wa.me/" + String(SHOP.whatsapp).replace(/\D/g,"") + "?text=" + encodeURIComponent(msg);
     };
+    // when the day changes, barbers who don't work that day can't be picked
+    $("bkBarber") && $("bkDay").addEventListener("change", () => {
+      const sel = $("bkBarber"), keep = sel.value, wd = +$("bkDay").selectedOptions[0].dataset.wd;
+      sel.innerHTML = crewOptsFor(wd);
+      const o = [...sel.options].find(x => x.value === keep && !x.disabled); sel.value = o ? keep : "";
+      build();
+    });
     ["bkName","bkPhone","bkBarber","bkDay","bkTime","bkCount"].forEach(id => $(id) && $(id).addEventListener("input", build));
     build();
     send.addEventListener("click", e => {
@@ -1753,6 +1788,15 @@
             <button class="bp-share ${ig ? "" : "solo"}" type="button" id="bpShare"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>شارك</button>
           </div>
       </div>
+      ${daysOf(b) ? (() => {
+        const ds = daysOf(b), today = shiftDay();
+        let when;
+        if (b.status === "vacation") when = `<p class="bp-when"><b>في أجازة دلوقتي</b></p>`;
+        else if (ds.includes(today)) when = `<p class="bp-when in"><b>موجود النهارده</b> · من ${fmt12(SHOP.openAt).en} لحد ${fmt12(SHOP.closeAt).en}</p>`;
+        else { const next = [1,2,3,4,5,6,7].map(k => (today + k) % 7).find(d => ds.includes(d)); when = `<p class="bp-when"><b>مش موجود النهارده</b>${next != null ? ` · راجع ${next === (today + 1) % 7 ? "بكره" : "يوم " + DAY_AR[next]}` : ""}</p>`; }
+        return `<div class="label">Working Days</div>
+          <div class="bp-days" role="list">${WEEK.map(d => `<span role="listitem" class="${ds.includes(d) ? "on" : ""} ${d === today ? "now" : ""}" aria-label="${DAY_AR[d]}: ${ds.includes(d) ? "موجود" : "مش موجود"}">${DAY_AR[d]}${d === today ? "<small>النهارده</small>" : ""}</span>`).join("")}</div>${when}`;
+      })() : ""}
       <div class="label">Work</div>
       ${works.length ? `<div class="bp-grid" data-bid="${esc(b.id)}">${works.map((g, k) => `<figure data-bi="${k}" role="button" tabindex="0" aria-label="${esc(g.caption || "صورة")}">${g.type === "video"
           ? `<video src="${esc(safeUrl(g.src))}#t=0.1" muted playsinline preload="metadata" style="${mstyle(g.focus)}"></video><span class="play" style="position:absolute;inset:0;display:grid;place-items:center"><svg viewBox="0 0 24 24" width="30" height="30" fill="rgba(255,255,255,.9)"><path d="M8 5v14l11-7z"/></svg></span>`
