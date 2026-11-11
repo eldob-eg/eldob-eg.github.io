@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin-vault.json
+Disallow: /preview/
+
+Sitemap: https://eldob-eg.github.io/sitemap.xml
