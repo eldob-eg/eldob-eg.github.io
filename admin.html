@@ -114,6 +114,33 @@
   .btns{display:flex;gap:8px;flex-wrap:wrap}
   .btns .btn{flex:1}
 
+  /* v4: barber work picker, pending reviews, offers */
+  .pick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:6px}
+  .pick-grid button{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;border:2px solid transparent;padding:0;background:var(--panel-2);cursor:pointer}
+  .pick-grid img,.pick-grid video{width:100%;height:100%;object-fit:cover;display:block;opacity:.55;transition:opacity .15s}
+  .pick-grid button.on{border-color:var(--brass)}
+  .pick-grid button.on img,.pick-grid button.on video{opacity:1}
+  .pick-grid button.on::after{content:"✓";position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;background:var(--brass);color:#1a140b;font-weight:700;font-size:.8rem;display:grid;place-items:center}
+  .pick-grid .other{position:absolute;bottom:3px;right:3px;left:3px;font-size:.6rem;background:rgba(0,0,0,.7);color:#ddd;border-radius:6px;padding:1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gtile .by{position:absolute;bottom:6px;right:6px;max-width:calc(100% - 40px);background:rgba(0,0,0,.72);font-size:.66rem;padding:2px 7px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .prev-rev{background:var(--panel);border:1px solid rgba(201,164,106,.4);border-radius:14px;padding:12px;margin-bottom:8px}
+  .prev-rev .h{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .prev-rev .h b{flex:1;min-width:0}
+  .prev-rev .st{color:#f5c04e;direction:ltr;font-size:.85rem;letter-spacing:1px}
+  .prev-rev p{font-size:.92rem;line-height:1.6;margin-bottom:6px;white-space:pre-wrap;word-break:break-word}
+  .prev-rev small{display:block;color:var(--muted);font-size:.75rem;margin-bottom:8px;direction:ltr;text-align:right}
+  .tab .n{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-inline-start:4px;border-radius:999px;background:#e5484d;color:#fff;font-size:.68rem;font-weight:700}
+  .of-quick{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 12px}
+  .of-quick button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:.8rem;cursor:pointer}
+  .of-bar{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;color:#f6e7c8;background:linear-gradient(90deg,#24190b,#3b2a12 50%,#24190b);border:1px solid rgba(201,164,106,.55)}
+  .of-bar .t{flex:1;min-width:0;font-weight:600;font-size:.88rem;line-height:1.35}
+  .of-bar .t small{display:block;font-weight:400;font-size:.72rem;color:#d9c39a}
+  .of-bar .cd{display:flex;gap:4px;flex-shrink:0}
+  .of-bar .u{display:flex;flex-direction:column;align-items:center;min-width:32px;padding:2px;border-radius:7px;background:rgba(0,0,0,.4);border:1px solid rgba(201,164,106,.35)}
+  .of-bar .u b{font-size:.9rem;line-height:1.1;color:#f1d39b;direction:ltr}
+  .of-bar .u i{font-style:normal;font-size:.56rem;color:#bfae8e}
+  .of-state{font-size:.82rem;margin-top:8px}
+
   /* save bar */
   .savebar{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(27,26,24,.97);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
   .savebar-in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:10px}
@@ -252,7 +279,8 @@
     <div class="tabs" id="tabs">
       <button class="tab on" data-tab="gallery">📸 Gallery</button>
       <button class="tab" data-tab="team">✂️ Team</button>
-      <button class="tab" data-tab="reviews">⭐ Reviews</button>
+      <button class="tab" data-tab="reviews" id="tabReviews">⭐ Reviews</button>
+      <button class="tab" data-tab="offers">🔥 Offers</button>
       <button class="tab" data-tab="groom">🤵 Groom</button>
       <button class="tab" data-tab="products">🛍️ Products</button>
       <button class="tab" data-tab="season">📅 Booking & Hours</button>
@@ -267,9 +295,10 @@
       <p class="hint">دوس على أي صورة عشان تعدّلها أو تمسحها أو تغيّر مكانها. الصور بتتصغّر لوحدها قبل الرفع.</p>
       <div class="card" style="margin-bottom:14px">
         <b style="display:block;margin-bottom:4px">Cover · صورة الغلاف</b>
-        <p class="hint" style="margin-bottom:10px">أول حاجة الزبون بيشوفها فوق اللوجو. ممكن صورة، أو فيديو قصير (من غير صوت، بيتكرر لوحده). لو سبتها فاضية بتتاخد أول صورة في الـ Gallery.</p>
+        <p class="hint" style="margin-bottom:10px">أول حاجة الزبون بيشوفها فوق اللوجو. ممكن صورة، أو فيديو قصير بيتكرر لوحده (ولو فيه أغنية، الزبون يقدر يشغّل صوته). لو سبتها فاضية بتتاخد أول صورة في الـ Gallery.</p>
         <div id="cvPrev"></div>
         <div class="field" style="margin-top:10px"><span>طول الغلاف</span><div id="cvHeight"></div></div>
+        <label class="sw" id="cvSoundRow" hidden style="margin-top:4px"><span><b>🔊 زرار صوت الفيديو</b><small>الأغنية بتشتغل أول ما الزبون يلمس الشاشة وهو قدام الفيديو، وبتقف لما ينزل تحت، وتكمّل لما يطلع تاني. وفيه زرار يقفلها لو مش عايزها</small></span><input type="checkbox" id="cvSound"><span class="knob"></span></label>
         <div class="btns" style="margin-top:8px">
           <label class="btn gold" for="cvImg" style="cursor:pointer">📷 صورة</label>
           <label class="btn ghost" for="cvVid" style="cursor:pointer">🎬 فيديو</label>
@@ -292,8 +321,11 @@
 
     <!-- Reviews -->
     <div data-pane="reviews" hidden>
-      <h2>Reviews · آراء العملاء</h2>
-      <p class="hint">بتظهر في الموقع تحت الحلاقين. اكتب كلام عملاء حقيقيين بس، زي ما قالوه أو كتبوه.</p>
+      <h2>New · آراء جديدة من الموقع</h2>
+      <p class="hint">الزباين بيكتبوها من زرار "اكتب رأيك" في الموقع. مش بتظهر غير لما توافق عليها، وبعدها دوس <b>حفظ ونشر</b>.</p>
+      <div id="pendRev"><div class="empty"><span class="spin"></span></div></div>
+      <h2>Reviews · اللي ظاهرة في الموقع</h2>
+      <p class="hint">بتظهر في الموقع تحت الحلاقين. لو بتضيف رأي بإيدك، اكتب كلام عملاء حقيقيين بس، زي ما قالوه أو كتبوه.</p>
       <div class="blist" id="rlist"></div>
       <button class="btn gold full" id="addReview" style="margin-top:12px">＋ ضيف رأي</button>
     </div>
@@ -327,6 +359,27 @@
           <label class="field"><span>مبلغ الـ Deposit (جنيه)</span><input data-bind="groom.deposit.amount" type="number" inputmode="numeric" min="0" step="50" class="ltr" placeholder="500"></label>
           <label class="field"><span>ملاحظة تحت المبلغ (اختياري)</span><input data-bind="groom.deposit.note" placeholder="مثلًا: الـ Deposit بيتخصم من الحساب"></label>
           <p class="hint" style="margin:0">الدفع بيروح على نفس رقم إنستاباي وفودافون كاش اللي في 📞 البيانات. والموقع مش بيقدر يعرف إن التحويل تم، فراجع الـ Screenshot اللي بيوصلك على الواتساب قبل ما تأكّد الميعاد.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Offers -->
+    <div data-pane="offers" hidden>
+      <h2>Offers · العروض</h2>
+      <div class="card">
+        <label class="sw"><span><b>اعرض العرض في الموقع</b><small>شريط فوق الموقع فيه العرض وعدّاد بالوقت الباقي، وبيختفي لوحده لما الوقت يخلص</small></span><input type="checkbox" data-bind="offer.on" data-toggle="ofBody"><span class="knob"></span></label>
+        <div class="sw-body" id="ofBody">
+          <label class="field"><span>العرض</span><input data-bind="offer.text" maxlength="70" placeholder="🔥 عرض العيد: قصّة + دقن بسعر خاص"></label>
+          <label class="field"><span>سطر صغير تحته (اختياري)</span><input data-bind="offer.sub" maxlength="60" placeholder="مثلًا: لحد آخر يوم في العيد"></label>
+          <label class="field"><span>العرض بيخلص امتى؟ (بتوقيت مصر)</span><input type="datetime-local" data-bind="offer.ends" id="ofEnds" class="ltr"></label>
+          <div class="of-quick" id="ofQuick">
+            <button type="button" data-d="1">بعد يوم</button>
+            <button type="button" data-d="3">بعد 3 أيام</button>
+            <button type="button" data-d="7">بعد أسبوع</button>
+            <button type="button" data-d="0">من غير عدّاد</button>
+          </div>
+          <label class="sw"><span><b>زرار "اطلب العرض على واتساب"</b><small>الزبون يدوس على الشريط، يفتحله واتساب برسالة فيها العرض</small></span><input type="checkbox" data-bind="offer.cta"><span class="knob"></span></label>
+          <div class="field" style="margin-top:12px"><span>شكله في الموقع</span><div id="ofPrev"></div></div>
         </div>
       </div>
     </div>
@@ -620,8 +673,11 @@ async function startApp(){
     toast(e.status ? ghError(e) : "مقدرتش أحمّل البيانات", 4000); return;
   }
   DATA.gallery ||= []; DATA.barbers ||= []; DATA.reviews ||= []; DATA.products ||= []; DATA.groom ||= {on:false,title:"باكدج العريس",intro:"",items:[],image:""}; DATA.groom.deposit ||= {on:false,amount:0,note:""}; DATA.booking ||= {}; DATA.announcement ||= {}; DATA.tempClosed ||= {};
+  DATA.offer ||= {on:false, text:"", sub:"", ends:"", cta:true}; if (DATA.offer.cta === undefined) DATA.offer.cta = true;
+  DATA.reviewsHidden ||= [];
   SAVED = clone(DATA);
-  bindFields(); renderGallery(); renderTeam(); renderReviews(); renderProducts(); paintGroom(); paintLogos(); paintCover(); paintSheetBtn(); paintCrowd();
+  bindFields(); renderGallery(); renderTeam(); renderReviews(); renderProducts(); paintGroom(); paintLogos(); paintCover(); paintSheetBtn(); paintCrowd(); paintOffer();
+  loadPending();
   try { localStorage.setItem("eldob_no_track", "1"); } catch(_) {}
 }
 
@@ -825,7 +881,10 @@ function paintCover(){
   $("cvHeight").innerHTML = segHTML("cvH", COVER_H, h);
   $("cvHeight").querySelectorAll('input[name="cvH"]').forEach(r => r.onchange = () => { DATA.coverHeight = r.value; setFrameRatio(box, "cv", COVER_R[r.value]); markDirty(); });
   $("cvClear").hidden = !(v || im);
+  $("cvSoundRow").hidden = !v;
+  $("cvSound").checked = DATA.coverSound !== false;
 }
+$("cvSound").addEventListener("change", e => { DATA.coverSound = e.target.checked; markDirty(); });
 const coverUpload = async (f, kind) => {
   $("cvPrev").innerHTML = `<span class="spin"></span>`;
   try {
@@ -913,7 +972,7 @@ function openReview(i){
 
 /* ================= Stats ================= */
 let STATS = null;
-const STAT_ROWS = [["whatsapp","💬 فتحوا الواتساب"],["instapay","💜 داسوا على إنستاباي"],["vodafone","❤️ داسوا على فودافون كاش"],["proof","📸 بعتوا Screenshot الدفع"],["booking","📅 حجوزات"],["location","📍 فتحوا الـ Location"],["instagram","إنستجرام"],["tiktok","تيك توك"],["facebook","فيسبوك"],["review","⭐ تقييم جوجل"],["share","🔗 شاركوا الموقع"],["install","📲 حطّوه على الموبايل"],["groom","🤵 طلبات العرسان"],["product","🛍️ طلبوا منتجات"]];
+const STAT_ROWS = [["whatsapp","💬 فتحوا الواتساب"],["instapay","💜 داسوا على إنستاباي"],["vodafone","❤️ داسوا على فودافون كاش"],["proof","📸 بعتوا Screenshot الدفع"],["booking","📅 حجوزات"],["location","📍 فتحوا الـ Location"],["instagram","إنستجرام"],["tiktok","تيك توك"],["facebook","فيسبوك"],["review","⭐ تقييم جوجل"],["share","🔗 شاركوا الموقع"],["install","📲 حطّوه على الموبايل"],["groom","🤵 طلبات العرسان"],["product","🛍️ طلبوا منتجات"],["offer","🔥 داسوا على العرض"],["feedback","✍️ كتبوا رأيهم"]];
 async function loadStats(){
   const body = $("statBody"), url = DATA?.booking?.sheetUrl;
   if (!url) { body.innerHTML = `<div class="empty">اربط شيت الحجوزات الأول من 📅 الحجز والمواعيد</div>`; return; }
@@ -984,6 +1043,16 @@ async function compressImage(file, maxSide, type){
     return await new Promise(res => c.toBlob(res, type || "image/jpeg", 0.82));
   } catch(e) { return file; }
 }
+// iPhone "High Efficiency" videos (HEVC) don't play in Chrome on many phones and PCs
+async function isHevc(file){
+  try {
+    const buf = new Uint8Array(await file.arrayBuffer());
+    for (let i = 0; i < buf.length - 4; i++) {
+      if (buf[i] === 0x68 && ((buf[i+1] === 0x76 && buf[i+2] === 0x63 && buf[i+3] === 0x31) || (buf[i+1] === 0x65 && buf[i+2] === 0x76 && buf[i+3] === 0x31))) return true;
+    }
+  } catch(_) {}
+  return false;
+}
 const blobToB64 = blob => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(blob); });
 async function uploadMedia(file, kind, folder){
   let blob = file, ext;
@@ -994,6 +1063,7 @@ async function uploadMedia(file, kind, folder){
   else if (kind === "image") { blob = await compressImage(file, folder === "uploads/team" ? 900 : 1600); ext = "jpg"; }
   else {
     if (file.size > MAX_VIDEO_MB*1024*1024) throw Object.assign(new Error("big"), {big:true});
+    isHevc(file).then(h => { if (h) toast("⚠️ الفيديو ده بصيغة HEVC (بتاعة الآيفون) ومش هيشتغل على كل الموبايلات والكمبيوترات. صوّر بـ Most Compatible: Settings ← Camera ← Formats", 9000); });
     ext = (file.name.split(".").pop() || "mp4").toLowerCase().replace(/[^a-z0-9]/g,"") || "mp4";
     if (ext === "mov") ext = "mov";
   }
@@ -1014,6 +1084,7 @@ function renderGallery(){
                             : `<img src="${esc(src(it.src))}" alt="" style="object-position:${fpos(it.focus)}">`}
       ${(it.size && it.size !== "auto") || it.wide ? `<span class="badge" style="${it.type==='video'?'top:30px':''}">${(GSIZES.find(s => s[0] === (it.size || "w")) || [,""])[1]}</span>` : ""}
       <span class="num">${i+1}</span>
+      ${it.barber && barberName(it.barber) ? `<span class="by">✂️ ${esc(barberName(it.barber))}</span>` : ""}
     </div>`).join("") + `
     <label class="gtile add-tile" for="gFile"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>ضيف صور<br>أو Video</span></label>`;
   if (!DATA.gallery.length) g.insertAdjacentHTML("afterbegin", `<div class="empty" style="grid-column:1/-1">الجاليري فاضي — ضيف أول صورة</div>`);
@@ -1050,6 +1121,7 @@ function openGalleryItem(i){
     <div class="field"><span>الحجم في الـ Gallery</span>${segHTML("gSize", GSIZES, it.size || (it.wide ? "w" : "auto"))}</div>
     <div class="field"><span>طريقة العرض</span>${segHTML("gFit", [["cover","تملّي المربع"],["contain","الصورة كاملة"]], it.fit || "cover")}</div>
     <label class="field"><span>كلام تحتها (اختياري)</span><input id="gCap" value="${esc(it.caption)}"></label>
+    ${DATA.barbers.length ? `<label class="field"><span>شغل مين؟ (بتظهر في صفحته)</span><select id="gBy"><option value="">شغل المحل (من غير اسم)</option>${DATA.barbers.filter(b => b.name).map(b => `<option value="${esc(b.id)}" ${it.barber === b.id ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></label>` : ""}
     <div class="btns" style="margin-bottom:8px">
       <button class="btn ghost" id="gUp" ${i===0?"disabled":""}>→ قدّمها</button>
       <button class="btn ghost" id="gDown" ${i===DATA.gallery.length-1?"disabled":""}>أخّرها ←</button>
@@ -1060,6 +1132,7 @@ function openGalleryItem(i){
     </div>`, root => {
       const commit = () => { it.caption = root.querySelector("#gCap").value.trim(); };
       root.querySelector("#gCap").oninput = () => { commit(); markDirty(); };
+      root.querySelector("#gBy") && (root.querySelector("#gBy").onchange = e => { if (e.target.value) it.barber = e.target.value; else delete it.barber; markDirty(); renderGallery(); });
       bindFramer(root, "g", f => { it.focus = f; markDirty(); renderGallery(); });
       root.querySelectorAll('input[name="gSize"]').forEach(r => r.onchange = () => { it.size = r.value; it.wide = r.value === "w"; setFrameRatio(root, "g", GRATIO[r.value]); markDirty(); renderGallery(); });
       root.querySelectorAll('input[name="gFit"]').forEach(r => r.onchange = () => { it.fit = r.value; setFrameRatio(root, "g", null, r.value); markDirty(); renderGallery(); });
@@ -1076,6 +1149,99 @@ function openGalleryItem(i){
     });
 }
 
+/* ================= v4 helpers ================= */
+const barberName = id => (DATA.barbers.find(b => b.id === id) || {}).name || "";
+// keep only the real link from the Instagram field (extra pasted text gets dropped)
+function cleanIg(v){
+  v = String(v || "");
+  const m = v.match(/https?:\/\/[^\s"'<>]+/i);
+  if (m) return m[0];
+  const h = v.trim().match(/^@?([A-Za-z0-9._]{2,30})$/);
+  return h ? "https://www.instagram.com/" + h[1] : "";
+}
+
+/* ================= Reviews written on the site (wait for approval) ================= */
+let PENDING = null;
+async function loadPending(){
+  const url = DATA?.booking?.sheetUrl;
+  if (!url) { PENDING = []; $("pendRev").innerHTML = `<div class="empty">اربط شيت الحجوزات الأول من 📅 Booking & Hours</div>`; return; }
+  $("pendRev").innerHTML = `<div class="empty"><span class="spin"></span></div>`;
+  try {
+    const j = await (await fetch(url + "?reviews=1&t=" + Date.now())).json();
+    if (!j.reviews) throw new Error("old");
+    PENDING = j.reviews.map(r => ({...r, name: String(r.name || "").replace(/^'/, ""), text: String(r.text || "").replace(/^'/, "")})); renderPending();
+  } catch(e) {
+    PENDING = null;
+    $("pendRev").innerHTML = `<div class="empty">مقدرتش أجيب الآراء الجديدة. لو لسه ما حدّثتش كود الشيت، حدّثه من 📅 Booking & Hours.<br><button class="btn ghost" style="margin-top:10px" id="pendRetry" type="button">جرّب تاني</button></div>`;
+    $("pendRetry").onclick = loadPending;
+  }
+}
+function renderPending(){
+  if (!PENDING) return;
+  const done = new Set([...(DATA.reviews || []).map(r => r.sid).filter(Boolean), ...(DATA.reviewsHidden || [])]);
+  const list = PENDING.filter(r => !done.has(r.id));
+  const tab = $("tabReviews");
+  tab.innerHTML = "⭐ Reviews" + (list.length ? `<span class="n">${list.length}</span>` : "");
+  if (!list.length) { $("pendRev").innerHTML = `<div class="empty">مفيش آراء جديدة مستنياك ✓</div>`; return; }
+  $("pendRev").innerHTML = list.map(r => `
+    <div class="prev-rev" data-id="${esc(r.id)}">
+      <div class="h"><b>${esc(r.name)}</b><span class="st">${"★".repeat(Math.max(1, Math.min(5, +r.stars || 5)))}</span></div>
+      <p>${esc(r.text)}</p>
+      <small>${esc(r.date)}</small>
+      <div class="btns"><button class="btn ghost" data-act="hide" type="button">اخفيه</button><button class="btn gold" data-act="pub" type="button">✓ انشره في الموقع</button></div>
+    </div>`).join("");
+}
+$("pendRev").addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const id = b.closest("[data-id]").dataset.id, r = (PENDING || []).find(x => x.id === id); if (!r) return;
+  if (b.dataset.act === "pub") {
+    DATA.reviews.unshift({id: uid(), sid: r.id, name: r.name, text: r.text, stars: Math.max(1, Math.min(5, +r.stars || 5))});
+    renderReviews(); toast("اتضاف ✓ — دوس حفظ ونشر عشان يظهر");
+  } else {
+    DATA.reviewsHidden.push(r.id); toast("اتخفى — دوس حفظ ونشر");
+  }
+  markDirty(); renderPending();
+});
+
+/* ================= Offers ================= */
+// the end time is typed in Egypt time; work out the real moment it ends
+function cairoToMs(v){
+  const m = String(v || "").match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (!m) return NaN;
+  const wall = Date.UTC(+m[1], m[2]-1, +m[3], +m[4], +m[5]);
+  const off = t => {
+    const p = Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:"Africa/Cairo",hourCycle:"h23",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).formatToParts(new Date(t)).map(x => [x.type, x.value]));
+    return Date.UTC(+p.year, p.month-1, +p.day, +p.hour % 24, +p.minute) - t;
+  };
+  let t = wall - off(wall); t = wall - off(t);
+  return t;
+}
+const cairoLocal = ms => {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:"Africa/Cairo",hourCycle:"h23",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).formatToParts(new Date(ms)).map(x => [x.type, x.value]));
+  return `${p.year}-${p.month}-${p.day}T${String(+p.hour % 24).padStart(2,"0")}:${p.minute}`;
+};
+function paintOffer(){
+  const o = DATA?.offer; if (!o) return;
+  const end = cairoToMs(o.ends), left = end - Date.now();
+  const two = n => String(n).padStart(2, "0"), unit = (n, l) => `<span class="u"><b>${n}</b><i>${l}</i></span>`;
+  let cd = "";
+  if (!isNaN(end) && left > 0) {
+    const s = Math.floor(left / 1000), D = Math.floor(s / 86400), H = Math.floor(s % 86400 / 3600), M = Math.floor(s % 3600 / 60), S = s % 60;
+    cd = (D ? unit(D, "يوم") : "") + unit(two(H), "ساعة") + unit(two(M), "دقيقة") + (D ? "" : unit(two(S), "ثانية"));
+  }
+  $("ofPrev").innerHTML = `<div class="of-bar"><span class="t">${esc(o.text || "اكتب العرض فوق")}${o.sub ? `<small>${esc(o.sub)}</small>` : ""}${o.cta !== false ? `<small style="color:#e2c48e">اطلب العرض على واتساب ←</small>` : ""}</span><span class="cd">${cd}</span></div>
+    <div class="of-state">${!o.on ? "⏸️ العرض مقفول، مش ظاهر في الموقع" : !o.text ? "✏️ اكتب العرض عشان يظهر" : isNaN(end) ? "✅ ظاهر في الموقع من غير عدّاد" : left > 0 ? "✅ ظاهر في الموقع، وهيختفي لوحده لما العدّاد يخلص" : "⛔ وقت العرض خلص، فمش ظاهر في الموقع. غيّر التاريخ لو عايز ترجّعه"}</div>`;
+}
+setInterval(() => { if (DATA && !document.querySelector('[data-pane="offers"]').hidden) paintOffer(); }, 1000);
+document.addEventListener("input", e => { if (String(e.target.dataset?.bind || "").startsWith("offer.")) paintOffer(); });
+document.addEventListener("change", e => { if (String(e.target.dataset?.bind || "").startsWith("offer.")) paintOffer(); });
+$("ofQuick").addEventListener("click", e => {
+  const b = e.target.closest("button[data-d]"); if (!b) return;
+  const d = +b.dataset.d;
+  DATA.offer.ends = d ? cairoLocal(Date.now() + d * 864e5).replace(/:\d\d$/, ":00") : "";
+  $("ofEnds").value = DATA.offer.ends; markDirty(); paintOffer();
+});
+
 /* ================= Team ================= */
 const STATUS = {active:"شغال", vacation:"أجازة", hidden:"مخفي"};
 function renderTeam(){
@@ -1084,7 +1250,7 @@ function renderTeam(){
   l.innerHTML = DATA.barbers.map((b,i) => `
     <div class="bitem" data-i="${i}">
       <div class="av">${b.photo ? `<img src="${esc(src(b.photo))}" alt="">` : esc((b.name||"?").trim().charAt(0))}</div>
-      <div class="t"><b>${esc(b.name||"من غير اسم")}</b><small>${esc(b.role||"")}</small></div>
+      <div class="t"><b>${esc(b.name||"من غير اسم")}</b><small>${esc(b.role||"")}${(n => n ? ` · ${n} صورة شغل` : "")(DATA.gallery.filter(g => g.barber === b.id).length)}</small></div>
       <span class="pill ${b.status||"active"}">${STATUS[b.status||"active"]}</span>
     </div>`).join("");
 }
@@ -1108,7 +1274,12 @@ function openBarber(i){
     <div id="bFr">${b.photo ? framerHTML("b", b.photo, false, "3/4", b.focus, "cover") : ""}</div>
     <label class="field"><span>الاسم</span><input id="bName" value="${esc(b.name)}" placeholder="مثلًا: محمد"></label>
     <label class="field"><span>اللقب / الشغلانة (اختياري)</span><input id="bRole" value="${esc(b.role)}" placeholder="Master Barber · حلاق · متخصص دقن"></label>
-    <label class="field"><span>لينك إنستجرام بتاعه (اختياري)</span><input id="bIg" class="ltr" value="${esc(b.instagram)}" placeholder="https://instagram.com/..."></label>
+    <label class="field"><span>لينك إنستجرام بتاعه (اختياري)</span><input id="bIg" class="ltr" value="${esc(cleanIg(b.instagram))}" placeholder="https://instagram.com/..."></label>
+    ${DATA.gallery.length ? `<div class="field"><span>صور شغله من الـ Gallery (بتظهر في صفحته) — دوس على الصورة تختارها</span>
+      <div class="pick-grid" id="bWorks">${DATA.gallery.map((g, gi) => {
+        const other = g.barber && g.barber !== b.id ? barberName(g.barber) : "";
+        return `<button type="button" data-gi="${gi}" class="${g.barber === b.id ? "on" : ""}">${g.type === "video" ? `<video src="${esc(src(g.src))}" muted playsinline preload="metadata"></video>` : `<img src="${esc(src(g.src))}" alt="" loading="lazy">`}${other ? `<span class="other">${esc(other)}</span>` : ""}</button>`;
+      }).join("")}</div></div>` : `<p class="hint">ضيف صور في 📸 Gallery الأول، وبعدها اختار صور شغله من هنا.</p>`}
     <div class="field"><span>الحالة</span>
       <div class="seg">${Object.entries(STATUS).map(([k,v]) => `<label><input type="radio" name="bSt" value="${k}" ${b.status===k?"checked":""}><span>${v}</span></label>`).join("")}</div>
     </div>
@@ -1131,22 +1302,29 @@ function openBarber(i){
       };
       q("#bNoPhoto") && (q("#bNoPhoto").onclick = () => { b.photo = ""; q("#bAv").innerHTML = "مفيش<br>صورة"; q("#bFr").innerHTML = ""; q("#bNoPhoto").remove(); });
       bindFramer(root, "b", f => { b.focus = f; });
+      const picked = new Set(DATA.gallery.map((g, gi) => g.barber === b.id ? gi : -1).filter(x => x >= 0));
+      q("#bWorks") && (q("#bWorks").onclick = e => {
+        const t = e.target.closest("button[data-gi]"); if (!t) return;
+        const gi = +t.dataset.gi; picked.has(gi) ? picked.delete(gi) : picked.add(gi);
+        t.classList.toggle("on", picked.has(gi)); t.querySelector(".other")?.remove();
+      });
       q("#bSave").onclick = () => {
-        b.name = q("#bName").value.trim(); b.role = q("#bRole").value.trim(); b.instagram = q("#bIg").value.trim();
+        b.name = q("#bName").value.trim(); b.role = q("#bRole").value.trim(); b.instagram = cleanIg(q("#bIg").value);
         b.status = root.querySelector('input[name="bSt"]:checked')?.value || "active";
         if (!b.name) return q("#bErr").textContent = "اكتب الاسم";
-        if (b.instagram && !/^https?:\/\//.test(b.instagram)) b.instagram = "https://instagram.com/" + b.instagram.replace(/^@/,"");
         if (!isNew && isUpload(oldPhoto) && oldPhoto !== b.photo) pendingDeletes.add(oldPhoto);
         if (isNew) DATA.barbers.push(b); else DATA.barbers[i] = b;
-        markDirty(); renderTeam(); closeSheet(); toast(isNew ? "اتضاف ✓ — دوس حفظ ونشر" : "اتعدّل ✓ — دوس حفظ ونشر");
+        DATA.gallery.forEach((g, gi) => { if (picked.has(gi)) g.barber = b.id; else if (g.barber === b.id) delete g.barber; });
+        markDirty(); renderTeam(); renderGallery(); closeSheet(); toast(isNew ? "اتضاف ✓ — دوس حفظ ونشر" : "اتعدّل ✓ — دوس حفظ ونشر");
       };
       q("#bUp") && (q("#bUp").onclick = () => { [DATA.barbers[i-1], DATA.barbers[i]] = [DATA.barbers[i], DATA.barbers[i-1]]; markDirty(); renderTeam(); closeSheet(); });
       const del = q("#bDel");
       del && (del.onclick = () => {
         if (del.dataset.sure !== "1") { del.dataset.sure = "1"; del.textContent = "متأكد؟ دوس تاني"; return; }
         DATA.barbers.splice(i, 1);
+        DATA.gallery.forEach(g => { if (g.barber === b.id) delete g.barber; });
         if (isUpload(oldPhoto)) pendingDeletes.add(oldPhoto);
-        markDirty(); renderTeam(); closeSheet(); toast("اتمسح — دوس حفظ ونشر");
+        markDirty(); renderTeam(); renderGallery(); closeSheet(); toast("اتمسح — دوس حفظ ونشر");
       });
     });
 }
@@ -1165,6 +1343,7 @@ function closeSheet(){ $("sheetRoot").innerHTML = ""; }
 $("saveBtn").onclick = async () => {
   const btn = $("saveBtn"); busy(btn, true, "بنحفظ…");
   try {
+    DATA.barbers.forEach(b => { if (b.instagram) b.instagram = cleanIg(b.instagram); });
     // keep only files still referenced
     const used = new Set([...DATA.gallery.map(g=>g.src), ...DATA.barbers.map(b=>b.photo), ...(DATA.products||[]).map(p=>p.photo), DATA.groom?.image, DATA.paymentLogos?.instapay, DATA.paymentLogos?.vodafone, DATA.cover, DATA.coverVideo]);
     const latest = await ghGet(DATA_PATH);
@@ -1178,7 +1357,7 @@ $("saveBtn").onclick = async () => {
 };
 $("discardBtn").onclick = () => {
   DATA = clone(SAVED); pendingDeletes.clear(); clearDirty();
-  bindFields(); renderGallery(); renderTeam(); renderReviews(); renderProducts(); paintGroom(); paintLogos(); paintCover(); paintSheetBtn(); paintCrowd(); toast("رجّعنا آخر نسخة محفوظة");
+  bindFields(); renderGallery(); renderTeam(); renderReviews(); renderProducts(); paintGroom(); paintLogos(); paintCover(); paintSheetBtn(); paintCrowd(); paintOffer(); renderPending(); toast("رجّعنا آخر نسخة محفوظة");
 };
 
 /* ================= Settings: change password / token ================= */

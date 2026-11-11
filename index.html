@@ -3,9 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>El-Dob — Men's Grooming Lounge</title>
-<meta name="description" content="El-Dob Men's Grooming Lounge — صالون حلاقة رجالي. المواعيد، الـ Location، الدفع بإنستاباي وفودافون كاش، والحجز في المواسم.">
+<title>El-Dob | صالون حلاقة رجالي في محرم بك، إسكندرية — Men's Grooming Lounge</title>
+<meta name="description" content="El-Dob Men's Grooming Lounge — صالون حلاقة رجالي في محرم بك، إسكندرية. متواجدين كل يوم. قصّات ودقن وباكدج العريس، والدفع بإنستاباي وفودافون كاش.">
 <meta name="theme-color" content="#121110">
+<link rel="canonical" href="https://eldob-eg.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="El-Dob">
+<meta property="og:title" content="El-Dob — Men's Grooming Lounge ✂️">
+<meta property="og:description" content="صالون حلاقة رجالي في محرم بك، إسكندرية · متواجدين كل يوم · الـ Location والدفع والـ Gallery كله هنا">
+<meta property="og:url" content="https://eldob-eg.github.io/">
+<meta property="og:image" content="https://eldob-eg.github.io/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="El-Dob Men's Grooming Lounge">
+<meta property="og:locale" content="ar_EG">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="El-Dob — Men's Grooming Lounge ✂️">
+<meta name="twitter:description" content="صالون حلاقة رجالي في محرم بك، إسكندرية">
+<meta name="twitter:image" content="https://eldob-eg.github.io/img/og.jpg">
+<script type="application/ld+json" id="ld">{"@context":"https://schema.org","@type":"BarberShop","name":"El-Dob","alternateName":["El-Dob Men's Grooming Lounge","El Dob","Eldob"],"description":"صالون حلاقة رجالي في محرم بك، إسكندرية","url":"https://eldob-eg.github.io/","image":"https://eldob-eg.github.io/img/og.jpg","logo":"https://eldob-eg.github.io/icons/icon-512.png","telephone":"+201016679635","foundingDate":"2021","address":{"@type":"PostalAddress","streetAddress":"6 El-Wazir St","addressLocality":"Moharram Bek, Alexandria","addressRegion":"Alexandria Governorate","addressCountry":"EG"},"geo":{"@type":"GeoCoordinates","latitude":31.1944836,"longitude":29.9181325},"hasMap":"https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"14:00","closes":"04:00"}],"paymentAccepted":"Cash, InstaPay, Vodafone Cash","currenciesAccepted":"EGP","sameAs":["https://www.facebook.com/share/1A8EnZZnTm/","https://www.instagram.com/eldop.10","https://www.tiktok.com/@eldop.10"]}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -635,13 +651,184 @@
   #teamWrap{margin-top:14px}
   .page[data-page="services"] #groomWrap > .label{display:none}
   .page[data-page="services"] #groomWrap{margin-top:14px}
+
+  /* ================= v4: offers, barber pages, customer reviews, desktop ================= */
+  /* top bars: announcement + offer stack together and stay on top */
+  .topbars{position:sticky;top:0;z-index:20}
+  .topbars .announce{position:static}
+  .page-head{top:var(--tb,0px)}
+  .offer{display:flex;align-items:center;gap:12px;padding:9px 16px;color:#f6e7c8;text-decoration:none;
+    background:linear-gradient(90deg,#24190b,#3b2a12 50%,#24190b);border-bottom:1px solid rgba(201,164,106,.55);
+    box-shadow:0 6px 18px rgba(0,0,0,.35)}
+  .offer[hidden]{display:none}
+  .offer .of-t{flex:1;min-width:0;font-weight:600;font-size:.9rem;line-height:1.35}
+  .offer .of-t small{display:block;font-weight:400;font-size:.74rem;color:#d9c39a}
+  .offer .of-cd{display:flex;align-items:center;gap:4px;flex-shrink:0}
+  .offer .of-cd .u{display:flex;flex-direction:column;align-items:center;min-width:34px;padding:3px 2px 2px;border-radius:8px;background:rgba(0,0,0,.4);border:1px solid rgba(201,164,106,.35)}
+  .offer .of-cd b{font-family:"Cinzel",serif;font-weight:600;font-size:.95rem;line-height:1.1;color:#f1d39b;font-variant-numeric:tabular-nums;direction:ltr}
+  .offer .of-cd i{font-style:normal;font-size:.58rem;color:#bfae8e;line-height:1.2}
+  .offer[href] .of-t::after{content:"اطلب العرض على واتساب ←";display:block;font-weight:500;font-size:.72rem;color:#e2c48e;margin-top:1px}
+
+  /* team cards open the barber's page */
+  a.barber{display:block;color:inherit;text-decoration:none}
+  .barber .more{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:.78rem;color:var(--brass)}
+  .barber .cnt{position:absolute;top:10px;inset-inline-start:10px;padding:3px 9px;border-radius:999px;background:rgba(10,9,8,.7);backdrop-filter:blur(6px);font-size:.72rem;color:#e7dccb}
+  a.barber:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+  /* barber page */
+  .ph-back{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--brass);flex-shrink:0}
+  .ph-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .bp-hero{display:grid;grid-template-columns:120px minmax(0,1fr);grid-template-areas:"ph info" "act act";align-items:center;gap:14px 16px;margin-top:14px}
+  .bp-ph{grid-area:ph}.bp-info{grid-area:info}.bp-actions{grid-area:act}
+  .bp-ph .away-tag{font-size:.7rem}
+  .bp-ph{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:4/5;background:var(--panel-2);display:grid;place-items:center;border:1px solid var(--line)}
+  .bp-ph img{width:100%;height:100%;object-fit:cover;display:block}
+  .bp-ph .initial{font-family:"Yellowtail",cursive;font-size:6rem;color:var(--brass)}
+  .bp-ph .away-tag{position:absolute;top:12px;inset-inline-end:12px}
+  .bp-name{font-family:"Reem Kufi","Alexandria",sans-serif;font-size:1.55rem;line-height:1.2;font-weight:700;overflow-wrap:anywhere}
+  .bp-role{color:var(--brass);font-size:.95rem;margin-top:2px}
+  .bp-meta{color:var(--muted);font-size:.85rem;margin-top:6px}
+  .bp-actions{display:grid;grid-template-columns:1fr auto;gap:8px}
+  .bp-actions a,.bp-actions button{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 16px;border-radius:14px;font:inherit;font-weight:600;font-size:.92rem;text-decoration:none;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+  .bp-actions .bp-ig{border:0;color:#fff;background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 40%,#d6249f 62%,#285aeb 95%)}
+  .bp-actions .bp-ig span{direction:ltr}
+  .bp-actions svg{width:19px;height:19px;flex-shrink:0}
+  .bp-actions .bp-ig svg{fill:#fff}
+  .bp-actions .bp-share svg{fill:none;stroke:var(--brass);stroke-width:1.8;stroke-linecap:round}
+  .bp-actions .solo{grid-column:1/-1}
+  .bp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+  .bp-grid figure{position:relative;aspect-ratio:1/1;border-radius:8px;overflow:hidden;background:var(--panel);cursor:pointer}
+  .bp-grid img,.bp-grid video{width:100%;height:100%;object-fit:cover;display:block}
+  .bp-empty{padding:26px 18px;border:1px dashed var(--line);border-radius:16px;text-align:center;color:var(--muted);font-size:.9rem}
+  .bp-empty a{color:var(--brass)}
+  .bp-crew{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px}
+  .bp-crew::-webkit-scrollbar{display:none}
+  .bp-crew a{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;border-radius:999px;background:var(--panel);border:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:.88rem}
+  .bp-crew .av{width:36px;height:36px;border-radius:50%;overflow:hidden;background:var(--panel-2);display:grid;place-items:center;color:var(--brass);font-weight:600}
+  .bp-crew .av img{width:100%;height:100%;object-fit:cover}
+  .lb-by{position:absolute;bottom:calc(44px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;text-decoration:none;font-size:.85rem;white-space:nowrap}
+  .lb-by[hidden]{display:none}
+
+  /* customer reviews */
+  .rev-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .rev-avg{display:flex;align-items:baseline;gap:8px;flex:1;min-width:0}
+  .rev-avg b{font-family:"Cinzel",serif;font-size:1.7rem;font-weight:600;color:var(--ink);line-height:1}
+  .rev-avg .st{color:#f5c04e;letter-spacing:1px;direction:ltr}
+  .rev-avg small{color:var(--muted);font-size:.8rem}
+  .rev-write{flex-shrink:0;padding:10px 16px;border-radius:12px;border:1px solid rgba(201,164,106,.5);background:rgba(201,164,106,.1);color:var(--brass);font:inherit;font-weight:600;font-size:.88rem;cursor:pointer}
+  .rv-stars{display:flex;justify-content:center;gap:6px;margin:6px 0 14px;direction:ltr}
+  .rv-stars button{width:46px;height:46px;border:0;background:none;font-size:2.1rem;line-height:1;color:#3a352e;cursor:pointer;transition:transform .12s,color .12s}
+  .rv-stars button.on{color:#f5c04e}
+  .rv-stars button:active{transform:scale(.88)}
+  .rv-stars button:focus-visible{outline:2px solid var(--brass);border-radius:10px}
+  .field textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);font:inherit;font-size:.95rem;resize:vertical;min-height:96px}
+  .field textarea:focus{outline:none;border-color:var(--brass-deep)}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  .go.gold{background:linear-gradient(135deg,#d8b67c,#9c7a45);color:#1a140b}
+  .rv-done{text-align:center;padding:8px 0 4px}
+  .rv-done .big{font-size:2.6rem}
+  .rv-done p{color:var(--muted);font-size:.92rem;margin:6px 0 16px}
+  .tabbar .tb-brand{display:none}
+  /* cover video sound: browsers start videos muted, the customer taps to hear the song */
+  .snd{position:absolute;z-index:3;top:14px;left:14px;width:44px;height:44px;display:grid;place-items:center;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(18,17,16,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font:inherit;font-size:.82rem;font-weight:500;cursor:pointer}
+  .snd svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+  .snd.on{border-color:rgba(201,164,106,.7);color:#f1d39b}
+  .snd:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  .snd .eq{display:none;gap:2px;align-items:flex-end;height:12px}
+  .snd.on .eq{display:flex}
+  .snd .eq i{width:3px;background:currentColor;border-radius:2px;animation:eq 1s ease-in-out infinite}
+  .snd .eq i:nth-child(2){animation-delay:-.4s}.snd .eq i:nth-child(3){animation-delay:-.7s}
+  @keyframes eq{0%,100%{height:3px}50%{height:12px}}
+  @media (prefers-reduced-motion:reduce){.snd .eq i{animation:none;height:8px}}
+  /* photo always fills the card at a fixed shape, whatever its size */
+  .barber .ph{overflow:hidden}
+  .barber .ph img,.bp-ph img{position:absolute;inset:0;width:100%;height:100%}
+
+  /* ================= PC / laptop layout ================= */
+  @media (min-width:900px){
+    body{padding-top:68px;padding-bottom:0}
+    .wrap{max-width:1160px;padding:0 40px 56px}
+    .tabbar{top:0;bottom:auto;height:68px;align-items:center;justify-content:flex-start;gap:4px;
+      padding:0 max(40px, calc(50% - 540px));border-top:0;border-bottom:1px solid var(--line)}
+    .tabbar .tb-brand{display:block;flex:0 0 auto;max-width:none;padding:0;margin:0 0 0 auto;font-family:"Yellowtail",cursive;font-size:2.2rem;font-weight:400;letter-spacing:0;line-height:1;color:#f6e7c8;text-decoration:none;direction:ltr;text-shadow:0 0 12px rgba(255,200,110,.4)}
+    .offer{padding-inline:max(24px, calc(50% - 540px))}
+    .announce{padding-inline:max(24px, calc(50% - 540px))}
+    .tabbar a[data-go]{flex:0 0 auto;max-width:none;flex-direction:row;gap:8px;padding:10px 16px;font-size:.8rem;letter-spacing:1px}
+    .tabbar a[data-go] svg{width:18px;height:18px}
+    .tabbar a.on::before{top:auto;bottom:-15px;left:14px;right:14px}
+    .tabbar a[data-go]:hover{color:var(--ink)}
+    .topbars{top:68px}
+    .page-head{top:calc(68px + var(--tb,0px));margin:0 -40px 12px;padding:18px 40px}
+    .ph-logo{font-size:2.2rem}
+    .ph-t b{font-size:1.15rem}
+    .toast{bottom:32px}
+
+    /* home: full-width cover, then two columns */
+    .hero{margin:0 calc(50% - 50vw)}
+    .hero-in{padding-bottom:70px}
+    .hero .wordmark{font-size:8.8rem}
+    .hero .sub{font-size:1rem;letter-spacing:4px}
+    .quick{max-width:760px;margin:-40px auto 0}
+    .quick a,.quick button{padding:16px 6px 14px;font-size:.9rem}
+    .home-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0 56px;align-items:start}
+    .home-grid > .col > .label:first-child{margin-top:44px}
+    .social{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .teaser{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .teaser a:nth-child(n+9){display:none}
+
+    /* gallery: bigger grid */
+    .page[data-page="gallery"] .gallery{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;grid-auto-rows:calc((min(100vw,1160px) - 80px - 32px) / 5)}
+    .page[data-page="gallery"] .g-item{border-radius:12px}
+    .page[data-page="gallery"] .g-link{grid-column:span 1;flex-direction:column;align-items:flex-start;gap:4px;margin:0;padding:18px;border-radius:12px}
+    .page[data-page="gallery"] .g-link svg{margin:0 0 auto}
+    .g-item img,.g-item video{transition:transform .35s ease}
+    .g-item:hover img,.g-item:hover video{transform:scale(1.04)}
+
+    /* team + reviews: grids instead of swiping */
+    .team{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;overflow:visible;margin:0;padding:0}
+    .team:has(> a:nth-child(-n+3):last-child){grid-template-columns:repeat(auto-fill,minmax(220px,260px))}
+    .barber{flex:none}
+    a.barber{transition:transform .2s ease,border-color .2s ease}
+    a.barber:hover{transform:translateY(-3px);border-color:rgba(201,164,106,.55)}
+    .reviews{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;overflow:visible;margin:0;padding:0}
+    .rev{flex:none}
+
+    /* services: package and products side by side */
+    .page[data-page="services"]:not([hidden]){display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0 40px;align-items:start}
+    .page[data-page="services"] > .page-head{grid-column:1/-1}
+    .page[data-page="services"] #prodWrap > .label{margin-top:14px}
+
+    /* barber page: portrait beside the work */
+    .bp-hero{grid-template-columns:320px minmax(0,1fr);grid-template-areas:"ph info" "ph act";grid-template-rows:1fr auto;gap:14px 36px;align-items:end;margin-top:20px}
+    .bp-ph .away-tag{font-size:.8rem}
+    .bp-name{font-size:2.8rem}
+    .bp-actions{max-width:420px}
+    .bp-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+    .bp-grid figure{border-radius:12px}
+    .bp-crew{margin:0;padding:0;flex-wrap:wrap}
+
+    /* pop-ups open in the middle of the screen */
+    .sheet-bg{align-items:center;padding:24px}
+    .sheet{border-radius:22px;border-bottom:1px solid var(--line);max-width:520px;padding:26px 26px 22px}
+    .lb-nav{width:56px;height:80px}
+    .lb-prev{right:24px}.lb-next{left:24px}
+
+    .s-btn,.x-btn,.quick a,.quick button,.see-all,.svc-teaser,.card-main{transition:border-color .2s,transform .2s}
+    .s-btn:hover,.x-btn:hover,.quick a:hover,.quick button:hover,.see-all:hover,.svc-teaser:hover{border-color:rgba(201,164,106,.55)}
+  }
 </style>
 </head>
 <body>
 
-<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": [], "crowd": {"level": "off", "wait": 0, "updatedAt": ""}, "groom": {"on": false, "title": "باكدج العريس", "intro": "", "items": [], "image": "", "deposit": {"on": false, "amount": 0, "note": ""}}, "products": [], "paymentLogos": {"instapay": "", "vodafone": ""}, "cover": "", "coverVideo": ""}</script>
+<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": [], "crowd": {"level": "off", "wait": 0, "updatedAt": ""}, "groom": {"on": false, "title": "باكدج العريس", "intro": "", "items": [], "image": "", "deposit": {"on": false, "amount": 0, "note": ""}}, "products": [], "paymentLogos": {"instapay": "", "vodafone": ""}, "cover": "", "coverVideo": "", "coverSound": true, "offer": {"on": false, "text": "", "sub": "", "ends": "", "cta": true}}</script>
 
-<div class="announce" id="announce" hidden></div>
+<div class="topbars" id="topbars">
+  <div class="announce" id="announce" hidden></div>
+  <a class="offer" id="offer" hidden rel="noopener">
+    <span class="of-t" id="offerText"></span>
+    <span class="of-cd" id="offerCd" aria-label="الوقت الباقي على العرض"></span>
+  </a>
+</div>
 <div class="wrap">
   <section class="page" data-page="home">
   <header class="hero">
@@ -672,6 +859,8 @@
     <button id="qShare" type="button"><span class="qi"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></span>شارك</button>
   </nav>
 
+  <div class="home-grid">
+  <div class="col">
   <div class="label" id="pay">Payment</div>
   <div class="pay-seg" role="tablist" aria-label="طريقة الدفع">
     <button type="button" role="tab" data-pm="ip" aria-selected="true">InstaPay</button>
@@ -741,6 +930,8 @@
 
   <div class="label">Booking</div>
   <div id="booking"></div>
+  </div>
+  <div class="col">
 
   <div id="galTeaser" hidden>
     <div class="label">Gallery</div>
@@ -780,6 +971,8 @@
       <span><b>Install El-Dob على موبايلك</b><small>أيقونة على الشاشة الرئيسية، يفتح كأنه أبلكيشن</small></span>
     </button>
   </div>
+  </div>
+  </div>
 
   </section>
 
@@ -798,9 +991,18 @@
 
   <div id="revWrap" hidden>
     <div class="label">Reviews</div>
+    <div class="rev-top">
+      <div class="rev-avg" id="revAvg"></div>
+      <button class="rev-write" id="revWrite" type="button" hidden>✍️ اكتب رأيك</button>
+    </div>
     <div class="reviews" id="reviews"></div>
   </div>
 
+  </section>
+
+  <section class="page" data-page="barber" hidden>
+  <div class="page-head"><a class="ph-back" href="#team" aria-label="رجوع للفريق"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></a><span class="ph-t"><b id="bpHead">Barber</b><small>El-Dob Team</small></span></div>
+  <div id="bp"></div>
   </section>
 
   <section class="page" data-page="services" hidden>
@@ -830,6 +1032,7 @@
 
 
 <nav class="tabbar" id="tabbar" aria-label="Sections">
+  <a class="tb-brand" href="#home" aria-label="El-Dob">El-Dob</a>
   <a href="#home" data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
   <a href="#gallery" data-go="gallery"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 16l-5-5-9 9"/></svg><span>Gallery</span></a>
   <a href="#team" data-go="team"><svg viewBox="0 0 24 24"><circle cx="7" cy="17" r="3"/><circle cx="17" cy="17" r="3"/><path d="M9.2 14.8 18 4M14.8 14.8 6 4"/></svg><span>Team</span></a>
@@ -841,6 +1044,7 @@
   <button class="lb-nav lb-prev" id="lbPrev" type="button" aria-label="Previous">‹</button>
   <div class="lb-media" id="lbMedia"></div>
   <button class="lb-nav lb-next" id="lbNext" type="button" aria-label="Next">›</button>
+  <a class="lb-by" id="lbBy" hidden></a>
   <div class="lb-count" id="lbCount"></div>
 </div>
 
@@ -922,6 +1126,30 @@
     </div>
   </div>
 </div>
+<div class="sheet-bg" id="revSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="rvTitle">
+    <div id="rvForm">
+      <h3 id="rvTitle">رأيك في El-Dob</h3>
+      <p class="sub">رأيك هيظهر في الموقع بعد ما نراجعه</p>
+      <div class="rv-stars" id="rvStars" role="radiogroup" aria-label="التقييم من 5">
+        <button type="button" role="radio" data-n="1" aria-label="1 من 5">★</button><button type="button" role="radio" data-n="2" aria-label="2 من 5">★</button><button type="button" role="radio" data-n="3" aria-label="3 من 5">★</button><button type="button" role="radio" data-n="4" aria-label="4 من 5">★</button><button type="button" role="radio" data-n="5" aria-label="5 من 5">★</button>
+      </div>
+      <label class="field"><span>اسمك</span><input id="rvName" type="text" maxlength="40" autocomplete="given-name" placeholder="مثلًا: أحمد"></label>
+      <label class="field"><span>رأيك</span><textarea id="rvText" rows="4" maxlength="300" placeholder="إيه اللي عجبك؟ القصّة، المعاملة، المكان…"></textarea></label>
+      <input id="rvWeb" class="hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="go gold" id="rvSend" type="button">ابعت رأيك</button>
+      <div class="bk-err" id="rvErr"></div>
+      <button class="later" type="button" data-close>مش دلوقتي</button>
+    </div>
+    <div id="rvDone" class="rv-done" hidden>
+      <div class="big">🙏</div>
+      <h3 id="rvDoneT">شكرًا!</h3>
+      <p>رأيك وصلنا، وهيظهر في الموقع بعد ما نراجعه.</p>
+      <a class="go gold" id="rvGoogle" target="_blank" rel="noopener" hidden>⭐ قيّمنا على Google كمان</a>
+      <button class="later" type="button" data-close>تمام</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast">اتنسخ ✓</div>
 
 <script>
@@ -931,6 +1159,16 @@
   const fpos = f => (f && isFinite(f.x) && isFinite(f.y)) ? `${+f.x}% ${+f.y}%` : "50% 50%";
   const mstyle = (f, fit) => `object-position:${fpos(f)};object-fit:${fit === "contain" ? "contain" : "cover"}`;
   const safeUrl = u => { u = String(u||""); return /^(https?:|tel:|#|img\/|uploads\/)/i.test(u) ? u : "#"; };
+  // Instagram field may hold extra pasted text: keep the first real link (or a bare @handle)
+  const igUrl = v => {
+    v = String(v || "");
+    const m = v.match(/https?:\/\/[^\s"'<>]+/i);
+    if (m) return m[0];
+    const h = v.trim().match(/^@?([A-Za-z0-9._]{2,30})$/);
+    return h ? "https://www.instagram.com/" + h[1] : "";
+  };
+  const plural = (n, one, two, few) => n === 1 ? `1 ${one}` : n === 2 ? two : n <= 10 ? `${n} ${few}` : `${n} ${one}`;
+  const igHandle = u => { try { const x = new URL(u); return /instagram\.com$/i.test(x.hostname.replace(/^www\./,"")) ? (x.pathname.split("/").filter(Boolean)[0] || "") : ""; } catch(_) { return ""; } };
 
   // ---------- Load data (data.json, falling back to the built-in copy) ----------
   const DEFAULTS = JSON.parse($("defaults").textContent);
@@ -946,7 +1184,7 @@
 
   // ---------- Visit counter: anonymous counts only, logged to the bookings sheet ----------
   const NO_TRACK = (() => { try { return localStorage.getItem("eldob_no_track") === "1"; } catch(_) { return false; } })();
-  const EVENTS = ["visit","whatsapp","instagram","facebook","tiktok","instapay","vodafone","location","review","proof","share","install","product"];
+  const EVENTS = ["visit","whatsapp","instagram","facebook","tiktok","instapay","vodafone","location","review","proof","share","install","product","offer"];
   const track = ev => {
     const url = SHOP.booking?.sheetUrl;
     if (NO_TRACK || !EVENTS.includes(ev) || !url || !/^https:\/\/script\.google\.com\//.test(url)) return;
@@ -974,12 +1212,62 @@
   // ---------- Header ----------
   document.title = SHOP.name + " — Men's Grooming Lounge";
   $("shopName").textContent = SHOP.name;
+  // keep Google's business info in step with the hours and links set in the admin panel
+  try {
+    const ld = JSON.parse($("ld").textContent);
+    ld.name = SHOP.name;
+    ld.openingHoursSpecification[0].opens = SHOP.openAt; ld.openingHoursSpecification[0].closes = SHOP.closeAt;
+    ld.telephone = "+" + String(SHOP.whatsapp).replace(/\D/g, "");
+    ld.sameAs = [SHOP.facebook, SHOP.instagram, SHOP.tiktok].filter(u => /^https:\/\//.test(u || ""));
+    if (/^https:\/\//.test(SHOP.mapsLink || "")) ld.hasMap = SHOP.mapsLink;
+    $("ld").textContent = JSON.stringify(ld);
+  } catch(_) {}
 
   // Announcement
   if (SHOP.announcement?.on && SHOP.announcement.text) {
     $("announce").hidden = false;
     $("announce").textContent = SHOP.announcement.text;
   }
+
+  // ---------- Offer bar with a live countdown (end time is Cairo time, set from the admin panel) ----------
+  const cairoToMs = v => {
+    const m = String(v || "").match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    if (!m) return NaN;
+    const wall = Date.UTC(+m[1], m[2]-1, +m[3], +m[4], +m[5]);
+    const off = t => {
+      const p = Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:"Africa/Cairo",hourCycle:"h23",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).formatToParts(new Date(t)).map(x => [x.type, x.value]));
+      return Date.UTC(+p.year, p.month-1, +p.day, +p.hour % 24, +p.minute) - t;
+    };
+    let t = wall - off(wall); t = wall - off(t);
+    return t;
+  };
+  const OF = SHOP.offer || {};
+  const ofEnd = cairoToMs(OF.ends);
+  const ofLive = () => !!(OF.on && OF.text) && (isNaN(ofEnd) || ofEnd > Date.now());
+  const setTB = () => document.documentElement.style.setProperty("--tb", $("topbars").offsetHeight + "px");
+  if ("ResizeObserver" in window) new ResizeObserver(setTB).observe($("topbars"));
+  if (ofLive()) {
+    const ob = $("offer");
+    $("offerText").innerHTML = esc(OF.text) + (OF.sub ? `<small>${esc(OF.sub)}</small>` : "");
+    if (OF.cta !== false) {
+      ob.href = "https://wa.me/" + String(SHOP.whatsapp).replace(/\D/g,"") + "?text=" + encodeURIComponent(`السلام عليكم، عايز أستفيد من العرض: ${OF.text}`);
+      ob.target = "_blank";
+      ob.addEventListener("click", () => track("offer"));
+    }
+    const two = n => String(n).padStart(2, "0");
+    const unit = (n, l) => `<span class="u"><b>${n}</b><i>${l}</i></span>`;
+    let ofTimer;
+    const tick = () => {
+      if (!ofLive()) { ob.hidden = true; clearInterval(ofTimer); setTB(); return; }
+      if (isNaN(ofEnd)) { $("offerCd").innerHTML = ""; return; }
+      const d = Math.max(0, ofEnd - Date.now()), s = Math.floor(d / 1000);
+      const D = Math.floor(s / 86400), H = Math.floor(s % 86400 / 3600), M = Math.floor(s % 3600 / 60), S = s % 60;
+      $("offerCd").innerHTML = (D ? unit(D, "يوم") : "") + unit(two(H), "ساعة") + unit(two(M), "دقيقة") + (D ? "" : unit(two(S), "ثانية"));
+    };
+    tick(); ob.hidden = false;
+    if (!isNaN(ofEnd)) ofTimer = setInterval(tick, 1000);
+  }
+  setTB();
 
   // ---------- Social ----------
   $("waLink").href = "https://wa.me/" + String(SHOP.whatsapp).replace(/\D/g,"");
@@ -1152,16 +1440,21 @@
     </a>`;
 
   // ---------- Team ----------
-  const team = (SHOP.barbers||[]).filter(b => b.status !== "hidden");
+  const team = (SHOP.barbers||[]).filter(b => b.status !== "hidden" && b.id);
+  const worksOf = id => (SHOP.gallery||[]).filter(g => g.barber && g.barber === id);
   if (team.length) {
     $("teamWrap").hidden = false;
-    $("team").innerHTML = team.map(b => `
-      <div class="barber ${b.status==="vacation"?"away":""}">
+    $("team").innerHTML = team.map(b => {
+      const n = worksOf(b.id).length;
+      return `
+      <a class="barber ${b.status==="vacation"?"away":""}" href="#barber/${encodeURIComponent(b.id)}" aria-label="${esc(b.name)}">
         <div class="ph">${b.photo?`<img src="${esc(safeUrl(b.photo))}" alt="${esc(b.name)}" loading="lazy" style="${mstyle(b.focus)}">`:`<span class="initial">${esc((b.name||"?").trim().charAt(0))}</span>`}
-          ${b.status==="vacation"?`<span class="away-tag">أجازة</span>`:""}</div>
+          ${b.status==="vacation"?`<span class="away-tag">أجازة</span>`:""}
+          ${n ? `<span class="cnt">${plural(n, "صورة", "صورتين", "صور")}</span>` : ""}</div>
         <div class="info"><b>${esc(b.name)}</b>${b.role?`<small>${esc(b.role)}</small>`:""}
-        ${b.instagram?`<a href="${esc(safeUrl(b.instagram))}" target="_blank" rel="noopener">Instagram</a>`:""}</div>
-      </div>`).join("");
+          <span class="more">شوف شغله ←</span></div>
+      </a>`;
+    }).join("");
   }
 
   // ---------- Booking (seasonal) ----------
@@ -1234,8 +1527,46 @@
 
   // ---------- Reviews (managed from the admin panel) ----------
   const revs = (SHOP.reviews||[]).filter(r => r.text && r.name);
+  const sheetOk = /^https:\/\/script\.google\.com\//.test(SHOP.booking?.sheetUrl || "");
+  if (revs.length || sheetOk) $("revWrap").hidden = false;
   if (revs.length) {
-    $("revWrap").hidden = false;
+    const avg = revs.reduce((a, r) => a + Math.max(1, Math.min(5, +r.stars || 5)), 0) / revs.length;
+    $("revAvg").innerHTML = `<b>${avg.toFixed(1)}</b><span class="st">${"★".repeat(Math.round(avg))}</span><small>من ${plural(revs.length, "رأي", "رأيين", "آراء")}</small>`;
+  } else {
+    $("revAvg").innerHTML = `<small>لسه مفيش آراء، كن أول واحد يكتب رأيه 👇</small>`;
+  }
+  if (sheetOk) {
+    $("revWrite").hidden = false;
+    const rs = $("revSheet");
+    let stars = 0;
+    const paintStars = () => rs.querySelectorAll("#rvStars button").forEach(b => { const on = +b.dataset.n <= stars; b.classList.toggle("on", on); b.setAttribute("aria-checked", String(+b.dataset.n === stars)); });
+    const sentRecently = () => { try { return Date.now() - (+localStorage.getItem("eldob_rev_at") || 0) < 864e5; } catch(_) { return false; } };
+    const showDone = (name, st) => {
+      $("rvForm").hidden = true; $("rvDone").hidden = false;
+      $("rvDoneT").textContent = name ? `شكرًا يا ${name}!` : "شكرًا!";
+      const g = SHOP.reviewLink || SHOP.mapsLink;
+      $("rvGoogle").hidden = !(st >= 4 && g); if (g) $("rvGoogle").href = safeUrl(g);
+    };
+    $("revWrite").addEventListener("click", () => {
+      if (sentRecently()) showDone("", 0); else { $("rvForm").hidden = false; $("rvDone").hidden = true; }
+      rs.hidden = false;
+    });
+    rs.addEventListener("click", e => { if (e.target === rs || e.target.closest("[data-close]")) rs.hidden = true; });
+    $("rvStars").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { stars = +b.dataset.n; paintStars(); $("rvErr").textContent = ""; } });
+    $("rvGoogle").addEventListener("click", () => track("review"));
+    $("rvSend").addEventListener("click", () => {
+      const name = $("rvName").value.trim(), text = $("rvText").value.trim(), err = $("rvErr");
+      if (!stars) { err.textContent = "اختار عدد النجوم الأول"; return; }
+      if (!name) { err.textContent = "اكتب اسمك"; return $("rvName").focus(); }
+      if (text.length < 3) { err.textContent = "اكتب رأيك في كلمتين"; return $("rvText").focus(); }
+      err.textContent = "";
+      try { fetch(SHOP.booking.sheetUrl, {method:"POST", mode:"no-cors", keepalive:true, headers:{"Content-Type":"text/plain;charset=utf-8"},
+        body: JSON.stringify({kind:"review", name, stars, text, hp: $("rvWeb").value})}); } catch(_) {}
+      try { localStorage.setItem("eldob_rev_at", String(Date.now())); } catch(_) {}
+      showDone(name, stars);
+    });
+  }
+  if (revs.length) {
     $("reviews").innerHTML = revs.map(r => {
       const n = Math.max(1, Math.min(5, +r.stars || 5));
       return `<figure class="rev"><div class="st" aria-label="${n} من 5">${"★".repeat(n)}<i>${"★".repeat(5-n)}</i></div>
@@ -1397,23 +1728,65 @@
     $("prods").addEventListener("click", e => { if (e.target.closest("[data-prod]")) track("product"); });
   }
 
+  // ---------- Barber page: photo, his work, his Instagram ----------
+  const igIco = $("igLink").querySelector("path").getAttribute("d");
+  function renderBarber(id){
+    const b = team.find(x => x.id === id);
+    if (!b) return false;
+    const works = worksOf(b.id), ig = igUrl(b.instagram), handle = igHandle(ig);
+    $("bpHead").textContent = b.name;
+    const others = team.filter(x => x.id !== b.id);
+    $("bp").innerHTML = `
+      <div class="bp-hero">
+        <div class="bp-ph">${b.photo ? `<img src="${esc(safeUrl(b.photo))}" alt="${esc(b.name)}" style="${mstyle(b.focus)}">` : `<span class="initial">${esc((b.name||"?").trim().charAt(0))}</span>`}
+          ${b.status === "vacation" ? `<span class="away-tag">أجازة دلوقتي</span>` : ""}</div>
+        <div class="bp-info">
+          <h2 class="bp-name">${esc(b.name)}</h2>
+          ${b.role ? `<p class="bp-role">${esc(b.role)}</p>` : ""}
+          <p class="bp-meta">${works.length ? plural(works.length, "صورة", "صورتين", "صور") + " من شغله" : "في فريق " + esc(SHOP.name)}</p>
+        </div>
+          <div class="bp-actions">
+            ${ig ? `<a class="bp-ig" href="${esc(ig)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="${igIco}"/></svg><span>${handle ? "@" + esc(handle) : "Instagram"}</span></a>` : ""}
+            <button class="bp-share ${ig ? "" : "solo"}" type="button" id="bpShare"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>شارك</button>
+          </div>
+      </div>
+      <div class="label">Work</div>
+      ${works.length ? `<div class="bp-grid" data-bid="${esc(b.id)}">${works.map((g, k) => `<figure data-bi="${k}" role="button" tabindex="0" aria-label="${esc(g.caption || "صورة")}">${g.type === "video"
+          ? `<video src="${esc(safeUrl(g.src))}#t=0.1" muted playsinline preload="metadata" style="${mstyle(g.focus)}"></video><span class="play" style="position:absolute;inset:0;display:grid;place-items:center"><svg viewBox="0 0 24 24" width="30" height="30" fill="rgba(255,255,255,.9)"><path d="M8 5v14l11-7z"/></svg></span>`
+          : `<img src="${esc(safeUrl(g.src))}" alt="${esc(g.caption || "")}" loading="lazy" style="${mstyle(g.focus)}">`}</figure>`).join("")}</div>`
+        : `<div class="bp-empty">لسه مفيش صور لشغل ${esc(b.name)} هنا.<br><a href="#gallery">شوف كل شغلنا في الـ Gallery</a></div>`}
+      ${others.length ? `<div class="label">Team</div><div class="bp-crew">${others.map(o => `<a href="#barber/${encodeURIComponent(o.id)}"><span class="av">${o.photo ? `<img src="${esc(safeUrl(o.photo))}" alt="" style="${mstyle(o.focus)}">` : esc((o.name||"?").trim().charAt(0))}</span>${esc(o.name)}</a>`).join("")}</div>` : ""}`;
+    $("bpShare").onclick = async () => {
+      track("share");
+      const url = location.origin + location.pathname + "#barber/" + encodeURIComponent(b.id);
+      const text = `${b.name} — ${SHOP.name} ✂️\nشوف شغله:`;
+      if (navigator.share) { try { await navigator.share({title: `${b.name} — ${SHOP.name}`, text, url}); return; } catch(e) { if (e && e.name === "AbortError") return; } }
+      copyText(url, "اللينك اتنسخ ✓ ابعته لأي حد");
+    };
+    return true;
+  }
+
   // ================= Sections: Home / Gallery / Team / Services =================
-  const PAGES = ["home","gallery","team","services"];
+  const PAGES = ["home","gallery","team","services","barber"];
   const has = {
     gallery: true,
     team: !$("teamWrap").hidden || !$("revWrap").hidden,
-    services: !$("groomWrap").hidden || !$("prodWrap").hidden
+    services: !$("groomWrap").hidden || !$("prodWrap").hidden,
+    barber: team.length > 0
   };
   document.querySelectorAll('#tabbar [data-go]').forEach(a => { if (a.dataset.go !== "home" && !has[a.dataset.go]) a.hidden = true; });
   $("svcTeaser").hidden = !has.services;
   const go = () => {
-    let p = (location.hash || "#home").slice(1);
+    let h = (location.hash || "#home").slice(1), p = h, arg = "";
+    if (h.startsWith("barber/")) { p = "barber"; try { arg = decodeURIComponent(h.slice(7)); } catch(_) { arg = ""; } }
     if (!PAGES.includes(p) || (p !== "home" && !has[p])) p = "home";
+    if (p === "barber" && !renderBarber(arg)) p = has.team ? "team" : "home";
     document.querySelectorAll(".page").forEach(s => s.hidden = s.dataset.page !== p);
-    document.querySelectorAll("#tabbar [data-go]").forEach(a => a.classList.toggle("on", a.dataset.go === p));
+    const tab = p === "barber" ? "team" : p;
+    document.querySelectorAll("#tabbar [data-go]").forEach(a => a.classList.toggle("on", a.dataset.go === tab));
+    document.title = p === "barber" ? `${$("bpHead").textContent} — ${SHOP.name}` : SHOP.name + " — Men's Grooming Lounge";
     scrollTo({top:0});
   };
-  addEventListener("hashchange", go); go();
 
   // home: small preview of the latest photos
   const gal = (SHOP.gallery||[]);
@@ -1425,26 +1798,34 @@
   }
 
   // lightbox: tap a photo to see it big, swipe or use the arrows
-  let lbI = 0;
+  let lbI = 0, lbList = gal;
   const lb = $("lightbox");
-  const lbShow = i => {
-    if (!gal.length) return;
-    lbI = (i + gal.length) % gal.length;
-    const g = gal[lbI];
+  const lbShow = (i, list) => {
+    if (list) lbList = list;
+    if (!lbList.length) return;
+    lbI = (i + lbList.length) % lbList.length;
+    const g = lbList[lbI];
     $("lbMedia").innerHTML = g.type === "video"
       ? `<video src="${esc(safeUrl(g.src))}" controls autoplay playsinline></video>`
       : `<img src="${esc(safeUrl(g.src))}" alt="${esc(g.caption||"")}">`;
-    $("lbCount").textContent = `${lbI+1} / ${gal.length}`;
-    $("lbPrev").hidden = $("lbNext").hidden = gal.length < 2;
+    $("lbCount").textContent = `${lbI+1} / ${lbList.length}`;
+    $("lbPrev").hidden = $("lbNext").hidden = lbList.length < 2;
+    // who did this cut? link to his page (not shown when already on his page)
+    const by = g.barber && team.find(b => b.id === g.barber), onHisPage = location.hash === "#barber/" + encodeURIComponent(g.barber || "");
+    $("lbBy").hidden = !by || onHisPage;
+    if (by) { $("lbBy").href = "#barber/" + encodeURIComponent(by.id); $("lbBy").textContent = `✂️ شغل ${by.name} ←`; }
     lb.hidden = false; document.body.style.overflow = "hidden";
   };
   const lbClose = () => { lb.hidden = true; $("lbMedia").innerHTML = ""; document.body.style.overflow = ""; };
-  $("gallery").addEventListener("click", e => { const f = e.target.closest("[data-gi]"); if (f) lbShow(+f.dataset.gi); });
-  $("teaserStrip").addEventListener("click", e => { const a = e.target.closest("[data-open]"); if (a) { setTimeout(() => lbShow(+a.dataset.open), 50); } });
+  $("gallery").addEventListener("click", e => { const f = e.target.closest("[data-gi]"); if (f) lbShow(+f.dataset.gi, gal); });
+  $("teaserStrip").addEventListener("click", e => { const a = e.target.closest("[data-open]"); if (a) { setTimeout(() => lbShow(+a.dataset.open, gal), 50); } });
+  $("lbBy").addEventListener("click", () => lbClose());
+  $("bp").addEventListener("click", e => { const f = e.target.closest("[data-bi]"); if (f) lbShow(+f.dataset.bi, worksOf(f.closest("[data-bid]").dataset.bid)); });
   $("lbClose").onclick = lbClose;
   $("lbPrev").onclick = () => lbShow(lbI - 1);
   $("lbNext").onclick = () => lbShow(lbI + 1);
   lb.addEventListener("click", e => { if (e.target === lb || e.target === $("lbMedia")) lbClose(); });
+  addEventListener("hashchange", go); go();
   addEventListener("keydown", e => { if (lb.hidden) return; if (e.key === "Escape") lbClose(); if (e.key === "ArrowLeft") lbShow(lbI + 1); if (e.key === "ArrowRight") lbShow(lbI - 1); });
   let tx = null;
   lb.addEventListener("touchstart", e => { tx = e.touches[0].clientX; }, {passive:true});
@@ -1466,6 +1847,53 @@
   // ---------- v3: video cover, one payment card at a time ----------
   if (SHOP.coverVideo) {
     $("heroImg").innerHTML = `<video src="${esc(safeUrl(SHOP.coverVideo))}" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="${mstyle(SHOP.coverFocus)}"></video>`;
+    // cover song: plays while the cover is on screen, pauses when you scroll down, carries on when you come back.
+    // Browsers only allow sound after the visitor touches the page once, so the first tap anywhere turns it on.
+    const cv = $("heroImg").querySelector("video");
+    if (cv && SHOP.coverSound !== false) {
+      const hero = document.querySelector(".hero");
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "snd";
+      hero.appendChild(btn);
+      let unlocked = false, wantSound = true, inView = true, firstStart = true;
+      const offIco = `<svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>`;
+      const onIco = `<svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>`;
+      const paintSnd = () => {
+        const on = unlocked && wantSound;
+        btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", String(on));
+        btn.setAttribute("aria-label", on ? "اقفل الصوت" : "شغّل الصوت"); btn.title = btn.getAttribute("aria-label");
+        btn.innerHTML = on ? onIco : offIco;
+      };
+      const homeShown = () => !document.querySelector('.page[data-page="home"]').hidden;
+      const apply = () => {
+        const show = inView && homeShown() && !document.hidden;
+        if (!show) { if (!cv.paused) cv.pause(); return; }
+        const sound = unlocked && wantSound;
+        if (sound && firstStart) { firstStart = false; cv.currentTime = 0; }   // the song starts from the top the first time
+        cv.muted = !sound;
+        const pr = cv.play();
+        if (pr && pr.catch) pr.catch(() => { if (!cv.muted) { cv.muted = true; cv.play().catch(() => {}); } });
+      };
+      btn.addEventListener("click", () => {
+        if (unlocked && wantSound) wantSound = false; else { unlocked = true; wantSound = true; }
+        paintSnd(); apply();
+      });
+      // first touch anywhere (except links that take you away, and the button itself) unlocks the sound
+      const unlock = e => {
+        if (unlocked) return;
+        const t = e.target;
+        if (t && t.closest && (t.closest(".snd") || t.closest("a[href]") || t.closest("#tabbar"))) return;
+        unlocked = true; paintSnd(); apply();
+        ["touchend","mousedown","keydown"].forEach(ev => removeEventListener(ev, unlock, true));
+      };
+      ["touchend","mousedown","keydown"].forEach(ev => addEventListener(ev, unlock, true));
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(es => { es.forEach(en => { inView = en.isIntersecting && en.intersectionRatio >= .35; }); apply(); }, {threshold:[0, .35, .6]}).observe(hero);
+      }
+      addEventListener("hashchange", () => setTimeout(apply, 0));
+      document.addEventListener("visibilitychange", apply);
+      paintSnd();
+    }
   }
   const paySeg = document.querySelector(".pay-seg"), payBox = document.querySelector(".pay");
   const pickPay = pm => {
