@@ -47,22 +47,6 @@
   ],
   "barbers": [
     {
-      "id": "mwarcnr4u2v3",
-      "name": "mohamed yasser",
-      "role": "حلاق",
-      "photo": "uploads/team/mwb8olpbjxjc.jpg",
-      "instagram": "https://www.instagram.com/mohameeyasser100?xtok=MWRjY3FyZWNzdmFxNw==",
-      "status": "active",
-      "days": [
-        0,
-        2,
-        3,
-        4,
-        5,
-        6
-      ]
-    },
-    {
       "id": "mwavhrim7ogp",
       "name": "ibrahem",
       "role": "حلاق",
@@ -75,6 +59,22 @@
       },
       "days": [
         1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "mwarcnr4u2v3",
+      "name": "mohamed yasser",
+      "role": "حلاق",
+      "photo": "uploads/team/mwb8olpbjxjc.jpg",
+      "instagram": "https://www.instagram.com/mohameeyasser100?xtok=MWRjY3FyZWNzdmFxNw==",
+      "status": "active",
+      "days": [
+        0,
         2,
         3,
         4,
