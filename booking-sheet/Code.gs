@@ -13,8 +13,12 @@ const STATUSES = ['جديد', 'اتأكد', 'حضر', 'ما جاش', 'اتلغى
 
 // عداد الزيارات: أرقام بس، من غير أي بيانات عن الناس
 const STATS_NAME = 'الإحصائيات';
-const EVENTS = ['visit', 'whatsapp', 'instapay', 'vodafone', 'location', 'booking', 'proof', 'instagram', 'facebook', 'tiktok', 'review', 'share', 'install', 'groom', 'product'];
-const EVENT_LABELS = ['التاريخ', 'زيارات', 'واتساب', 'إنستاباي', 'فودافون كاش', 'لوكيشن', 'حجوزات', 'Screenshot الدفع', 'إنستجرام', 'فيسبوك', 'تيك توك', 'تقييم جوجل', 'مشاركة', 'تثبيت', 'طلبات العرسان', 'طلبات منتجات'];
+const EVENTS = ['visit', 'whatsapp', 'instapay', 'vodafone', 'location', 'booking', 'proof', 'instagram', 'facebook', 'tiktok', 'review', 'share', 'install', 'groom', 'product', 'offer', 'feedback'];
+const EVENT_LABELS = ['التاريخ', 'زيارات', 'واتساب', 'إنستاباي', 'فودافون كاش', 'لوكيشن', 'حجوزات', 'Screenshot الدفع', 'إنستجرام', 'فيسبوك', 'تيك توك', 'تقييم جوجل', 'مشاركة', 'تثبيت', 'طلبات العرسان', 'طلبات منتجات', 'دوسات العرض', 'آراء من الموقع'];
+
+// آراء العملاء اللي بيكتبوها من الموقع: بتستنى موافقتك من لوحة الأدمن قبل ما تظهر
+const REVIEWS_NAME = 'آراء العملاء';
+const REVIEW_HEADERS = ['وقت التسجيل', 'الاسم', 'التقييم', 'الرأي', 'ID'];
 
 const GROOM_NAME = 'طلبات العرسان';
 const GROOM_HEADERS = ['وقت التسجيل', 'الاسم', 'الموبايل', 'المناسبة', 'التاريخ', 'عدد الأفراد', 'المكان', 'ملاحظات', 'Deposit', 'الحالة'];
@@ -27,6 +31,16 @@ function doPost(e) {
   try {
     const d = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     if (d.kind === 'event') { count_(d.event); return reply_({ ok: true }); }
+    if (d.kind === 'review') {
+      if (d.hp) return reply_({ ok: true });            // اتملت الخانة المخفية = روبوت
+      const name = clean_(d.name, 40), text = clean_(d.text, 300);
+      const stars = Math.max(1, Math.min(5, Math.round(Number(d.stars) || 0)));
+      if (!name || text.length < 3 || !Number(d.stars)) return reply_({ ok: false, error: 'missing' });
+      const id = Utilities.getUuid().slice(0, 12);
+      reviews_().appendRow([new Date(), name, stars, text, id]);
+      count_('feedback');
+      return reply_({ ok: true });
+    }
     if (d.kind === 'groom') {
       if (!d.name || !d.phone) return reply_({ ok: false, error: 'missing' });
       groom_().appendRow([new Date(), clean_(d.name), "'" + clean_(d.phone).replace(/^'/, ''), clean_(d.type), clean_(d.date),
@@ -60,6 +74,7 @@ function doPost(e) {
 // فتح اللينك في المتصفح بيقول إن الشيت شغال
 function doGet(e) {
   if (e && e.parameter && e.parameter.stats) return reply_({ ok: true, days: statsDays_(Number(e.parameter.days) || 60) });
+  if (e && e.parameter && e.parameter.reviews) return reply_({ ok: true, reviews: reviewsList_(100) });
   return reply_({ ok: true, service: 'El-Dob bookings' });
 }
 
@@ -68,6 +83,7 @@ function setup() {
   sheet_();
   stats_();
   groom_();
+  reviews_();
 }
 
 function sheet_() {
@@ -127,6 +143,32 @@ function groom_() {
   return sh;
 }
 
+function reviews_() {
+  const ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(REVIEWS_NAME);
+  if (!sh) {
+    sh = ss.insertSheet(REVIEWS_NAME);
+    sh.setRightToLeft(true);
+    sh.appendRow(REVIEW_HEADERS);
+    sh.setFrozenRows(1);
+    sh.getRange(1, 1, 1, REVIEW_HEADERS.length).setFontWeight('bold').setBackground('#1b1a18').setFontColor('#c9a46a');
+    sh.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm');
+    sh.setColumnWidth(4, 420);
+  }
+  return sh;
+}
+
+// آخر الآراء (الأحدث الأول) عشان لوحة الأدمن تعرضها وإنت توافق أو تخفي
+function reviewsList_(n) {
+  const sh = reviews_();
+  const last = sh.getLastRow();
+  if (last < 2) return [];
+  const from = Math.max(2, last - n + 1);
+  return sh.getRange(from, 1, last - from + 1, REVIEW_HEADERS.length).getValues().map(function (r) {
+    return { date: r[0] instanceof Date ? Utilities.formatDate(r[0], TZ, 'yyyy-MM-dd HH:mm') : String(r[0]), name: String(r[1]), stars: Number(r[2]) || 5, text: String(r[3]), id: String(r[4]) };
+  }).filter(function (r) { return r.id; }).reverse();
+}
+
 // بيزوّد العدد في سطر النهارده (سطر لكل يوم)
 function count_(ev) {
   const col = EVENTS.indexOf(ev);
@@ -156,8 +198,8 @@ function statsDays_(n) {
 }
 
 // يمنع أي حد يكتب معادلات في الشيت، ويقصّر النص الطويل
-function clean_(v) {
-  let s = String(v == null ? '' : v).trim().slice(0, 120);
+function clean_(v, max) {
+  let s = String(v == null ? '' : v).trim().slice(0, max || 120);
   if (/^[=+\-@]/.test(s)) s = "'" + s;
   return s;
 }
