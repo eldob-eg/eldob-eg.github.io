@@ -733,6 +733,9 @@
   .snd{position:absolute;z-index:3;top:14px;left:14px;width:44px;height:44px;display:grid;place-items:center;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(18,17,16,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font:inherit;font-size:.82rem;font-weight:500;cursor:pointer}
   .snd svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
   .snd.on{border-color:rgba(201,164,106,.7);color:#f1d39b}
+  .snd.hint::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:2px solid rgba(241,211,155,.8);animation:sndPing 1.8s ease-out infinite;pointer-events:none}
+  @keyframes sndPing{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.7);opacity:0}}
+  @media (prefers-reduced-motion:reduce){.snd.hint::after{animation:none;opacity:.6}}
   .snd:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
   .snd .eq{display:none;gap:2px;align-items:flex-end;height:12px}
   .snd.on .eq{display:flex}
@@ -1846,7 +1849,7 @@
 
   // ---------- v3: video cover, one payment card at a time ----------
   if (SHOP.coverVideo) {
-    $("heroImg").innerHTML = `<video src="${esc(safeUrl(SHOP.coverVideo))}" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="${mstyle(SHOP.coverFocus)}"></video>`;
+    $("heroImg").innerHTML = `<video src="${esc(safeUrl(SHOP.coverVideo))}" ${SHOP.coverSound === false ? "autoplay " : ""}muted loop playsinline preload="auto" aria-hidden="true" style="${mstyle(SHOP.coverFocus)}"></video>`;
     // cover song: plays while the cover is on screen, pauses when you scroll down, carries on when you come back.
     // Browsers only allow sound after the visitor touches the page once, so the first tap anywhere turns it on.
     const cv = $("heroImg").querySelector("video");
@@ -1855,12 +1858,14 @@
       const btn = document.createElement("button");
       btn.type = "button"; btn.className = "snd";
       hero.appendChild(btn);
-      let unlocked = false, wantSound = true, inView = true, firstStart = true;
+      // try sound right away: browsers that allow it (installed app, regular visitors on Chrome) play the song
+      // on entry; the rest refuse until the visitor's first tap, so we fall back to muted and wait for it
+      let unlocked = true, wantSound = true, inView = true, firstStart = true;
       const offIco = `<svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>`;
       const onIco = `<svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>`;
       const paintSnd = () => {
         const on = unlocked && wantSound;
-        btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", String(on));
+        btn.classList.toggle("on", on); btn.classList.toggle("hint", !unlocked); btn.setAttribute("aria-pressed", String(on));
         btn.setAttribute("aria-label", on ? "اقفل الصوت" : "شغّل الصوت"); btn.title = btn.getAttribute("aria-label");
         btn.innerHTML = on ? onIco : offIco;
       };
@@ -1872,7 +1877,9 @@
         if (sound && firstStart) { firstStart = false; cv.currentTime = 0; }   // the song starts from the top the first time
         cv.muted = !sound;
         const pr = cv.play();
-        if (pr && pr.catch) pr.catch(() => { if (!cv.muted) { cv.muted = true; cv.play().catch(() => {}); } });
+        if (pr && pr.catch) pr.catch(() => {
+          if (!cv.muted) { unlocked = false; firstStart = true; cv.muted = true; paintSnd(); cv.play().catch(() => {}); }
+        });
       };
       btn.addEventListener("click", () => {
         if (unlocked && wantSound) wantSound = false; else { unlocked = true; wantSound = true; }
@@ -1892,7 +1899,7 @@
       }
       addEventListener("hashchange", () => setTimeout(apply, 0));
       document.addEventListener("visibilitychange", apply);
-      paintSnd();
+      paintSnd(); apply();
     }
   }
   const paySeg = document.querySelector(".pay-seg"), payBox = document.querySelector(".pay");
