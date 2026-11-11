@@ -1847,30 +1847,50 @@
   // ---------- v3: video cover, one payment card at a time ----------
   if (SHOP.coverVideo) {
     $("heroImg").innerHTML = `<video src="${esc(safeUrl(SHOP.coverVideo))}" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="${mstyle(SHOP.coverFocus)}"></video>`;
-    // sound button: the video starts muted (browsers block sound until you tap), tap to hear its song
+    // cover song: plays while the cover is on screen, pauses when you scroll down, carries on when you come back.
+    // Browsers only allow sound after the visitor touches the page once, so the first tap anywhere turns it on.
     const cv = $("heroImg").querySelector("video");
     if (cv && SHOP.coverSound !== false) {
+      const hero = document.querySelector(".hero");
       const btn = document.createElement("button");
       btn.type = "button"; btn.className = "snd";
-      document.querySelector(".hero").appendChild(btn);
+      hero.appendChild(btn);
+      let unlocked = false, wantSound = true, inView = true, firstStart = true;
       const offIco = `<svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>`;
       const onIco = `<svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>`;
       const paintSnd = () => {
-        const on = !cv.muted;
+        const on = unlocked && wantSound;
         btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", String(on));
         btn.innerHTML = on ? `${onIco}<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>اقفل الصوت` : `${offIco}شغّل الصوت`;
       };
+      const homeShown = () => !document.querySelector('.page[data-page="home"]').hidden;
+      const apply = () => {
+        const show = inView && homeShown() && !document.hidden;
+        if (!show) { if (!cv.paused) cv.pause(); return; }
+        const sound = unlocked && wantSound;
+        if (sound && firstStart) { firstStart = false; cv.currentTime = 0; }   // the song starts from the top the first time
+        cv.muted = !sound;
+        const pr = cv.play();
+        if (pr && pr.catch) pr.catch(() => { if (!cv.muted) { cv.muted = true; cv.play().catch(() => {}); } });
+      };
       btn.addEventListener("click", () => {
-        if (cv.muted) {
-          cv.muted = false; cv.currentTime = 0;
-          const pr = cv.play(); if (pr && pr.catch) pr.catch(() => { cv.muted = true; paintSnd(); });
-        } else cv.muted = true;
-        paintSnd();
+        if (unlocked && wantSound) wantSound = false; else { unlocked = true; wantSound = true; }
+        paintSnd(); apply();
       });
-      // the song stops when the customer leaves Home or switches apps
-      const hush = () => { if (!cv.muted) { cv.muted = true; paintSnd(); } };
-      addEventListener("hashchange", () => { if (document.querySelector('.page[data-page="home"]').hidden) hush(); });
-      document.addEventListener("visibilitychange", () => { if (document.hidden) hush(); });
+      // first touch anywhere (except links that take you away, and the button itself) unlocks the sound
+      const unlock = e => {
+        if (unlocked) return;
+        const t = e.target;
+        if (t && t.closest && (t.closest(".snd") || t.closest("a[href]") || t.closest("#tabbar"))) return;
+        unlocked = true; paintSnd(); apply();
+        ["touchend","mousedown","keydown"].forEach(ev => removeEventListener(ev, unlock, true));
+      };
+      ["touchend","mousedown","keydown"].forEach(ev => addEventListener(ev, unlock, true));
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(es => { es.forEach(en => { inView = en.isIntersecting && en.intersectionRatio >= .35; }); apply(); }, {threshold:[0, .35, .6]}).observe(hero);
+      }
+      addEventListener("hashchange", () => setTimeout(apply, 0));
+      document.addEventListener("visibilitychange", apply);
       paintSnd();
     }
   }
