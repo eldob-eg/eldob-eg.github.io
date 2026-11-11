@@ -1,6 +1,6 @@
 // El-Dob: lets the site open as an app and load fast. Always tries the network first,
 // so edits from the admin panel show right away; the saved copy is only used offline.
-const CACHE = "eldob-v4";
+const CACHE = "eldob-v5";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 
 self.addEventListener("install", e => {
@@ -16,7 +16,9 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET" || url.origin !== location.origin || url.pathname.endsWith("admin.html") || url.pathname.includes("admin-vault")) return;
   // pages always ask the server for the newest version (skips the browser's 10-minute page cache)
   const isPage = req.mode === "navigate" || url.pathname.endsWith("/") || url.pathname.endsWith(".html");
-  const net = isPage ? fetch(url.href, {cache: "no-cache", credentials: "same-origin"}) : fetch(req);
+  // pages skip GitHub's 10-minute copy too (a unique address each time), so a new version shows on the next open
+  const fresh = new URL(url.href); fresh.searchParams.set("_", Date.now());
+  const net = isPage ? fetch(fresh.href, {cache: "no-store", credentials: "same-origin"}) : fetch(req);
   e.respondWith(
     net.then(res => {
       if (res.ok && (req.mode === "navigate" || SHELL.some(s => url.pathname.endsWith(s.replace("./", ""))) || url.pathname.includes("/uploads/") || url.pathname.includes("/img/"))) {

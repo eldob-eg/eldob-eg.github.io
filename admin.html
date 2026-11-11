@@ -145,6 +145,13 @@
   .of-bar .u i{font-style:normal;font-size:.56rem;color:#bfae8e}
   .of-state{font-size:.82rem;margin-top:8px}
 
+  /* publish watcher: tells you when the change is really on the site */
+  .live-state{position:fixed;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:70;max-width:calc(100% - 24px);padding:10px 16px;border-radius:999px;background:var(--panel);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.45);font-size:.85rem;display:flex;align-items:center;gap:8px;white-space:nowrap}
+  .live-state[hidden]{display:none}
+  .live-state.ok{border-color:rgba(62,207,110,.6);color:#8ff0b0}
+  .live-state.wait{border-color:rgba(201,164,106,.55);color:var(--brass)}
+  .live-state .spin{width:14px;height:14px;border-width:2px}
+
   /* save bar */
   .savebar{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(27,26,24,.97);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
   .savebar-in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:10px}
@@ -518,6 +525,7 @@
 </section>
 
 <div id="sheetRoot"></div>
+<div class="live-state" id="liveState" hidden></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -734,7 +742,7 @@ async function saveCrowd(patch){
     base.crowd = DATA.crowd;
     const res = await ghPut(DATA_PATH, utf8b64(JSON.stringify(base, null, 2)), "تحديث الزحمة", latest?.sha);
     SHA = res.content.sha; SAVED.crowd = clone(DATA.crowd);
-    toast("اتحدّثت ✓ هتظهر في الموقع خلال دقيقة");
+    watchLive(base);
   } catch(e) { DATA.crowd = prev; paintCrowd(); toast(ghError(e), 3500); }
   finally { crowdBusy = false; document.querySelectorAll("#crowdBtns button, .crowd-mins button").forEach(b => b.disabled = false); }
 }
@@ -1153,6 +1161,32 @@ function openGalleryItem(i){
     });
 }
 
+/* ================= Publish watcher =================
+   GitHub takes 1–3 minutes to put a save on the site (longer if you save many times in a row).
+   This checks the live site and says when your change is really there. */
+let liveTimer = null, liveRun = 0;
+function liveState(kind, html){ const el = $("liveState"); el.className = "live-state " + kind; el.innerHTML = html; el.hidden = false; }
+function watchLive(expected){
+  const want = JSON.stringify(expected), run = ++liveRun, started = Date.now();
+  clearTimeout(liveTimer);
+  liveState("wait", `<span class="spin"></span> اتحفظ ✓ وبيتنشر على الموقع… (دقيقة لـ ٣)`);
+  const check = async () => {
+    if (run !== liveRun) return;
+    try {
+      const r = await fetch("data.json?live=" + Date.now(), {cache: "no-store"});
+      if (r.ok && JSON.stringify(await r.json()) === want) {
+        liveState("ok", "✅ ظهر على الموقع دلوقتي");
+        liveTimer = setTimeout(() => { if (run === liveRun) $("liveState").hidden = true; }, 7000);
+        return;
+      }
+    } catch(_) {}
+    if (Date.now() - started > 8 * 60000) { liveState("wait", "⏳ لسه بيتنشر، GitHub متأخر شوية. هيظهر لوحده"); liveTimer = setTimeout(() => { if (run === liveRun) $("liveState").hidden = true; }, 9000); return; }
+    liveTimer = setTimeout(check, 6000);
+  };
+  liveTimer = setTimeout(check, 4000);
+}
+$("liveState").addEventListener("click", () => { $("liveState").hidden = true; });
+
 /* ================= v4 helpers ================= */
 const DAY_AD = ["الأحد","الاتنين","التلات","الأربع","الخميس","الجمعة","السبت"];
 const WEEK_AD = [6,0,1,2,3,4,5];   // Saturday first
@@ -1375,7 +1409,7 @@ $("saveBtn").onclick = async () => {
     SHA = res.content.sha; SAVED = clone(DATA); clearDirty();
     for (const p of pendingDeletes) { if (!used.has(p)) { try { await ghDelete(p, "مسح ملف قديم"); } catch(_){} } }
     pendingDeletes.clear();
-    toast("اتحفظ ✓ هيظهر في الموقع خلال دقيقة أو اتنين", 4000);
+    watchLive(DATA);
   } catch(e) { toast(ghError(e), 4000); }
   finally { busy(btn, false); }
 };
