@@ -729,6 +729,17 @@
   .rv-done .big{font-size:2.6rem}
   .rv-done p{color:var(--muted);font-size:.92rem;margin:6px 0 16px}
   .tabbar .tb-brand{display:none}
+  /* cover video sound: browsers start videos muted, the customer taps to hear the song */
+  .snd{position:absolute;z-index:3;top:14px;left:14px;display:flex;align-items:center;gap:8px;padding:9px 14px 9px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(18,17,16,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font:inherit;font-size:.82rem;font-weight:500;cursor:pointer}
+  .snd svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+  .snd.on{border-color:rgba(201,164,106,.7);color:#f1d39b}
+  .snd:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  .snd .eq{display:none;gap:2px;align-items:flex-end;height:12px}
+  .snd.on .eq{display:flex}
+  .snd .eq i{width:3px;background:currentColor;border-radius:2px;animation:eq 1s ease-in-out infinite}
+  .snd .eq i:nth-child(2){animation-delay:-.4s}.snd .eq i:nth-child(3){animation-delay:-.7s}
+  @keyframes eq{0%,100%{height:3px}50%{height:12px}}
+  @media (prefers-reduced-motion:reduce){.snd .eq i{animation:none;height:8px}}
   /* photo always fills the card at a fixed shape, whatever its size */
   .barber .ph{overflow:hidden}
   .barber .ph img,.bp-ph img{position:absolute;inset:0;width:100%;height:100%}
@@ -809,7 +820,7 @@
 </head>
 <body>
 
-<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": [], "crowd": {"level": "off", "wait": 0, "updatedAt": ""}, "groom": {"on": false, "title": "باكدج العريس", "intro": "", "items": [], "image": "", "deposit": {"on": false, "amount": 0, "note": ""}}, "products": [], "paymentLogos": {"instapay": "", "vodafone": ""}, "cover": "", "coverVideo": "", "offer": {"on": false, "text": "", "sub": "", "ends": "", "cta": true}}</script>
+<script id="defaults" type="application/json">{"name": "El-Dob", "facebook": "https://www.facebook.com/share/1A8EnZZnTm/", "instagram": "https://www.instagram.com/eldop.10", "tiktok": "https://www.tiktok.com/@eldop.10", "whatsapp": "201016679635", "instapayLink": "", "instapayId": "01016679635", "vodafoneCash": "01016679635", "mapsLink": "https://maps.app.goo.gl/Laq7A5NX5ATnXgrd6", "address": "اضغط وهيوديك على المحل على طول", "reviewLink": "", "openAt": "14:00", "closeAt": "04:00", "daysText": "متواجدين كل يوم", "hoursNote": "الدور بالحضور — تعالى في أي وقت في المواعيد", "tempClosed": {"on": false, "text": "مقفولين النهارده، نشوفكم بكره"}, "announcement": {"on": false, "text": ""}, "booking": {"open": false, "title": "حجوزات العيد مفتوحة", "note": "عشان الزحمة، احجز دورك وهنأكدلك على الواتساب", "sheetUrl": "", "sheetView": ""}, "gallery": [], "barbers": [], "reviews": [], "crowd": {"level": "off", "wait": 0, "updatedAt": ""}, "groom": {"on": false, "title": "باكدج العريس", "intro": "", "items": [], "image": "", "deposit": {"on": false, "amount": 0, "note": ""}}, "products": [], "paymentLogos": {"instapay": "", "vodafone": ""}, "cover": "", "coverVideo": "", "coverSound": true, "offer": {"on": false, "text": "", "sub": "", "ends": "", "cta": true}}</script>
 
 <div class="topbars" id="topbars">
   <div class="announce" id="announce" hidden></div>
@@ -1836,6 +1847,32 @@
   // ---------- v3: video cover, one payment card at a time ----------
   if (SHOP.coverVideo) {
     $("heroImg").innerHTML = `<video src="${esc(safeUrl(SHOP.coverVideo))}" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="${mstyle(SHOP.coverFocus)}"></video>`;
+    // sound button: the video starts muted (browsers block sound until you tap), tap to hear its song
+    const cv = $("heroImg").querySelector("video");
+    if (cv && SHOP.coverSound !== false) {
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "snd";
+      document.querySelector(".hero").appendChild(btn);
+      const offIco = `<svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>`;
+      const onIco = `<svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>`;
+      const paintSnd = () => {
+        const on = !cv.muted;
+        btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", String(on));
+        btn.innerHTML = on ? `${onIco}<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>اقفل الصوت` : `${offIco}شغّل الصوت`;
+      };
+      btn.addEventListener("click", () => {
+        if (cv.muted) {
+          cv.muted = false; cv.currentTime = 0;
+          const pr = cv.play(); if (pr && pr.catch) pr.catch(() => { cv.muted = true; paintSnd(); });
+        } else cv.muted = true;
+        paintSnd();
+      });
+      // the song stops when the customer leaves Home or switches apps
+      const hush = () => { if (!cv.muted) { cv.muted = true; paintSnd(); } };
+      addEventListener("hashchange", () => { if (document.querySelector('.page[data-page="home"]').hidden) hush(); });
+      document.addEventListener("visibilitychange", () => { if (document.hidden) hush(); });
+      paintSnd();
+    }
   }
   const paySeg = document.querySelector(".pay-seg"), payBox = document.querySelector(".pay");
   const pickPay = pm => {
