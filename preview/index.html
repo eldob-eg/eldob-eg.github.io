@@ -730,8 +730,8 @@
   .rv-done p{color:var(--muted);font-size:.92rem;margin:6px 0 16px}
   .tabbar .tb-brand{display:none}
   /* cover video sound: browsers start videos muted, the customer taps to hear the song */
-  .snd{position:absolute;z-index:3;top:14px;left:14px;display:flex;align-items:center;gap:8px;padding:9px 14px 9px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(18,17,16,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font:inherit;font-size:.82rem;font-weight:500;cursor:pointer}
-  .snd svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+  .snd{position:absolute;z-index:3;top:14px;left:14px;width:44px;height:44px;display:grid;place-items:center;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(18,17,16,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font:inherit;font-size:.82rem;font-weight:500;cursor:pointer}
+  .snd svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
   .snd.on{border-color:rgba(201,164,106,.7);color:#f1d39b}
   .snd:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
   .snd .eq{display:none;gap:2px;align-items:flex-end;height:12px}
@@ -1861,7 +1861,8 @@
       const paintSnd = () => {
         const on = unlocked && wantSound;
         btn.classList.toggle("on", on); btn.setAttribute("aria-pressed", String(on));
-        btn.innerHTML = on ? `${onIco}<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>اقفل الصوت` : `${offIco}شغّل الصوت`;
+        btn.setAttribute("aria-label", on ? "اقفل الصوت" : "شغّل الصوت"); btn.title = btn.getAttribute("aria-label");
+        btn.innerHTML = on ? onIco : offIco;
       };
       const homeShown = () => !document.querySelector('.page[data-page="home"]').hidden;
       const apply = () => {
