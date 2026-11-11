@@ -678,15 +678,17 @@
   /* barber page */
   .ph-back{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--brass);flex-shrink:0}
   .ph-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .bp-hero{display:grid;gap:16px;margin-top:12px}
-  .bp-ph{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:4/5;background:var(--panel-2);display:grid;place-items:center;border:1px solid var(--line)}
+  .bp-hero{display:grid;grid-template-columns:120px minmax(0,1fr);grid-template-areas:"ph info" "act act";align-items:center;gap:14px 16px;margin-top:14px}
+  .bp-ph{grid-area:ph}.bp-info{grid-area:info}.bp-actions{grid-area:act}
+  .bp-ph .away-tag{font-size:.7rem}
+  .bp-ph{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:4/5;background:var(--panel-2);display:grid;place-items:center;border:1px solid var(--line)}
   .bp-ph img{width:100%;height:100%;object-fit:cover;display:block}
   .bp-ph .initial{font-family:"Yellowtail",cursive;font-size:6rem;color:var(--brass)}
   .bp-ph .away-tag{position:absolute;top:12px;inset-inline-end:12px}
-  .bp-name{font-family:"Reem Kufi","Alexandria",sans-serif;font-size:1.9rem;line-height:1.2;font-weight:700}
+  .bp-name{font-family:"Reem Kufi","Alexandria",sans-serif;font-size:1.55rem;line-height:1.2;font-weight:700;overflow-wrap:anywhere}
   .bp-role{color:var(--brass);font-size:.95rem;margin-top:2px}
   .bp-meta{color:var(--muted);font-size:.85rem;margin-top:6px}
-  .bp-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:14px}
+  .bp-actions{display:grid;grid-template-columns:1fr auto;gap:8px}
   .bp-actions a,.bp-actions button{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 16px;border-radius:14px;font:inherit;font-weight:600;font-size:.92rem;text-decoration:none;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
   .bp-actions .bp-ig{border:0;color:#fff;background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 40%,#d6249f 62%,#285aeb 95%)}
   .bp-actions .bp-ig span{direction:ltr}
@@ -737,7 +739,7 @@
     .wrap{max-width:1160px;padding:0 40px 56px}
     .tabbar{top:0;bottom:auto;height:68px;align-items:center;justify-content:flex-start;gap:4px;
       padding:0 max(40px, calc(50% - 540px));border-top:0;border-bottom:1px solid var(--line)}
-    .tabbar .tb-brand{display:block;flex:0 0 auto;max-width:none;padding:0;margin-inline-end:auto;font-family:"Yellowtail",cursive;font-size:2.2rem;font-weight:400;letter-spacing:0;line-height:1;color:#f6e7c8;text-decoration:none;direction:ltr;text-shadow:0 0 12px rgba(255,200,110,.4)}
+    .tabbar .tb-brand{display:block;flex:0 0 auto;max-width:none;padding:0;margin:0 0 0 auto;font-family:"Yellowtail",cursive;font-size:2.2rem;font-weight:400;letter-spacing:0;line-height:1;color:#f6e7c8;text-decoration:none;direction:ltr;text-shadow:0 0 12px rgba(255,200,110,.4)}
     .offer{padding-inline:max(24px, calc(50% - 540px))}
     .announce{padding-inline:max(24px, calc(50% - 540px))}
     .tabbar a[data-go]{flex:0 0 auto;max-width:none;flex-direction:row;gap:8px;padding:10px 16px;font-size:.8rem;letter-spacing:1px}
@@ -786,7 +788,8 @@
     .page[data-page="services"] #prodWrap > .label{margin-top:14px}
 
     /* barber page: portrait beside the work */
-    .bp-hero{grid-template-columns:340px minmax(0,1fr);gap:36px;align-items:end;margin-top:20px}
+    .bp-hero{grid-template-columns:320px minmax(0,1fr);grid-template-areas:"ph info" "ph act";grid-template-rows:1fr auto;gap:14px 36px;align-items:end;margin-top:20px}
+    .bp-ph .away-tag{font-size:.8rem}
     .bp-name{font-size:2.8rem}
     .bp-actions{max-width:420px}
     .bp-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
@@ -1730,11 +1733,11 @@
           <h2 class="bp-name">${esc(b.name)}</h2>
           ${b.role ? `<p class="bp-role">${esc(b.role)}</p>` : ""}
           <p class="bp-meta">${works.length ? plural(works.length, "صورة", "صورتين", "صور") + " من شغله" : "في فريق " + esc(SHOP.name)}</p>
+        </div>
           <div class="bp-actions">
             ${ig ? `<a class="bp-ig" href="${esc(ig)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="${igIco}"/></svg><span>${handle ? "@" + esc(handle) : "Instagram"}</span></a>` : ""}
             <button class="bp-share ${ig ? "" : "solo"}" type="button" id="bpShare"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>شارك</button>
           </div>
-        </div>
       </div>
       <div class="label">Work</div>
       ${works.length ? `<div class="bp-grid" data-bid="${esc(b.id)}">${works.map((g, k) => `<figure data-bi="${k}" role="button" tabindex="0" aria-label="${esc(g.caption || "صورة")}">${g.type === "video"
