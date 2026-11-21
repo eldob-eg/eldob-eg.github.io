@@ -565,7 +565,8 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     <p class="kicker">Open when…</p>
     <h2 class="h">جوابات لكل وقت ✉️</h2>
     <p class="sub">مش لازم تفتحيهم دلوقتي…
-كل جواب مستني اللحظة بتاعته 🤍</p>
+كل جواب مستني اللحظة بتاعته 🤍
+✨ الجوابات بتتغير كل يوم… ارجعيلها بكرة</p>
     <div class="envs" id="envs"></div>
   </section>
 
@@ -1379,13 +1380,16 @@ function wrapped() {
 /* ---- open when ---- */
 function openWhen() {
   const L = DATA.openWhen; if (!L) { $("#openwhen").hidden = true; return; }
-  const read = new Set(store.get("ow", []));
+  // a new letter behind every envelope each day; "opened" marks start fresh too
+  const day = Math.floor((new Date(now().toDateString()) - new Date(parseLocal(DATA.met).toDateString())) / 864e5);
+  const saved = store.get("owDay", null), read = new Set(saved && saved.day === day ? saved.read : []);
+  const pick = (o, k) => { const t = o.texts || [o.text]; return t[(day + k * 3) % t.length].replace("{days}", day); };
   $("#envs").innerHTML = L.map((o, k) => `<button class="ow${read.has(k) ? " read" : ""}" type="button" data-k="${k}"><span class="i">${o.icon}</span><small>Open when…</small><span></span></button>`).join("");
   $("#envs").querySelectorAll(".ow").forEach(b => {
     const o = L[+b.dataset.k]; b.querySelector("span:last-child").textContent = o.label;
     b.onclick = () => {
-      read.add(+b.dataset.k); store.set("ow", [...read]); b.classList.add("read");
-      modal(`<span class="pill" style="background:#ffe4e8;color:#b5182f">${o.icon} Open when ${esc(o.label)}</span><p class="body">${esc(o.text)}</p><p class="sign">— ${esc(DATA.from || "أنا")} 🤍</p>`);
+      const k = +b.dataset.k; read.add(k); store.set("owDay", { day, read: [...read] }); b.classList.add("read");
+      modal(`<span class="pill" style="background:#ffe4e8;color:#b5182f">${o.icon} Open when ${esc(o.label)}</span><p class="day" dir="ltr">Today's letter ✨</p><p class="body">${esc(pick(o, k))}</p><p class="sign">— ${esc(DATA.from || "أنا")} 🤍</p>`);
     };
   });
 }
