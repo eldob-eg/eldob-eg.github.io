@@ -107,6 +107,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
   -webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 9s linear infinite;
   filter:drop-shadow(0 0 28px rgba(94,255,196,.35))}
 @keyframes shimmer{to{background-position:300% 0}}
+.nick{font-family:"Great Vibes",cursive;direction:ltr;font-size:30px;color:#ffd1e3;margin-top:-6px;text-shadow:0 0 14px rgba(255,160,200,.5)}
 .hero .sub{margin-top:14px;font-size:17px;color:#dbe6ff}
 .cue{text-decoration:none;margin-top:26px;font-size:14px;color:var(--muted);animation:bob 2.2s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(8px)}}
@@ -152,7 +153,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .paper::before,.paper::after{content:"❄";position:absolute;color:#9bb6dd;font-size:22px;top:12px}
 .paper::before{right:14px}.paper::after{left:14px}
 .paper .when{direction:ltr;text-align:center;font-weight:800;letter-spacing:.12em;color:#b5182f;font-size:14px;margin-bottom:16px}
-.paper .txt{font-family:var(--script);font-size:21px;line-height:42px;white-space:pre-line;unicode-bidi:plaintext;text-align:center;min-height:84px}
+.paper .txt{font-family:var(--script);font-size:21px;line-height:42px;white-space:pre-line;unicode-bidi:plaintext;text-align:start;min-height:84px}
 .paper .txt.typing::after{content:"|";animation:blink .8s steps(1) infinite;color:#b5182f}
 .paper .sign{margin-top:20px;text-align:left;font-family:var(--script);font-size:22px;color:#7a4a2a}
 
@@ -168,7 +169,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .polaroid .ph{display:grid;place-items:center;text-align:center;color:#d8e6ff;font-size:13px;line-height:1.8;
   background:radial-gradient(circle at 50% 30%,#3a5ea8,#16275a);}
 .polaroid .ph i{font-style:normal;font-size:34px;display:block}
-.polaroid figcaption{margin-top:8px;text-align:center;font-family:var(--script);color:#4a3a2a;font-size:16.5px;line-height:1.5;min-height:24px}
+.polaroid figcaption{white-space:pre-line;unicode-bidi:plaintext;margin-top:8px;text-align:center;font-family:var(--script);color:#4a3a2a;font-size:16.5px;line-height:1.5;min-height:24px}
 .polaroid.loading img{opacity:0}
 .polaroid img{transition:opacity .6s}
 
@@ -244,7 +245,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
 #lightbox.show{opacity:1;pointer-events:auto}
 #lightbox figure{max-width:94vw;text-align:center}
 #lightbox img,#lightbox video{max-width:94vw;max-height:78vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-#lightbox figcaption{margin-top:12px;font-family:var(--script);font-size:22px}
+#lightbox figcaption{white-space:pre-line;unicode-bidi:plaintext;margin-top:12px;font-family:var(--script);font-size:22px}
 #lightbox .nav{position:absolute;top:50%;width:46px;height:46px;margin-top:-23px;border-radius:50%;background:rgba(255,255,255,.1);font-size:22px}
 #lightbox .prev{right:12px}#lightbox .next{left:12px}
 #lightbox .x{position:absolute;top:14px;left:14px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);font-size:20px}
@@ -289,6 +290,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     <p class="coords">ROVANIEMI · 66°33′ N</p>
     <p class="hi">أهلاً بيكي في لابلاند يا</p>
     <h1 class="name" data-k="her"></h1>
+    <p class="nick" data-k="nick"></p>
     <p class="sub" data-k="heroSub"></p>
     <a class="cue" href="#since">Scroll down ❄</a>
   </section>
@@ -323,7 +325,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
       <div class="env-back"></div><div class="env-letter">💌</div><div class="env-front"></div><div class="env-flap"></div>
       <div class="seal">❄</div>
     </div>
-    <p class="tap" id="envTap">Tap the letter 💌</p>
+    <p class="tap" id="envTap">Tap the letter 💌<br><small>(ولو عايزة تقريها مرة واحدة، دوسي على الورقة)</small></p>
     <div class="paper" id="paper" hidden>
       <p class="when" data-k="message.when"></p>
       <p class="txt" id="letterTxt"></p>
@@ -799,7 +801,7 @@ function letter() {
       env.classList.add("done"); paper.hidden = false; store.set("letterOpened", true);
       let i = 0; txt.classList.add("typing");
       const chars = [...full];
-      const step = () => { if (i >= chars.length) { txt.classList.remove("typing"); return; } txt.textContent = chars.slice(0, ++i).join(""); typer = setTimeout(step, chars[i - 1] === "\n" ? 260 : 38); };
+      const step = () => { if (i >= chars.length) { txt.classList.remove("typing"); return; } txt.textContent = chars.slice(0, ++i).join(""); typer = setTimeout(step, chars[i - 1] === "\n" ? 220 : 26); };
       let typer; step();
       paper.addEventListener("click", () => { clearTimeout(typer); i = chars.length; txt.textContent = full; txt.classList.remove("typing"); }, { once: true });
     }, 1500);
@@ -830,6 +832,7 @@ function gallery() {
     const f = document.createElement("figure"); f.className = "polaroid loading"; f.style.setProperty("--r", R[i % R.length] + "deg"); f.dataset.i = i;
     const m = document.createElement(p.type.startsWith("video") ? "video" : "img");
     if (m.tagName === "VIDEO") { m.muted = true; m.loop = true; m.playsInline = true; m.autoplay = true; } else m.alt = p.caption || "";
+    if (p.pos) m.style.objectPosition = p.pos;
     const cap = document.createElement("figcaption"); cap.textContent = p.caption || "";
     f.append(m, cap); f.onclick = () => lightbox(i); g.appendChild(f); io.observe(f);
   });

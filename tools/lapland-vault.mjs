@@ -59,7 +59,7 @@ async function pack(dir) {
     const src = randomBytes(6).toString("hex") + ".bin";
     await writeFile(path.join(VAULT, src), await seal(key, m.bytes));
     const name = String(i + 1).padStart(2, "0") + "-" + path.basename(p.file, path.extname(p.file)) + m.ext;
-    photos.push({ src, type: m.type, caption: p.caption || "", name });
+    photos.push({ src, type: m.type, caption: p.caption || "", name, ...(p.pos ? { pos: p.pos } : {}) });
     console.log(`  photo ${p.file} -> ${src} (${Math.round(m.bytes.length / 1024)} KB)`);
   }
   const head = Buffer.alloc(8);
@@ -79,7 +79,7 @@ async function unpack(out) {
   for (const p of data.photos) {
     await writeFile(path.join(out, "photos", p.name), await open(key, await readFile(path.join(VAULT, p.src))));
   }
-  data.photos = data.photos.map(p => ({ file: p.name, caption: p.caption }));
+  data.photos = data.photos.map(p => ({ file: p.name, caption: p.caption, ...(p.pos ? { pos: p.pos } : {}) }));
   await writeFile(path.join(out, "content.json"), JSON.stringify(data, null, 2) + "\n");
   console.log(`unpacked to ${out}`);
 }
