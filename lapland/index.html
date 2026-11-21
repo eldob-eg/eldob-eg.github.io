@@ -112,7 +112,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .cue{text-decoration:none;margin-top:26px;font-size:14px;color:var(--muted);animation:bob 2.2s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(8px)}}
 
-.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;direction:ltr}
 .tile{padding:18px 6px;text-align:center}
 .tile b{display:block;font-size:clamp(26px,8vw,46px);font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums;
   background:linear-gradient(180deg,#fff,#bfe3ff);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -214,6 +214,26 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
   background:linear-gradient(90deg,#ffe3a3,#ff9fb0,#c59bff,#7fd8ff,#ffe3a3);background-size:300%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 6s linear infinite}
 .ny .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
 
+.bd-note{margin-top:14px;color:var(--muted);font-size:14px}
+.cake{position:relative;width:240px;height:230px;margin:18px auto 4px}
+.cake .plate{position:absolute;left:50%;bottom:0;width:250px;height:18px;margin-left:-125px;border-radius:50%;background:linear-gradient(#f1f5ff,#b9c7ea);box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.cake .tier{position:absolute;left:50%;border-radius:16px 16px 10px 10px;overflow:hidden}
+.cake .t1{bottom:10px;width:220px;height:78px;margin-left:-110px;background:linear-gradient(#ffc3da,#f08bb4)}
+.cake .t2{bottom:86px;width:156px;height:62px;margin-left:-78px;background:linear-gradient(#fff6fa,#ffd3e4)}
+.cake .tier::before{content:"";position:absolute;top:0;left:0;right:0;height:18px;background:radial-gradient(circle at 10px 4px,#fffaf3 9px,transparent 10px) repeat-x;background-size:20px 18px}
+.cake .t1 span{position:absolute;inset:22px 0 0;text-align:center;font:26px "Great Vibes",cursive;color:#9c1840;direction:ltr}
+.cake .t2 span{position:absolute;inset:16px 0 0;text-align:center;font:700 32px "Playfair Display",serif;color:#c2185b}
+.candles{position:absolute;left:50%;bottom:148px;transform:translateX(-50%);display:flex;gap:18px}
+.candle{position:relative;width:10px;height:36px;border-radius:3px;cursor:pointer;background:repeating-linear-gradient(135deg,#fff 0 5px,#7fd8ff 5px 10px)}
+.candle::before{content:"";position:absolute;left:4px;top:-6px;width:2px;height:7px;background:#3a2a1a}
+.flame{position:absolute;left:50%;bottom:calc(100% + 4px);width:13px;height:22px;margin-left:-6.5px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+  background:radial-gradient(circle at 50% 72%,#fff 0 18%,#ffe08a 42%,#ff8a3d 82%);box-shadow:0 0 18px 7px rgba(255,200,100,.55);transform-origin:50% 90%;animation:flick .12s infinite alternate;transition:opacity .35s,transform .35s}
+@keyframes flick{to{transform:scale(.9,1.08) rotate(3deg)}}
+.candle.out .flame{animation:none;opacity:0;transform:scale(.2) translateY(6px)}
+.candle.out::after{content:"";position:absolute;left:0;bottom:100%;width:10px;height:10px;border-radius:50%;background:rgba(220,225,240,.6);animation:smoke 1.8s ease-out forwards}
+.cake.locked .flame{display:none}
+.cake.locked{filter:saturate(.6) brightness(.8)}
+.cake.locked::after{content:"🔒";position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:40px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
 footer{text-align:center;padding:40px 18px 34vh;color:var(--muted);font-size:14px;line-height:2}
 footer .heart{font-family:var(--script);font-size:24px;color:var(--text)}
 footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-decoration:underline}
@@ -382,6 +402,35 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
           <button class="btn" id="nyLetterBtn" type="button">New Year letter 💌</button>
           <button class="btn ghost" id="fwBtn" type="button">Fireworks! 🎆</button>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal" id="birthday">
+    <p class="kicker">Birthday girl</p>
+    <h2 class="h" id="bdTitle">🎂</h2>
+    <p class="sub" id="bdSub"></p>
+    <div class="ny card">
+      <div class="tiles" id="bdCount">
+        <div class="tile"><b id="bD">0</b><span>Days</span></div>
+        <div class="tile"><b id="bH">0</b><span>Hours</span></div>
+        <div class="tile"><b id="bM">0</b><span>Minutes</span></div>
+        <div class="tile"><b id="bS">0</b><span>Seconds</span></div>
+      </div>
+      <div class="cake locked" id="cake">
+        <div class="plate"></div>
+        <div class="tier t1"><span id="cakeName"></span></div>
+        <div class="tier t2"><span id="cakeAge"></span></div>
+        <div class="candles" id="candles"></div>
+      </div>
+      <div class="row" id="bdRow" hidden>
+        <button class="btn" id="blowBtn" type="button">Make a wish… & blow 🌬️</button>
+        <button class="btn ghost" id="micBtn" type="button">🎤 انفخي في الموبايل بجد</button>
+      </div>
+      <p class="bd-note" id="bdNote" hidden>اتمني أمنية الأول… وبعدين طفّي الشمع (دوسي على الشمعة أو انفخي) 🕯️</p>
+      <div class="row" id="bdDone" hidden>
+        <button class="btn" id="bdLetterBtn" type="button">Birthday letter 💌</button>
+        <button class="btn ghost" id="bdAgain" type="button">Light them again 🕯️</button>
       </div>
     </div>
   </section>
@@ -642,7 +691,7 @@ const FW = (() => {
 const Music = (() => {
   let ctx, master, on = false, timer, t0, idx = 0;
   const F = n => 440 * Math.pow(2, n / 12);
-  const NOTE = { C3: F(-21), D3: F(-19), F3: F(-16), G3: F(-14), C5: F(3), D5: F(5), E5: F(7), F5: F(8), G5: F(10) };
+  const NOTE = { C3: F(-21), D3: F(-19), F3: F(-16), G3: F(-14), G4: F(-2), A4: F(0), B4: F(2), C5: F(3), D5: F(5), E5: F(7), F5: F(8), G5: F(10) };
   const A = [["E5",1],["E5",1],["E5",2],["E5",1],["E5",1],["E5",2],["E5",1],["G5",1],["C5",1.5],["D5",.5],["E5",4]];
   const B1 = [["F5",1],["F5",1],["F5",1.5],["F5",.5],["F5",1],["E5",1],["E5",1],["E5",.5],["E5",.5],["E5",1],["D5",1],["D5",1],["E5",1],["D5",2],["G5",2]];
   const B2 = [["F5",1],["F5",1],["F5",1],["F5",1],["F5",1],["E5",1],["E5",1],["E5",.5],["E5",.5],["G5",1],["G5",1],["F5",1],["D5",1],["C5",4]];
@@ -680,7 +729,19 @@ const Music = (() => {
     prime() { try { if (!ctx) init(); ctx.resume(); } catch {} },
     start() { try { if (!ctx) init(); ctx.resume(); if (on) return; on = true; idx = 0; melT = ctx.currentTime + .15; timer = setInterval(schedule, 60); schedule(); } catch {} },
     stop() { on = false; clearInterval(timer); if (ctx) ctx.suspend(); },
-    pause() { if (ctx && on) ctx.suspend(); }, resume() { if (ctx && on) ctx.resume(); }
+    pause() { if (ctx && on) ctx.suspend(); }, resume() { if (ctx && on) ctx.resume(); },
+    // Happy Birthday, once, then the bells carry on if they were on
+    birthday() {
+      try {
+        if (!ctx) init(); ctx.resume();
+        const was = on; if (on) { on = false; clearInterval(timer); }
+        const song = [["G4",.75],["G4",.25],["A4",1],["G4",1],["C5",1],["B4",2],["G4",.75],["G4",.25],["A4",1],["G4",1],["D5",1],["C5",2],
+          ["G4",.75],["G4",.25],["G5",1],["E5",1],["C5",1],["B4",1],["A4",2],["F5",.75],["F5",.25],["E5",1],["C5",1],["D5",1],["C5",3]];
+        let t = ctx.currentTime + .1;
+        for (const [n, b] of song) { voice(NOTE[n], t, 1.8, .18); t += b * .48; }
+        if (was) setTimeout(() => this.start(), (t - ctx.currentTime + 1.5) * 1000);
+      } catch {}
+    }
   };
 })();
 document.addEventListener("visibilitychange", () => document.hidden ? Music.pause() : Music.resume());
@@ -761,7 +822,7 @@ const get = (o, path) => path.split(".").reduce((a, k) => a && a[k], o);
 function render() {
   document.querySelectorAll("[data-k]").forEach(el => el.textContent = get(DATA, el.dataset.k) || "");
   document.title = `Lapland ❄️ ${DATA.her}`;
-  sinceInit(); timeline(); letter(); gallery(); advent(); wish(); newYear(); eleven();
+  sinceInit(); timeline(); letter(); gallery(); advent(); wish(); newYear(); birthday(); eleven();
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
   document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 }
@@ -918,7 +979,7 @@ function wish() {
     const w = store.get("wishes", []); w.push(text); store.set("wishes", w);
     setTimeout(() => {
       ta.classList.remove("fold"); ta.value = "";
-      const share = "https://wa.me/?text=" + encodeURIComponent("My wish for 2027 ✨\n" + text);
+      const share = "https://wa.me/" + (DATA.wa || "") + "?text=" + encodeURIComponent("My wish for 2027 ✨\n" + text);
       $("#wishOut").innerHTML = `<p class="wish-reply">${esc(DATA.wishReply || "Your wish is on its way ✨")}</p><a class="btn ghost" style="margin-top:12px;text-decoration:none" target="_blank" rel="noopener" href="${share}">Send it to me on WhatsApp 💬</a>`;
       show();
     }, 900);
@@ -935,7 +996,8 @@ function newYear() {
   $("#nyLetterBtn").onclick = () => modal(letterHTML(), "night");
   $("#fwBtn").onclick = () => FW.start(7000);
   const celebrate = () => { done(); FW.start(14000); store.set("nySeen", true); setTimeout(() => modal(letterHTML(), "night"), 2500); };
-  if (now() >= NY) { done(); if (!store.get("nySeen", false)) setTimeout(celebrate, 1200); return; }
+  const bdOn = DATA.birthday && (() => { const b = parseLocal(DATA.birthday); return now() >= new Date(NY.getFullYear(), b.getMonth(), b.getDate()); })();
+  if (now() >= NY) { done(); if (!store.get("nySeen", false) && !bdOn) setTimeout(celebrate, 1200); return; }
   const tick = () => {
     let s = Math.ceil((NY - now()) / 1000);
     if (s <= 0) { clearInterval(iv); celebrate(); return; }
@@ -958,6 +1020,80 @@ function eleven() {
     setTimeout(() => modal(`<span class="pill" style="background:#1f3a7a;color:#c9f5ff">✨ 11:11</span><p class="body">${esc(DATA.eleven)}</p>`, "night"), 900);
   };
   check(); setInterval(check, 5000);
+}
+
+/* ---- birthday ---- */
+function birthday() {
+  if (!DATA.birthday) { $("#birthday").hidden = true; return; }
+  const born = parseLocal(DATA.birthday), year = parseLocal(DATA.newYear).getFullYear();
+  const day = new Date(year, born.getMonth(), born.getDate()), age = year - born.getFullYear();
+  const nick = (DATA.nick || DATA.her).replace(/\s*🎀/, "");
+  $("#bdTitle").textContent = `\u2066${day.getDate()} · ${day.getMonth() + 1}\u2069 🎂`;
+  $("#cakeName").textContent = "Happy Birthday " + nick; $("#cakeAge").textContent = age;
+  const cake = $("#cake"), box = $("#candles");
+  box.innerHTML = "";
+  for (let i = 0; i < 5; i++) box.insertAdjacentHTML("beforeend", `<span class="candle"><span class="flame"></span></span>`);
+  const candles = [...box.children];
+  let done = false;
+  const letter = () => modal(`<span class="pill coupon">🎂 ${age}</span><p class="body">${esc(DATA.bdLetter || "")}</p><p class="sign">— ${esc(DATA.from || "أنا")} 🤍</p>`);
+  const finish = () => {
+    if (done) return; done = true; stopMic();
+    store.set("bdBlown", true); $("#bdRow").hidden = true; $("#bdNote").hidden = true; $("#bdDone").hidden = false;
+    FW.start(9000); Music.birthday(); setTimeout(letter, 2200);
+  };
+  const out = c => { c.classList.add("out"); if (candles.every(x => x.classList.contains("out"))) finish(); };
+  candles.forEach(c => c.onclick = () => { if (!cake.classList.contains("locked")) out(c); });
+  $("#blowBtn").onclick = () => candles.forEach((c, i) => setTimeout(() => out(c), i * 160));
+  $("#bdLetterBtn").onclick = letter;
+  $("#bdAgain").onclick = () => { done = false; candles.forEach(c => c.classList.remove("out")); $("#bdDone").hidden = true; $("#bdRow").hidden = false; $("#bdNote").hidden = false; };
+  // blow into the phone: a strong, steady rush of air on the mic puts the candles out
+  let stream = null, raf = 0;
+  const stopMic = () => { cancelAnimationFrame(raf); if (stream) stream.getTracks().forEach(t => t.stop()); stream = null; $("#micBtn").textContent = "🎤 انفخي في الموبايل بجد"; };
+  $("#micBtn").onclick = async () => {
+    if (stream) return stopMic();
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const ac = new (window.AudioContext || window.webkitAudioContext)(), an = ac.createAnalyser();
+      an.fftSize = 1024; ac.createMediaStreamSource(stream).connect(an);
+      const buf = new Uint8Array(an.fftSize); let loud = 0;
+      $("#micBtn").textContent = "🎤 انفخي دلوقتي…";
+      const listen = () => {
+        an.getByteTimeDomainData(buf);
+        let sum = 0; for (const v of buf) sum += ((v - 128) / 128) ** 2;
+        loud = Math.sqrt(sum / buf.length) > .2 ? loud + 1 : Math.max(0, loud - 1);
+        const left = candles.filter(c => !c.classList.contains("out"));
+        if (loud > 4 && left.length) { out(left[0]); loud = 2; }
+        if (stream) raf = requestAnimationFrame(listen); else ac.close();
+      };
+      listen();
+    } catch { stream = null; toast("مفيش مايك… دوسي على الشمع بقى 🕯️"); }
+  };
+  const open = () => {
+    cake.classList.remove("locked"); $("#bdCount").hidden = true;
+    $("#bdSub").textContent = `Happy Birthday يا \u2066${DATA.nick || DATA.her}\u2069\nاتمني أمنية وطفّي الشمع 🎂`;
+    if (store.get("bdBlown", false)) { candles.forEach(c => c.classList.add("out")); done = true; $("#bdDone").hidden = false; }
+    else { $("#bdRow").hidden = false; $("#bdNote").hidden = false; }
+  };
+  if (now() >= day) {
+    open();
+    if (!store.get("bdHello", false)) {
+      store.set("bdHello", true);
+      setTimeout(() => {
+        modal(`<span class="pill coupon">🎂 <bdi dir="ltr">${day.getDate()} · ${day.getMonth() + 1}</bdi></span><p class="body">It's your birthday!! 🎉\nفي تورتة مستنياكي تحت… go blow the candles 🕯️</p><button class="btn" type="button" id="toCake" style="margin-top:16px">Take me to the cake 🎂</button>`);
+        $("#toCake").onclick = () => { closeModal(); $("#birthday").scrollIntoView({ behavior: "smooth" }); };
+      }, 1500);
+    }
+    return;
+  }
+  $("#bdSub").textContent = "Something sweet opens on your birthday…\nاستني اليوم ده 🤫";
+  const tick = () => {
+    let s = Math.ceil((day - now()) / 1000);
+    if (s <= 0) { clearInterval(iv); open(); FW.start(5000); toast("It's your birthday!! 🎂"); return; }
+    $("#bD").textContent = Math.floor(s / 86400); s %= 86400;
+    $("#bH").textContent = Math.floor(s / 3600); s %= 3600;
+    $("#bM").textContent = Math.floor(s / 60); $("#bS").textContent = s % 60;
+  };
+  const iv = setInterval(tick, 1000); tick();
 }
 
 $("#forget").onclick = () => { store.del("k"); location.reload(); };
