@@ -54,21 +54,27 @@ async function pack(dir) {
   const key = await deriveKey(salt);
   await rm(VAULT, { recursive: true, force: true });
   await mkdir(VAULT, { recursive: true });
-  const photos = [];
-  for (const [i, p] of (content.photos || []).entries()) {
-    const m = await loadMedia(path.join(dir, "photos", p.file));
-    const src = randomBytes(6).toString("hex") + ".txt";
-    await writeFile(path.join(VAULT, src), (await seal(key, m.bytes)).toString("base64"));
-    const name = String(i + 1).padStart(2, "0") + "-" + path.basename(p.file, path.extname(p.file)) + m.ext;
-    photos.push({ src, type: m.type, caption: p.caption || "", name, ...(p.pos ? { pos: p.pos } : {}) });
-    console.log(`  photo ${p.file} -> ${src} (${Math.round(m.bytes.length / 1024)} KB)`);
-  }
+  let n = 0;
+  const packList = async list => {
+    const photos = [];
+    for (const p of list || []) {
+      const m = await loadMedia(path.join(dir, "photos", p.file));
+      const src = randomBytes(6).toString("hex") + ".txt";
+      await writeFile(path.join(VAULT, src), (await seal(key, m.bytes)).toString("base64"));
+      const name = String(++n).padStart(2, "0") + "-" + path.basename(p.file, path.extname(p.file)) + m.ext;
+      photos.push({ src, type: m.type, caption: p.caption || "", name, ...(p.pos ? { pos: p.pos } : {}) });
+      console.log(`  photo ${p.file} -> ${src} (${Math.round(m.bytes.length / 1024)} KB)`);
+    }
+    return photos;
+  };
+  const photos = await packList(content.photos);
+  const timo = content.timo ? { ...content.timo, photos: await packList(content.timo.photos) } : undefined;
   const head = Buffer.alloc(8);
   MAGIC.copy(head);
   head.writeUInt32BE(ITER, 4);
-  const body = await seal(key, Buffer.from(JSON.stringify({ ...content, photos })));
+  const body = await seal(key, Buffer.from(JSON.stringify({ ...content, photos, ...(timo ? { timo } : {}) })));
   await writeFile(path.join(VAULT, "content.txt"), Buffer.concat([head, salt, body]).toString("base64"));
-  console.log(`vault ready: ${photos.length} photo(s) in lapland/vault/`);
+  console.log(`vault ready: ${n} photo(s) in lapland/vault/`);
 }
 
 async function unpack(out) {
@@ -78,10 +84,12 @@ async function unpack(out) {
   const key = await deriveKey(buf.subarray(8, 24));
   const data = JSON.parse((await open(key, buf.subarray(24))).toString("utf8"));
   await mkdir(path.join(out, "photos"), { recursive: true });
-  for (const p of data.photos) {
-    await writeFile(path.join(out, "photos", p.name), await open(key, await read(p.src)));
-  }
-  data.photos = data.photos.map(p => ({ file: p.name, caption: p.caption, ...(p.pos ? { pos: p.pos } : {}) }));
+  const unpackList = async list => {
+    for (const p of list) await writeFile(path.join(out, "photos", p.name), await open(key, await read(p.src)));
+    return list.map(p => ({ file: p.name, caption: p.caption, ...(p.pos ? { pos: p.pos } : {}) }));
+  };
+  data.photos = await unpackList(data.photos);
+  if (data.timo) data.timo.photos = await unpackList(data.timo.photos);
   await writeFile(path.join(out, "content.json"), JSON.stringify(data, null, 2) + "\n");
   console.log(`unpacked to ${out}`);
 }
