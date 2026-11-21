@@ -6,6 +6,7 @@
 //   node tools/lapland-vault.mjs unpack <outDir>       gets content.json + photos/ back from the vault
 //
 // Password = the date's digits, day-month-year: 11102026. Override with LAPLAND_PASS.
+// Files are stored as base64 text (.txt) so any static host, claude.ai artifacts included, can serve them.
 // Photos are turned upright, shrunk to 1600px and stripped of EXIF (location, phone model) before encrypting.
 import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
@@ -56,8 +57,8 @@ async function pack(dir) {
   const photos = [];
   for (const [i, p] of (content.photos || []).entries()) {
     const m = await loadMedia(path.join(dir, "photos", p.file));
-    const src = randomBytes(6).toString("hex") + ".bin";
-    await writeFile(path.join(VAULT, src), await seal(key, m.bytes));
+    const src = randomBytes(6).toString("hex") + ".txt";
+    await writeFile(path.join(VAULT, src), (await seal(key, m.bytes)).toString("base64"));
     const name = String(i + 1).padStart(2, "0") + "-" + path.basename(p.file, path.extname(p.file)) + m.ext;
     photos.push({ src, type: m.type, caption: p.caption || "", name, ...(p.pos ? { pos: p.pos } : {}) });
     console.log(`  photo ${p.file} -> ${src} (${Math.round(m.bytes.length / 1024)} KB)`);
@@ -66,18 +67,19 @@ async function pack(dir) {
   MAGIC.copy(head);
   head.writeUInt32BE(ITER, 4);
   const body = await seal(key, Buffer.from(JSON.stringify({ ...content, photos })));
-  await writeFile(path.join(VAULT, "content.bin"), Buffer.concat([head, salt, body]));
+  await writeFile(path.join(VAULT, "content.txt"), Buffer.concat([head, salt, body]).toString("base64"));
   console.log(`vault ready: ${photos.length} photo(s) in lapland/vault/`);
 }
 
 async function unpack(out) {
-  const buf = await readFile(path.join(VAULT, "content.bin"));
+  const read = async f => Buffer.from(await readFile(path.join(VAULT, f), "utf8"), "base64");
+  const buf = await read("content.txt");
   if (!buf.subarray(0, 4).equals(MAGIC)) throw new Error("not a Lapland vault");
   const key = await deriveKey(buf.subarray(8, 24));
   const data = JSON.parse((await open(key, buf.subarray(24))).toString("utf8"));
   await mkdir(path.join(out, "photos"), { recursive: true });
   for (const p of data.photos) {
-    await writeFile(path.join(out, "photos", p.name), await open(key, await readFile(path.join(VAULT, p.src))));
+    await writeFile(path.join(out, "photos", p.name), await open(key, await read(p.src)));
   }
   data.photos = data.photos.map(p => ({ file: p.name, caption: p.caption, ...(p.pos ? { pos: p.pos } : {}) }));
   await writeFile(path.join(out, "content.json"), JSON.stringify(data, null, 2) + "\n");

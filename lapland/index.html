@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#050a1c">
 <title>Lapland ❄️</title>
@@ -691,7 +691,8 @@ $("#music").onclick = () => { if (Music.on) { Music.stop(); store.set("music", f
 let KEY = null, DATA = null;
 const enc = new TextEncoder();
 let vaultP = null;
-const vault = () => vaultP || (vaultP = fetch("vault/content.bin", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error("vault"); return r.arrayBuffer(); }).then(b => new Uint8Array(b)).catch(e => { vaultP = null; throw e; }));
+const b64 = t => Uint8Array.from(atob(t.trim()), c => c.charCodeAt(0));
+const vault = () => vaultP || (vaultP = fetch("vault/content.txt", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error("vault"); return r.text(); }).then(b64).catch(e => { vaultP = null; throw e; }));
 async function tryPass(pass) {
   const buf = await vault();
   const iter = new DataView(buf.buffer, buf.byteOffset).getUint32(4);
@@ -703,7 +704,7 @@ async function tryPass(pass) {
   } catch { return null; }
 }
 async function media(p) {
-  const r = await fetch("vault/" + p.src); const b = new Uint8Array(await r.arrayBuffer());
+  const r = await fetch("vault/" + p.src); const b = b64(await r.text());
   const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b.slice(0, 12) }, KEY, b.slice(12));
   return URL.createObjectURL(new Blob([pt], { type: p.type }));
 }
