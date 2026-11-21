@@ -347,6 +347,36 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .menu button{padding:12px 8px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:#fff;font-weight:600;font-size:14.5px}
 .eggs{margin-top:8px;font-size:13px;color:var(--gold);direction:ltr}
 footer .heart{cursor:pointer}
+/* ---- arcade ---- */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;justify-content:center;flex-wrap:wrap}
+.chips button{flex:none;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--line);font-weight:700;font-size:14.5px;direction:ltr}
+.chips button.on{background:linear-gradient(135deg,#ffe3a3,#f3ad5f);color:#2b1705;border-color:transparent}
+.arc{padding:18px;text-align:center;min-height:300px}
+.arc .note{color:var(--muted);font-size:14px;white-space:pre-line;unicode-bidi:plaintext;margin:6px 0 12px}
+.arc .res{font:600 21px/1.7 var(--script);white-space:pre-line;unicode-bidi:plaintext;margin:12px 0}
+.mstat{display:flex;justify-content:space-between;font-weight:800;margin-bottom:10px;direction:ltr}
+.mgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;direction:ltr}
+.mc{aspect-ratio:3/4;perspective:600px;padding:0}
+.mc .in{position:relative;display:block;width:100%;height:100%;transform-style:preserve-3d;transition:transform .45s}
+.mc.open .in,.mc.done .in{transform:rotateY(180deg)}
+.mc .bk,.mc .fr{position:absolute;inset:0;border-radius:10px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.mc .bk{display:grid;place-items:center;font-size:24px;background:linear-gradient(160deg,#2a54a0,#14295f);border:1px solid rgba(200,228,255,.3);
+  background-image:radial-gradient(circle,rgba(255,255,255,.18) 1px,transparent 1.5px);background-size:12px 12px}
+.mc .fr{transform:rotateY(180deg);background:#dfe6f2}
+.mc .fr img{width:100%;height:100%;object-fit:cover}
+.mc.done .fr{box-shadow:0 0 0 3px var(--aurora),0 0 18px rgba(94,255,196,.6)}
+.court{display:block;width:100%;height:430px;border-radius:16px;touch-action:none;cursor:grab}
+.clock{font:700 clamp(54px,17vw,92px)/1.1 "Playfair Display",serif;direction:ltr;color:#fff;letter-spacing:.02em;text-shadow:0 0 30px rgba(127,216,255,.5);margin:18px 0 6px;font-variant-numeric:tabular-nums}
+.clock.hit{color:var(--gold);text-shadow:0 0 40px rgba(246,213,142,.9)}
+.slots,.tiles{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;direction:ltr;margin:12px 0}
+.slots span,.tiles button{width:38px;height:46px;border-radius:10px;display:grid;place-items:center;font:800 22px "Cairo",sans-serif}
+.slots span{border:2px dashed rgba(200,228,255,.4);cursor:pointer}
+.slots span.f{border-style:solid;border-color:var(--gold);background:rgba(246,213,142,.12)}
+.slots.ok span{border-color:var(--aurora);background:rgba(94,255,196,.2)}
+.slots.no{animation:shake .4s}
+.tiles button{background:linear-gradient(180deg,#fffaf0,#f2e6cc);color:#3a2a1a;box-shadow:0 4px 0 #c9b48a}
+.tiles button[disabled]{visibility:hidden}
+.wrow{display:flex;gap:10px;justify-content:center;margin-top:10px}
 footer{text-align:center;padding:40px 18px 34vh;color:var(--muted);font-size:14px;line-height:2}
 footer .heart{font-family:var(--script);font-size:24px;color:var(--text)}
 footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-decoration:underline}
@@ -514,6 +544,14 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     <p class="sub">11 سؤال عن حكايتنا…
 ولو خلصتيهم في جايزة مستنياكي 🎁</p>
     <div class="quiz card" id="quizBox"></div>
+  </section>
+
+  <section class="sec reveal" id="arcade">
+    <p class="kicker">Game corner</p>
+    <h2 class="h" dir="ltr">Lapland Arcade 🎮</h2>
+    <p class="sub">اختاري لعبة… ولو زهقتي في غيرها 😄</p>
+    <div class="chips" id="arcTabs"></div>
+    <div class="arc card" id="arcArea"></div>
   </section>
 
   <section class="sec reveal" id="wrapped">
@@ -1007,7 +1045,7 @@ const get = (o, path) => path.split(".").reduce((a, k) => a && a[k], o);
 function render() {
   document.querySelectorAll("[data-k]").forEach(el => el.textContent = get(DATA, el.dataset.k) || "");
   document.title = `Lapland ❄️ ${DATA.her}`;
-  sinceInit(); timeline(); letter(); gallery(); globe(); timo(); game(); quiz(); wrapped(); openWhen(); playlist(); menu(); eggs(); advent(); wish(); newYear(); eleven();
+  sinceInit(); timeline(); letter(); gallery(); globe(); timo(); game(); quiz(); arcade(); wrapped(); openWhen(); playlist(); menu(); eggs(); advent(); wish(); newYear(); eleven();
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
   document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 }
@@ -1363,7 +1401,7 @@ function playlist() {
 /* ---- menu ---- */
 function menu() {
   const items = [["hero", "❄️ Home"], ["story", "📖 Our story"], ["letter", "💌 11:11"], ["memories", "📸 Us"], ["globe", "🔮 Snow globe"], ["timo", "🦁 Timo"],
-    ["quiz", "🧠 Quiz"], ["wrapped", "🎧 Wrapped"], ["openwhen", "✉️ Open when"], ["playlist", "🎶 Playlist"], ["advent", "🎁 Doors"], ["wish", "✨ Wish"], ["newyear", "🎆 New Year"], ["y2027", "🌟 2027"]];
+    ["quiz", "🧠 Quiz"], ["arcade", "🎮 Arcade"], ["wrapped", "🎧 Wrapped"], ["openwhen", "✉️ Open when"], ["playlist", "🎶 Playlist"], ["advent", "🎁 Doors"], ["wish", "✨ Wish"], ["newyear", "🎆 New Year"], ["y2027", "🌟 2027"]];
   $("#menuBtn").onclick = () => {
     const vis = items.filter(([id]) => id === "hero" || (document.getElementById(id) && !document.getElementById(id).hidden));
     modal(`<span class="pill" style="background:#1f3a7a;color:#c9f5ff">❄ Lapland map</span><div class="menu">${vis.map(([id, t]) => `<button type="button" data-go="${id}">${t}</button>`).join("")}</div>`, "night");
@@ -1392,6 +1430,176 @@ function eggs() {
   document.querySelector("#paper .when").onclick = () => egg("letter");
   document.querySelector("footer .heart").onclick = () => egg("footer");
   showEggs();
+}
+
+/* ---- arcade ---- */
+function arcade() {
+  const A = DATA.games; if (!A) { $("#arcade").hidden = true; return; }
+  const area = $("#arcArea"), tabs = $("#arcTabs");
+  const games = [["memory", "🃏 Memory", memoryGame], ["padel", "🎾 Padel", padelGame], ["clock", "⏱️ 11:11", clockGame], ["words", "🔤 Words", wordsGame], ["king", "🐟 Feed the King", null]];
+  let stop = null;
+  const open = id => {
+    if (id === "king") { $("#game").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+    if (stop) stop(); stop = null;
+    tabs.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.g === id));
+    stop = games.find(g => g[0] === id)[2](area, A) || null;
+  };
+  tabs.innerHTML = games.map(([id, t]) => `<button type="button" data-g="${id}">${t}</button>`).join("");
+  tabs.onclick = e => { const b = e.target.closest("button"); if (b) open(b.dataset.g); };
+  open("memory");
+}
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+function memoryGame(area, A) {
+  const pool = [...(DATA.photos || []).slice(0, 4), ...((DATA.timo || {}).photos || []).slice(0, 4)];
+  const cards = shuffle(pool.flatMap((p, i) => [i, i]));
+  area.innerHTML = `<p class="note">اقلبي كارتين… ولو نفس الصورة يفضلوا مفتوحين 🃏</p>
+    <div class="mstat"><span id="mMoves">Moves 0</span><span id="mBest"></span><span id="mTime">0s</span></div>
+    <div class="mgrid">${cards.map((c, k) => `<button class="mc" type="button" data-k="${k}"><span class="in"><span class="bk">❄</span><span class="fr"><img alt="" data-i="${c}"></span></span></button>`).join("")}</div>
+    <p class="res" id="mRes"></p>`;
+  pool.forEach((p, i) => media(p).then(u => { p.url = u; area.querySelectorAll(`img[data-i="${i}"]`).forEach(im => { im.src = u; if (p.pos) im.style.objectPosition = p.pos; }); }).catch(() => {}));
+  let first = null, lock = false, moves = 0, done = 0, t0 = 0, tick = 0;
+  const best = store.get("memBest", 0);
+  $("#mBest").textContent = best ? `Best ${best}` : "";
+  area.querySelector(".mgrid").onclick = e => {
+    const b = e.target.closest(".mc"); if (!b || lock || b.classList.contains("open") || b.classList.contains("done")) return;
+    if (!t0) { t0 = Date.now(); tick = setInterval(() => $("#mTime").textContent = Math.round((Date.now() - t0) / 1000) + "s", 500); }
+    b.classList.add("open");
+    if (!first) { first = b; return; }
+    moves++; $("#mMoves").textContent = "Moves " + moves;
+    const a = first; first = null;
+    if (cards[a.dataset.k] === cards[b.dataset.k]) {
+      a.classList.replace("open", "done"); b.classList.replace("open", "done"); done += 2;
+      if (done === cards.length) {
+        clearInterval(tick); FW.start(3000);
+        if (!best || moves < best) store.set("memBest", moves);
+        $("#mRes").textContent = `${moves} moves · ${Math.round((Date.now() - t0) / 1000)}s 🎉\n` + (A.memoryLine || "");
+        area.insertAdjacentHTML("beforeend", `<button class="btn ghost" type="button" id="mAgain" dir="ltr">Play again 🔁</button>`);
+        $("#mAgain").onclick = () => memoryGame(area, A);
+      }
+    } else { lock = true; setTimeout(() => { a.classList.remove("open"); b.classList.remove("open"); lock = false; }, 850); }
+  };
+  return () => clearInterval(tick);
+}
+
+function padelGame(area, A) {
+  area.innerHTML = `<p class="note">حركي المضرب بصباعك… أول واحد يجيب 5 يكسب 🎾</p>
+    <canvas class="court" id="court"></canvas>
+    <div class="gbar"><span id="pMe">حور 0</span><span id="pHim">سلومتك 0</span></div>
+    <button class="btn" type="button" id="pGo">Serve 🎾</button><p class="res" id="pRes"></p>`;
+  const cv = $("#court"), x = cv.getContext("2d"), dpr = Math.min(devicePixelRatio || 1, 2);
+  const r = cv.getBoundingClientRect(), W = r.width, H = r.height;
+  cv.width = W * dpr; cv.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const me = { x: W / 2, w: W * .26 }, him = { x: W / 2, w: W * .24 }, ball = { x: W / 2, y: H / 2, vx: 0, vy: 0, r: 7 };
+  let sMe = 0, sHim = 0, live = false, raf = 0, last = 0, rally = 0, err = 0, over = false;
+  const base = H / 115;
+  const hud = () => { $("#pMe").textContent = "حور " + sMe; $("#pHim").textContent = "سلومتك " + sHim; };
+  const aim = e => { const b = cv.getBoundingClientRect(); me.x = Math.min(W - me.w / 2, Math.max(me.w / 2, e.clientX - b.left)); if (!live) draw(); };
+  cv.addEventListener("pointermove", aim); cv.addEventListener("pointerdown", aim);
+  const rr = (X, Y, w, h, c) => { x.fillStyle = c; x.beginPath(); x.roundRect ? x.roundRect(X, Y, w, h, h / 2) : x.rect(X, Y, w, h); x.fill(); };
+  const draw = () => {
+    const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#1f5fc9"); g.addColorStop(1, "#2a76e0");
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.strokeStyle = "rgba(255,255,255,.85)"; x.lineWidth = 2; x.strokeRect(8, 8, W - 16, H - 16);
+    x.beginPath(); x.moveTo(W / 2, H * .25); x.lineTo(W / 2, H * .75); x.moveTo(8, H * .25); x.lineTo(W - 8, H * .25); x.moveTo(8, H * .75); x.lineTo(W - 8, H * .75); x.stroke();
+    x.setLineDash([6, 6]); x.strokeStyle = "rgba(255,255,255,.6)"; x.beginPath(); x.moveTo(8, H / 2); x.lineTo(W - 8, H / 2); x.stroke(); x.setLineDash([]);
+    rr(him.x - him.w / 2, 20, him.w, 12, "#0b1638"); rr(me.x - me.w / 2, H - 32, me.w, 12, "#ff6b9a");
+    x.font = "bold 11px Cairo, sans-serif"; x.textAlign = "center"; x.fillStyle = "#fff";
+    x.fillText("سلومتك", him.x, 48); x.fillText("حور 🎀", me.x, H - 38);
+    x.fillStyle = "#d7ff3a"; x.shadowColor = "#d7ff3a"; x.shadowBlur = 10; x.beginPath(); x.arc(ball.x, ball.y, ball.r, 0, 6.283); x.fill(); x.shadowBlur = 0;
+  };
+  const serve = dir => { ball.x = W / 2; ball.y = H / 2; const a = (Math.random() - .5) * .9; ball.vx = Math.sin(a) * base; ball.vy = dir * Math.cos(a) * base; rally = 0; err = (Math.random() - .5) * him.w * .9; live = true; last = 0; $("#pGo").hidden = true; raf = requestAnimationFrame(step); };
+  const point = meWon => {
+    live = false; meWon ? sMe++ : sHim++; hud(); draw();
+    if (sMe === 5 || sHim === 5) {
+      over = true; const win = sMe === 5; if (win) FW.start(3500);
+      $("#pRes").textContent = (win ? "You win! 🏆\n" + (A.padelWin || "") : (A.padelLose || ""));
+      $("#pGo").hidden = false; $("#pGo").textContent = "Rematch 🔁"; return;
+    }
+    setTimeout(() => serve(meWon ? -1 : 1), 700);
+  };
+  const step = t => {
+    if (!live) return;
+    const k = Math.min(2.5, last ? (t - last) / 16.7 : 1); last = t;
+    ball.x += ball.vx * k; ball.y += ball.vy * k;
+    if (ball.x < 8 + ball.r) { ball.x = 8 + ball.r; ball.vx = Math.abs(ball.vx); }
+    if (ball.x > W - 8 - ball.r) { ball.x = W - 8 - ball.r; ball.vx = -Math.abs(ball.vx); }
+    const target = ball.vy < 0 ? ball.x + err : W / 2, sp = W * (.0105 + rally * .0004) * k;
+    him.x += Math.max(-sp, Math.min(sp, target - him.x)); him.x = Math.min(W - him.w / 2, Math.max(him.w / 2, him.x));
+    const hit = (p, y, dir) => {
+      if (Math.abs(ball.x - p.x) > p.w / 2 + ball.r) return false;
+      const sp2 = Math.hypot(ball.vx, ball.vy) * 1.045, off = (ball.x - p.x) / (p.w / 2);
+      ball.vx = off * sp2 * .75; ball.vy = dir * Math.sqrt(Math.max(sp2 * sp2 - ball.vx * ball.vx, sp2 * sp2 * .3)); ball.y = y; rally++;
+      err = (Math.random() - .5) * him.w * (.6 + rally * .05); return true;
+    };
+    if (ball.vy > 0 && ball.y + ball.r >= H - 32 && ball.y < H - 20) hit(me, H - 32 - ball.r, -1);
+    if (ball.vy < 0 && ball.y - ball.r <= 32 && ball.y > 20) hit(him, 32 + ball.r, 1);
+    if (ball.y > H + 20) return point(false);
+    if (ball.y < -20) return point(true);
+    draw(); raf = requestAnimationFrame(step);
+  };
+  $("#pGo").onclick = () => { if (over) { sMe = sHim = 0; over = false; hud(); $("#pRes").textContent = ""; } serve(1); };
+  draw();
+  return () => { live = false; cancelAnimationFrame(raf); };
+}
+
+function clockGame(area, A) {
+  area.innerHTML = `<p class="note">الساعة هتجري بسرعة…
+وقفيها على 11:11:11 بالظبط ✨</p><div class="clock" id="clk">11:10:30</div>
+    <button class="btn" type="button" id="cGo">Start ⏱️</button><p class="res" id="cRes"></p><p class="rcount" id="cBest"></p>`;
+  const clk = $("#clk"), btn = $("#cGo"), MS = 42, TARGET = 41;
+  let raf = 0, t0 = 0, run = false, best = store.get("clockBest", null);
+  const fmt = s => `11:${String(10 + Math.floor((30 + s) / 60)).padStart(2, "0")}:${String((30 + s) % 60).padStart(2, "0")}`;
+  const showBest = () => $("#cBest").textContent = best === null ? "" : best === 0 ? "Best: perfect 11:11:11 ✨" : `Best: ${best}s away`;
+  const tick = () => { const s = Math.floor((performance.now() - t0) / MS); clk.textContent = fmt(s); if (s > TARGET + 80) return stopIt(s); raf = requestAnimationFrame(tick); };
+  const stopIt = s => {
+    run = false; cancelAnimationFrame(raf); clk.textContent = fmt(s);
+    const d = s - TARGET, ad = Math.abs(d);
+    if (best === null || ad < best) { best = ad; store.set("clockBest", best); }
+    clk.classList.toggle("hit", ad === 0);
+    if (ad === 0) { const sh = document.createElement("div"); sh.className = "shoot"; document.body.appendChild(sh); setTimeout(() => sh.remove(), 1700); FW.start(4000); }
+    $("#cRes").textContent = ad === 0 ? (A.elevenPerfect || "Perfect ✨") : ad <= 2 ? `So close!! 😱 ${ad}s ${d < 0 ? "early" : "late"}` : d < 0 ? `Too early by ${ad}s ⏳` : `Too late by ${ad}s 😅`;
+    btn.textContent = "Try again 🔁"; showBest();
+  };
+  btn.onclick = () => {
+    if (run) return stopIt(Math.floor((performance.now() - t0) / MS));
+    run = true; clk.classList.remove("hit"); $("#cRes").textContent = ""; btn.textContent = "STOP ✋"; t0 = performance.now(); raf = requestAnimationFrame(tick);
+  };
+  showBest();
+  return () => { run = false; cancelAnimationFrame(raf); };
+}
+
+function wordsGame(area, A) {
+  const L = A.words || []; let i = 0, score = 0;
+  const show = () => {
+    if (i >= L.length) {
+      area.innerHTML = `<p class="clock" style="font-size:64px">${score} / ${L.length}</p><p class="res">${score === L.length ? "All of them!! 🎉" : "Not bad 😄"}</p><button class="btn ghost" type="button" id="wAgain" dir="ltr">Play again 🔁</button>`;
+      if (score >= L.length - 1) FW.start(3000);
+      $("#wAgain").onclick = () => { i = 0; score = 0; show(); }; return;
+    }
+    const w = L[i].w; let mix; do { mix = shuffle([...w]); } while (mix.join("") === w && w.length > 1);
+    area.innerHTML = `<p class="rcount">${i + 1} / ${L.length}</p><p class="note" style="font-size:16px"></p>
+      <div class="slots" id="slots">${[...w].map(() => "<span></span>").join("")}</div>
+      <div class="tiles" id="tiles">${mix.map((c, k) => `<button type="button" data-k="${k}">${c}</button>`).join("")}</div>
+      <div class="wrow"><button class="btn ghost" type="button" id="wHint" dir="ltr">Hint 💡</button><button class="btn ghost" type="button" id="wSkip" dir="ltr">Skip ⏭</button></div>`;
+    area.querySelector(".note").textContent = L[i].hint;
+    const slots = [...area.querySelectorAll("#slots span")], used = [];
+    const put = b => { const n = used.length; if (n >= w.length) return; used.push(b); slots[n].textContent = b.textContent; slots[n].classList.add("f"); b.disabled = true; if (used.length === w.length) check(); };
+    const check = () => {
+      const box = $("#slots");
+      if (used.map(b => b.textContent).join("") === w) { box.classList.add("ok"); score++; setTimeout(() => { i++; show(); }, 800); }
+      else { box.classList.remove("no"); void box.offsetWidth; box.classList.add("no"); setTimeout(clear, 450); }
+    };
+    const clear = () => { used.splice(0).forEach(b => b.disabled = false); slots.forEach(s => { s.textContent = ""; s.classList.remove("f"); }); };
+    $("#tiles").onclick = e => { const b = e.target.closest("button"); if (b) put(b); };
+    $("#slots").onclick = () => clear();
+    $("#wHint").onclick = () => {
+      clear(); toast(`It starts with "${w.slice(0, 2)}" 👀`);
+      for (const ch of w.slice(0, 2)) { const b = [...area.querySelectorAll("#tiles button")].find(t => !t.disabled && t.textContent === ch); if (b) put(b); }
+    };
+    $("#wSkip").onclick = () => { toast(`It was ${w} 😉`); i++; show(); };
+  };
+  show();
 }
 
 /* ---- modal ---- */
