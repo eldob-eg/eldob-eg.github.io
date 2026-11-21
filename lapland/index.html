@@ -9,11 +9,12 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>❄️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;600;800&family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cairo:wght@400;600;800&family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
 :root{
   --night:#050a1c;--glass:rgba(12,22,54,.58);--line:rgba(200,225,255,.16);
   --aurora:#5effc4;--teal:#7fd8ff;--violet:#c59bff;--warm:#ffcf8a;--gold:#f6d58e;--red:#e2475b;
+  --script:"Playfair Display","Aref Ruqaa",serif;
   --text:#eef4ff;--muted:#aebddf;--paper:#fffaf0;--ink:#3a2a1a;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -61,7 +62,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
   box-shadow:0 0 30px rgba(127,216,255,.35),inset 0 0 20px rgba(127,216,255,.2)}
 .flake-ring span{display:block;animation:spin 14s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.lock-card h1{font-family:"Aref Ruqaa",serif;font-size:34px;line-height:1.35;text-shadow:0 0 22px rgba(127,216,255,.45)}
+.lock-card h1{font-family:var(--script);font-size:31px;line-height:1.35;text-shadow:0 0 22px rgba(127,216,255,.45)}
 .lock-card p.lead{color:var(--muted);margin:8px 0 22px;line-height:1.8;font-size:15.5px}
 .date-row{display:flex;justify-content:center;align-items:flex-start;gap:8px;direction:ltr}
 .date-row .sep{font-size:26px;color:rgba(200,228,255,.5);padding-top:12px}
@@ -92,15 +93,15 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 #app{position:relative;z-index:3}
 .sec{max-width:900px;margin:0 auto;padding:80px 18px}
 .kicker{font-family:"Great Vibes",cursive;direction:ltr;text-align:center;color:var(--aurora);font-size:28px;text-shadow:0 0 16px rgba(94,255,196,.45)}
-.h{font-family:"Aref Ruqaa",serif;text-align:center;font-size:clamp(32px,7.5vw,48px);line-height:1.4;margin-bottom:10px;text-shadow:0 0 26px rgba(127,216,255,.35)}
-.sub{text-align:center;color:var(--muted);line-height:1.9;white-space:pre-line;max-width:560px;margin:0 auto 30px}
+.h{font-family:var(--script);text-align:center;font-size:clamp(32px,7.5vw,48px);line-height:1.4;margin-bottom:10px;text-shadow:0 0 26px rgba(127,216,255,.35)}
+.sub{text-align:center;color:var(--muted);line-height:1.9;white-space:pre-line;unicode-bidi:plaintext;max-width:560px;margin:0 auto 30px}
 .card{background:var(--glass);border:1px solid var(--line);border-radius:24px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 18px 50px rgba(0,0,0,.35)}
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .9s ease,transform .9s ease}
 .reveal.in{opacity:1;transform:none}
 
 .hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 18px 34vh}
 .coords{direction:ltr;letter-spacing:.25em;font-size:11.5px;color:rgba(200,225,255,.6);margin-top:4px}
-.hero .hi{font-family:"Aref Ruqaa",serif;font-size:clamp(26px,6.5vw,40px);margin-top:18px}
+.hero .hi{font-family:var(--script);font-size:clamp(26px,6.5vw,40px);margin-top:18px}
 .name{font-family:"Aref Ruqaa",serif;font-weight:700;font-size:clamp(96px,30vw,190px);line-height:1.05;padding:0 .1em;
   background:linear-gradient(100deg,#5effc4,#7fd8ff 30%,#c59bff 55%,#ffe3a3 75%,#5effc4);background-size:300% 100%;
   -webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 9s linear infinite;
@@ -116,7 +117,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
   background:linear-gradient(180deg,#fff,#bfe3ff);-webkit-background-clip:text;background-clip:text;color:transparent}
 .tile span{font-size:13px;color:var(--muted)}
 .since-from{text-align:center;margin:18px 0 0;color:var(--muted);direction:ltr;letter-spacing:.12em}
-.since-line{text-align:center;margin-top:10px;font-family:"Aref Ruqaa",serif;font-size:21px}
+.since-line{text-align:center;margin-top:10px;font-family:var(--script);font-size:21px}
 
 .timeline{position:relative;max-width:560px;margin:0 auto;padding-right:30px}
 .timeline::before{content:"";position:absolute;right:9px;top:8px;bottom:8px;width:2px;
@@ -125,8 +126,8 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .tl::before{content:"❄";position:absolute;right:-31px;top:20px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;
   background:#0a1638;border:2px solid var(--aurora);box-shadow:0 0 14px rgba(94,255,196,.6)}
 .tl .d{direction:ltr;text-align:right;font-weight:800;letter-spacing:.06em;color:var(--gold);font-size:15px}
-.tl h3{font-family:"Aref Ruqaa",serif;font-size:25px;margin:4px 0}
-.tl p{color:#d3def7;line-height:1.85;white-space:pre-line}
+.tl h3{font-family:var(--script);font-size:25px;margin:4px 0}
+.tl p{color:#d3def7;line-height:1.85;white-space:pre-line;unicode-bidi:plaintext;text-align:right}
 .tl a{display:inline-block;margin-top:10px;color:var(--aurora);font-weight:800;text-decoration:none;font-size:15px}
 
 .envelope{position:relative;width:min(340px,86vw);aspect-ratio:1.55;margin:16px auto 0;cursor:pointer;perspective:900px;transition:opacity .6s,transform .6s}
@@ -151,9 +152,9 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .paper::before,.paper::after{content:"❄";position:absolute;color:#9bb6dd;font-size:22px;top:12px}
 .paper::before{right:14px}.paper::after{left:14px}
 .paper .when{direction:ltr;text-align:center;font-weight:800;letter-spacing:.12em;color:#b5182f;font-size:14px;margin-bottom:16px}
-.paper .txt{font-family:"Aref Ruqaa",serif;font-size:22px;line-height:42px;white-space:pre-line;min-height:84px}
+.paper .txt{font-family:var(--script);font-size:21px;line-height:42px;white-space:pre-line;unicode-bidi:plaintext;text-align:center;min-height:84px}
 .paper .txt.typing::after{content:"|";animation:blink .8s steps(1) infinite;color:#b5182f}
-.paper .sign{margin-top:20px;text-align:left;font-family:"Aref Ruqaa",serif;font-size:22px;color:#7a4a2a}
+.paper .sign{margin-top:20px;text-align:left;font-family:var(--script);font-size:22px;color:#7a4a2a}
 
 .lights{display:block;width:100%;height:60px;margin-bottom:6px;overflow:visible}
 .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:26px 16px;padding:6px 4px}
@@ -167,7 +168,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .polaroid .ph{display:grid;place-items:center;text-align:center;color:#d8e6ff;font-size:13px;line-height:1.8;
   background:radial-gradient(circle at 50% 30%,#3a5ea8,#16275a);}
 .polaroid .ph i{font-style:normal;font-size:34px;display:block}
-.polaroid figcaption{margin-top:8px;text-align:center;font-family:"Aref Ruqaa",serif;color:#4a3a2a;font-size:16.5px;line-height:1.5;min-height:24px}
+.polaroid figcaption{margin-top:8px;text-align:center;font-family:var(--script);color:#4a3a2a;font-size:16.5px;line-height:1.5;min-height:24px}
 .polaroid.loading img{opacity:0}
 .polaroid img{transition:opacity .6s}
 
@@ -195,11 +196,11 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 
 .wishbox{padding:22px;max-width:560px;margin:0 auto;text-align:center}
 .wishbox textarea{width:100%;min-height:130px;border:0;border-radius:16px;padding:16px 18px;resize:vertical;outline:none;
-  background:linear-gradient(170deg,#fffdf6,#f6ecd6);color:var(--ink);font:22px/1.8 "Aref Ruqaa",serif;box-shadow:inset 0 2px 10px rgba(0,0,0,.08)}
+  background:linear-gradient(170deg,#fffdf6,#f6ecd6);color:var(--ink);font:21px/1.8 var(--script);box-shadow:inset 0 2px 10px rgba(0,0,0,.08)}
 .wishbox textarea.fold{animation:fold .9s ease forwards}
 @keyframes fold{to{transform:scale(.1) translateY(-200px);opacity:0}}
 .wishbox .btn{margin-top:16px}
-.wish-reply{margin-top:16px;font-family:"Aref Ruqaa",serif;font-size:22px;line-height:1.8;white-space:pre-line;color:var(--aurora)}
+.wish-reply{margin-top:16px;font-family:var(--script);font-size:21px;line-height:1.8;white-space:pre-line;unicode-bidi:plaintext;color:var(--aurora)}
 .wish-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;text-align:right}
 .wish-list div{padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);font-size:14.5px;color:#d6e2fb}
 .wish-star{position:fixed;z-index:60;font-size:30px;pointer-events:none;color:#fff6c8;text-shadow:0 0 14px #fff2a8,0 0 30px #ffd36e;animation:soar 2.4s ease-in forwards}
@@ -213,7 +214,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .ny .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
 
 footer{text-align:center;padding:40px 18px 34vh;color:var(--muted);font-size:14px;line-height:2}
-footer .heart{font-family:"Aref Ruqaa",serif;font-size:24px;color:var(--text)}
+footer .heart{font-family:var(--script);font-size:24px;color:var(--text)}
 footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-decoration:underline}
 
 #music{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;width:50px;height:50px;border-radius:50%;font-size:22px;
@@ -230,11 +231,11 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
 .mcard .x{position:absolute;top:10px;left:12px;width:36px;height:36px;border-radius:50%;font-size:18px;color:#8a7560}
 .mcard .pill{display:inline-block;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:800;background:#e9f2ff;color:#2a54a0;margin-bottom:12px}
 .mcard .pill.coupon{background:#ffe4e8;color:#b5182f}.mcard .pill.challenge{background:#dff7ee;color:#11634b}
-.mcard .day{font-family:"Aref Ruqaa",serif;font-size:20px;color:#9a7f5e}
-.mcard .body{font-family:"Aref Ruqaa",serif;font-size:24px;line-height:1.85;white-space:pre-line;margin-top:8px}
+.mcard .day{font-family:var(--script);font-size:20px;color:#9a7f5e}
+.mcard .body{font-family:var(--script);font-size:22px;line-height:1.85;white-space:pre-line;unicode-bidi:plaintext;margin-top:8px}
 .mcard.coupon{border:3px dashed #d9798a;outline:6px solid #fffaf0}
 .mcard .foot{margin-top:16px;font-size:13px;color:#9a7f5e}
-.mcard .sign{margin-top:16px;font-family:"Aref Ruqaa",serif;font-size:22px;color:#7a4a2a}
+.mcard .sign{margin-top:16px;font-family:var(--script);font-size:22px;color:#7a4a2a}
 .mcard.night{background:linear-gradient(170deg,#132a62,#0a1638);color:var(--text)}
 .mcard.night .x{color:#aebddf}
 .mcard.night .body{color:#fff}
@@ -243,7 +244,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
 #lightbox.show{opacity:1;pointer-events:auto}
 #lightbox figure{max-width:94vw;text-align:center}
 #lightbox img,#lightbox video{max-width:94vw;max-height:78vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-#lightbox figcaption{margin-top:12px;font-family:"Aref Ruqaa",serif;font-size:22px}
+#lightbox figcaption{margin-top:12px;font-family:var(--script);font-size:22px}
 #lightbox .nav{position:absolute;top:50%;width:46px;height:46px;margin-top:-23px;border-radius:50%;background:rgba(255,255,255,.1);font-size:22px}
 #lightbox .prev{right:12px}#lightbox .next{left:12px}
 #lightbox .x{position:absolute;top:14px;left:14px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);font-size:20px}
@@ -268,16 +269,16 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
 <section id="lock">
   <form class="lock-card" id="lockForm" autocomplete="off">
     <div class="flake-ring"><span>❄️</span></div>
-    <h1>لابلاند مستنياكي</h1>
-    <p class="lead">الباب ده مايفتحش غير بتاريخ واحد بس…<br>اليوم اللي بدأت فيه حكايتنا 🤍</p>
+    <h1>Lapland is waiting for you</h1>
+    <p class="lead">الباب ده مايفتحش غير بتاريخ واحد بس…<br><span dir="ltr">the day our story began 🤍</span></p>
     <div class="date-row">
-      <div class="ice"><input id="dd" inputmode="numeric" maxlength="2" placeholder="--" aria-label="اليوم"><label for="dd">يوم</label></div>
+      <div class="ice"><input id="dd" inputmode="numeric" maxlength="2" placeholder="--" aria-label="اليوم"><label for="dd">Day</label></div>
       <span class="sep">-</span>
-      <div class="ice"><input id="mm" inputmode="numeric" maxlength="2" placeholder="--" aria-label="الشهر"><label for="mm">شهر</label></div>
+      <div class="ice"><input id="mm" inputmode="numeric" maxlength="2" placeholder="--" aria-label="الشهر"><label for="mm">Month</label></div>
       <span class="sep">-</span>
-      <div class="ice"><input id="yy" class="year" inputmode="numeric" maxlength="4" placeholder="----" aria-label="السنة"><label for="yy">سنة</label></div>
+      <div class="ice"><input id="yy" class="year" inputmode="numeric" maxlength="4" placeholder="----" aria-label="السنة"><label for="yy">Year</label></div>
     </div>
-    <button class="btn" id="unlockBtn" type="submit">افتحي الباب 🗝️</button>
+    <button class="btn" id="unlockBtn" type="submit">Open the door 🗝️</button>
     <p id="hint"></p>
   </form>
 </section>
@@ -289,17 +290,17 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     <p class="hi">أهلاً بيكي في لابلاند يا</p>
     <h1 class="name" data-k="her"></h1>
     <p class="sub" data-k="heroSub"></p>
-    <a class="cue" href="#since">انزلي تحت ❄</a>
+    <a class="cue" href="#since">Scroll down ❄</a>
   </section>
 
   <section class="sec reveal" id="since">
     <p class="kicker">Since day one</p>
-    <h2 class="h">من أول يوم اتكلمنا</h2>
+    <h2 class="h">من أول يوم… and counting</h2>
     <div class="tiles">
-      <div class="tile card"><b id="sD">0</b><span>يوم</span></div>
-      <div class="tile card"><b id="sH">0</b><span>ساعة</span></div>
-      <div class="tile card"><b id="sM">0</b><span>دقيقة</span></div>
-      <div class="tile card"><b id="sS">0</b><span>ثانية</span></div>
+      <div class="tile card"><b id="sD">0</b><span>Days</span></div>
+      <div class="tile card"><b id="sH">0</b><span>Hours</span></div>
+      <div class="tile card"><b id="sM">0</b><span>Minutes</span></div>
+      <div class="tile card"><b id="sS">0</b><span>Seconds</span></div>
     </div>
     <p class="since-from" id="sinceFrom"></p>
     <p class="since-line" data-k="sinceLine"></p>
@@ -308,19 +309,21 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
   <section class="sec reveal" id="story">
     <p class="kicker">Our story</p>
     <h2 class="h">والرقم 11 بقى بتاعنا</h2>
-    <p class="sub">كل حاجة حلوة بينا ليها علاقة بالرقم ده… حتى لو مكناش قاصدين ✨</p>
+    <p class="sub">Everything good between us has an 11 in it…
+حتى لو مكناش قاصدين ✨</p>
     <div class="timeline" id="timeline"></div>
   </section>
 
   <section class="sec reveal" id="letter">
     <p class="kicker">The 11:11 message</p>
     <h2 class="h">المسدج</h2>
-    <p class="sub">اتبعتت في ميعاد مش أي ميعاد… 11-11 الساعة 11:11</p>
+    <p class="sub">اتبعتت في ميعاد مش أي ميعاد…
+11 · 11 at 11:11 sharp</p>
     <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="افتحي الجواب">
       <div class="env-back"></div><div class="env-letter">💌</div><div class="env-front"></div><div class="env-flap"></div>
       <div class="seal">❄</div>
     </div>
-    <p class="tap" id="envTap">دوسي على الجواب علشان يتفتح</p>
+    <p class="tap" id="envTap">Tap the letter 💌</p>
     <div class="paper" id="paper" hidden>
       <p class="when" data-k="message.when"></p>
       <p class="txt" id="letterTxt"></p>
@@ -330,27 +333,29 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
 
   <section class="sec reveal" id="memories">
     <p class="kicker">Our memories</p>
-    <h2 class="h">صورنا</h2>
-    <p class="sub">كل صورة هنا متعلقة على حبل نور… زي ما هي متعلقة في دماغي 📸</p>
+    <h2 class="h">Us 📸</h2>
+    <p class="sub">Every photo here hangs on a string of lights…
+زي ما هي متعلقة في دماغي ✨</p>
     <svg class="lights" id="lights" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true"></svg>
     <div class="gallery" id="gallery"></div>
   </section>
 
   <section class="sec reveal" id="advent">
     <p class="kicker">Advent of us</p>
-    <h2 class="h">باب كل يوم في ديسمبر</h2>
+    <h2 class="h">A door a day</h2>
     <p class="sub" id="adventSub"></p>
     <div class="doors" id="doors"></div>
-    <div class="legend"><span>💌 كلمة حلوة</span><span>🎟️ كوبون ليكي</span><span>🎯 تحدي</span></div>
+    <div class="legend"><span>💌 Sweet note</span><span>🎟️ Coupon</span><span>🎯 Challenge</span></div>
   </section>
 
   <section class="sec reveal" id="wish">
     <p class="kicker">Make a wish</p>
     <h2 class="h">أمنيتك لـ 2027</h2>
-    <p class="sub">في لابلاند بيقولوا إن الأمنية اللي بتتكتب تحت الشفق بتتحقق… جربي ✨</p>
+    <p class="sub">They say in Lapland, a wish written under the northern lights comes true…
+جربي ✨</p>
     <div class="wishbox card">
-      <textarea id="wishTxt" placeholder="اكتبي أمنيتك هنا…"></textarea>
-      <button class="btn" id="wishBtn" type="button">طيّري الأمنية للشفق ✨</button>
+      <textarea id="wishTxt" placeholder="Write your wish here… اكتبي أمنيتك"></textarea>
+      <button class="btn" id="wishBtn" type="button">Send it to the aurora ✨</button>
       <div id="wishOut"></div>
       <div class="wish-list" id="wishList"></div>
     </div>
@@ -362,27 +367,27 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     <div class="ny card">
       <div id="nyCount">
         <div class="tiles">
-          <div class="tile"><b id="cD">0</b><span>يوم</span></div>
-          <div class="tile"><b id="cH">0</b><span>ساعة</span></div>
-          <div class="tile"><b id="cM">0</b><span>دقيقة</span></div>
-          <div class="tile"><b id="cS">0</b><span>ثانية</span></div>
+          <div class="tile"><b id="cD">0</b><span>Days</span></div>
+          <div class="tile"><b id="cH">0</b><span>Hours</span></div>
+          <div class="tile"><b id="cM">0</b><span>Minutes</span></div>
+          <div class="tile"><b id="cS">0</b><span>Seconds</span></div>
         </div>
-        <p class="sub" style="margin:16px auto 0">ولما العداد يخلص… افتحي الموقع 🎆</p>
+        <p class="sub" style="margin:16px auto 0">ولما العداد يخلص… open the site 🎆</p>
       </div>
       <div id="nyDone" hidden>
         <p class="ny-done">Happy New Year<br>2027</p>
         <div class="row">
-          <button class="btn" id="nyLetterBtn" type="button">رسالة راس السنة 💌</button>
-          <button class="btn ghost" id="fwBtn" type="button">فرقعي صواريخ 🎆</button>
+          <button class="btn" id="nyLetterBtn" type="button">New Year letter 💌</button>
+          <button class="btn ghost" id="fwBtn" type="button">Fireworks! 🎆</button>
         </div>
       </div>
     </div>
   </section>
 
   <footer>
-    <p class="heart">اتعملت مخصوص علشانك ❄️🤍</p>
-    <p>من مصر… لحد لابلاند</p>
-    <button type="button" id="forget">قفّلي الباب على الجهاز ده 🔒</button>
+    <p class="heart">Made just for you ❄️🤍</p>
+    <p>من مصر… all the way to Lapland</p>
+    <button type="button" id="forget">Lock the door on this device 🔒</button>
   </footer>
 </main>
 
@@ -708,23 +713,23 @@ fields.forEach((f, i) => {
   f.addEventListener("input", () => { f.value = digits(f.value).slice(0, f.maxLength); if (f.value.length === f.maxLength && fields[i + 1]) fields[i + 1].focus(); });
   f.addEventListener("keydown", e => { if (e.key === "Backspace" && !f.value && fields[i - 1]) fields[i - 1].focus(); });
 });
-const HINTS = ["مش ده… فكري تاني 🤍", "تلميح: كان في شهر أكتوبر 🍂", "تلميح كمان: اليوم رقمه رقم بنحبه أوي… ✨", "يوم 11 من شهر 10 سنة 2026 😉"];
+const HINTS = ["Nope… فكري تاني 🤍", "Hint: كان في October 🍂", "Another hint: اليوم رقمه رقم بنحبه أوي ✨", "11 · 10 · 2026… come on 😉"];
 let tries = 0;
 $("#lockForm").addEventListener("submit", async e => {
   e.preventDefault();
   let [d, m, y] = fields.map(f => digits(f.value));
-  if (!d || !m || !y) { $("#hint").textContent = "اكتبي اليوم والشهر والسنة ❄️"; return; }
+  if (!d || !m || !y) { $("#hint").textContent = "Day, month & year please ❄️"; return; }
   if (y.length === 2) y = "20" + y;
   d = d.padStart(2, "0"); m = m.padStart(2, "0");
   const cands = [...new Set([d + m + y, m + d + y])];
   if (store.get("music", true)) Music.prime();
-  const btn = $("#unlockBtn"); btn.disabled = true; btn.textContent = "بيفتح… ❄️";
+  const btn = $("#unlockBtn"); btn.disabled = true; btn.textContent = "Opening… ❄️";
   try {
     for (const c of cands) { const r = await tryPass(c); if (r) { store.set("k", c); return enter(r, true); } }
     $("#hint").textContent = HINTS[Math.min(tries++, HINTS.length - 1)];
     const card = $("#lockForm"); card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
-  } catch { $("#hint").textContent = "النت فيه مشكلة… جربي تاني كمان شوية 🌨️"; }
-  btn.disabled = false; btn.textContent = "افتحي الباب 🗝️";
+  } catch { $("#hint").textContent = "النت فيه مشكلة… try again in a bit 🌨️"; }
+  btn.disabled = false; btn.textContent = "Open the door 🗝️";
 });
 
 function enter(r, withFlash) {
@@ -741,7 +746,7 @@ function enter(r, withFlash) {
 (async function auto() {
   const k = store.get("k", null);
   if (!k) return;
-  $("#hint").textContent = "أهلاً تاني ❄️";
+  $("#hint").textContent = "Welcome back ❄️";
   try { const r = await tryPass(k); if (r) { enter(r, false); return; } } catch {}
   store.del("k"); $("#hint").textContent = "";
 })();
@@ -817,7 +822,7 @@ function gallery() {
   const g = $("#gallery"); g.innerHTML = "";
   shots = DATA.photos || [];
   if (!shots.length) {
-    for (let i = 0; i < 4; i++) g.insertAdjacentHTML("beforeend", `<figure class="polaroid" style="--r:${R[i]}deg"><div class="ph"><span><i>❄️</i>صورتنا هتتحط هنا</span></div><figcaption>قريب…</figcaption></figure>`);
+    for (let i = 0; i < 4; i++) g.insertAdjacentHTML("beforeend", `<figure class="polaroid" style="--r:${R[i]}deg"><div class="ph"><span><i>❄️</i>Our photo<br>هتتحط هنا</span></div><figcaption>soon…</figcaption></figure>`);
     return;
   }
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); load(e.target); } }), { rootMargin: "300px" });
@@ -862,7 +867,7 @@ addEventListener("keydown", e => { if (e.key === "Escape") { closeModal(); lbClo
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 /* ---- advent calendar ---- */
-const KIND = { note: ["💌", "كلمة حلوة", ""], coupon: ["🎟️", "كوبون ليكي", "coupon"], challenge: ["🎯", "تحدي النهارده", "challenge"] };
+const KIND = { note: ["💌", "Sweet note", ""], coupon: ["🎟️", "Coupon for you", "coupon"], challenge: ["🎯", "Today's challenge", "challenge"] };
 function advent() {
   const year = parseLocal(DATA.newYear).getFullYear() - 1, list = DATA.advent || [];
   const box = $("#doors"); box.innerHTML = "";
@@ -872,19 +877,19 @@ function advent() {
   const t = now(), dec1 = new Date(year, 11, 1);
   const todayN = t.getFullYear() === year && t.getMonth() === 11 ? t.getDate() : 0;
   $("#adventSub").textContent = t < dec1
-    ? `الأبواب بتبدأ تفتح من 1 ديسمبر… باب جديد كل يوم لحد آخر السنة 🎁\nفاضل ${Math.ceil((dec1 - t) / 864e5)} يوم`
-    : todayN ? `النهارده ${todayN} ديسمبر… دوري على الباب اللي بينوّر ✨` : "كل الأبواب اتفتحت… ارجعيلها وقت ما تحبي 🤍";
+    ? `Doors start opening December 1st 🎁\nباب جديد كل يوم لحد آخر السنة\n${Math.ceil((dec1 - t) / 864e5)} days to go`
+    : todayN ? `Today is December ${todayN}…\nدوري على الباب اللي بينوّر ✨` : "All doors are open…\nارجعيلها وقت ما تحبي 🤍";
   order.forEach(n => {
     const it = list[n - 1], k = KIND[it.kind] || KIND.note, unlocked = t >= new Date(year, 11, n);
     const d = document.createElement("button"); d.type = "button";
     d.className = "door" + (unlocked ? "" : " locked") + (n === todayN ? " today" : "") + (opened.has(n) ? " opened" : "");
-    d.innerHTML = `<span class="in">${k[0]}</span><span class="face">${n}<small>${unlocked ? (n === todayN ? "النهارده" : "") : "🔒"}</small></span>`;
+    d.innerHTML = `<span class="in">${k[0]}</span><span class="face">${n}<small>${unlocked ? (n === todayN ? "Today" : "") : "🔒"}</small></span>`;
     d.onclick = () => {
-      if (!unlocked) { d.classList.remove("wiggle"); void d.offsetWidth; d.classList.add("wiggle"); toast(`لسه بدري… استني لحد ${n} ديسمبر 🤫`); return; }
+      if (!unlocked) { d.classList.remove("wiggle"); void d.offsetWidth; d.classList.add("wiggle"); toast(`Too early 🤫 استني لحد ${n} December`); return; }
       const first = !opened.has(n);
       opened.add(n); store.set("doors", [...opened]); d.classList.add("opened");
-      setTimeout(() => modal(`<span class="pill ${k[2]}">${k[0]} ${k[1]}</span><p class="day">${n} ديسمبر</p><p class="body">${esc(it.text)}</p>` +
-        (it.kind === "coupon" ? `<p class="foot">صالح لحد ما تستخدميه… قدّميه وقت ما تحبي 😉</p>` : ""), k[2]), first ? 650 : 0);
+      setTimeout(() => modal(`<span class="pill ${k[2]}">${k[0]} ${k[1]}</span><p class="day">December ${n}</p><p class="body">${esc(it.text)}</p>` +
+        (it.kind === "coupon" ? `<p class="foot">Valid forever… استخدميه وقت ما تحبي 😉</p>` : ""), k[2]), first ? 650 : 0);
     };
     box.appendChild(d);
   });
@@ -895,12 +900,12 @@ function wish() {
   const list = $("#wishList");
   const show = () => {
     const w = store.get("wishes", []);
-    list.innerHTML = w.length ? `<p style="color:var(--muted);font-size:13px">أمنياتك اللي طارت ✨</p>` + w.map(x => `<div>${esc(x)}</div>`).join("") : "";
+    list.innerHTML = w.length ? `<p style="color:var(--muted);font-size:13px">Your wishes ✨</p>` + w.map(x => `<div>${esc(x)}</div>`).join("") : "";
   };
   show();
   $("#wishBtn").onclick = () => {
     const ta = $("#wishTxt"), text = ta.value.trim();
-    if (!text) { toast("اكتبي الأمنية الأول ✍️"); ta.focus(); return; }
+    if (!text) { toast("Write your wish first ✍️"); ta.focus(); return; }
     const r = ta.getBoundingClientRect(), star = document.createElement("div");
     star.className = "wish-star"; star.textContent = "✦";
     star.style.left = r.left + r.width / 2 + "px"; star.style.top = r.top + r.height / 2 + "px";
@@ -910,8 +915,8 @@ function wish() {
     const w = store.get("wishes", []); w.push(text); store.set("wishes", w);
     setTimeout(() => {
       ta.classList.remove("fold"); ta.value = "";
-      const share = "https://wa.me/?text=" + encodeURIComponent("أمنيتي لـ 2027 ✨\n" + text);
-      $("#wishOut").innerHTML = `<p class="wish-reply">${esc(DATA.wishReply || "أمنيتك طارت ✨")}</p><a class="btn ghost" style="margin-top:12px;text-decoration:none" target="_blank" rel="noopener" href="${share}">ابعتيهالي على واتساب 💬</a>`;
+      const share = "https://wa.me/?text=" + encodeURIComponent("My wish for 2027 ✨\n" + text);
+      $("#wishOut").innerHTML = `<p class="wish-reply">${esc(DATA.wishReply || "Your wish is on its way ✨")}</p><a class="btn ghost" style="margin-top:12px;text-decoration:none" target="_blank" rel="noopener" href="${share}">Send it to me on WhatsApp 💬</a>`;
       show();
     }, 900);
   };
@@ -922,7 +927,7 @@ function newYear() {
   const NY = parseLocal(DATA.newYear);
   const letterHTML = () => `<span class="pill" style="background:#2a3f7a;color:#ffe3a3">🎆 ${NY.getFullYear()}</span><p class="body">${esc(DATA.newYearLetter)}</p><p class="sign">— ${esc(DATA.from || "أنا")} 🤍</p>`;
   const done = () => {
-    $("#nyCount").hidden = true; $("#nyDone").hidden = false; $("#nyTitle").textContent = "أول راس سنة سوا 🎆";
+    $("#nyCount").hidden = true; $("#nyDone").hidden = false; $("#nyTitle").textContent = "Our first New Year 🎆";
   };
   $("#nyLetterBtn").onclick = () => modal(letterHTML(), "night");
   $("#fwBtn").onclick = () => FW.start(7000);
