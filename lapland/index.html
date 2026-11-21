@@ -244,6 +244,38 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .plaque{margin:10px auto 0;width:fit-content;max-width:100%;padding:6px 12px;border-radius:4px;background:linear-gradient(#fbe7b0,#c9993b);color:#3b2a12;
   font:600 14px/1.55 var(--script);text-align:center;white-space:pre-line;unicode-bidi:plaintext;box-shadow:0 3px 8px rgba(0,0,0,.4)}
 .mcard .body.paw{font-size:20px}
+#final{position:fixed;inset:0;z-index:66;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(circle at 50% 40%,rgba(12,24,64,.93),rgba(2,4,14,.97));opacity:0;transition:opacity .8s;pointer-events:none}
+#final.veil>*{opacity:0;transition:opacity .4s}
+#final.show{opacity:1;pointer-events:auto}
+#final .f-name{font:700 clamp(84px,27vw,150px)/1.05 "Aref Ruqaa",serif;background:linear-gradient(100deg,#5effc4,#7fd8ff,#c59bff,#ffe3a3);
+  -webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 24px rgba(94,255,196,.5))}
+#final .f-num{font:700 clamp(120px,46vw,280px)/1 "Playfair Display",serif;color:#fff;text-shadow:0 0 40px rgba(255,227,163,.8),0 0 90px rgba(127,216,255,.5)}
+#final .f-num.beat{animation:beat .9s ease-out}
+@keyframes beat{0%{transform:scale(1.35);opacity:.2}30%{opacity:1}100%{transform:scale(1)}}
+#final .f-sub{font:22px var(--script);color:#dbe6ff;margin-top:8px}
+.y27 .card{padding:22px;margin-top:18px}
+.y27 h3{font:600 24px var(--script);text-align:center;margin-bottom:6px}
+.y27 .intro{text-align:center;color:var(--muted);white-space:pre-line;unicode-bidi:plaintext;line-height:1.8;margin-bottom:14px}
+.todo{display:flex;flex-direction:column;gap:10px}
+.todo label{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid var(--line);cursor:pointer;transition:.25s}
+.todo input{appearance:none;-webkit-appearance:none;flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--gold);display:grid;place-items:center;cursor:pointer}
+.todo input:checked{background:var(--gold)}
+.todo input:checked::after{content:"✓";color:#2b1705;font-weight:800}
+.todo span{white-space:pre-line;unicode-bidi:plaintext;line-height:1.6;flex:1}
+.todo b{flex:none;font:700 15px "Playfair Display",serif;color:var(--gold);width:22px;text-align:center}
+.todo label.on{background:rgba(246,213,142,.12);border-color:rgba(246,213,142,.5)}
+.todo label.on span{text-decoration:line-through;text-decoration-color:rgba(246,213,142,.7);color:var(--muted)}
+.voice{display:flex;flex-direction:column;align-items:center;gap:14px}
+.vbtn{width:84px;height:84px;border-radius:50%;font-size:34px;color:#2b1705;background:linear-gradient(135deg,#ffe3a3,#f3ad5f);box-shadow:0 10px 30px rgba(255,190,100,.4)}
+.bars{display:flex;align-items:center;gap:4px;height:40px}
+.bars i{width:5px;height:8px;border-radius:3px;background:var(--aurora);opacity:.5}
+.voice.playing .bars i{animation:bar 1s ease-in-out infinite;opacity:1}
+@keyframes bar{50%{height:36px}}
+.vtime{font:600 14px "Cairo",sans-serif;color:var(--muted);direction:ltr}
+.pass{margin:16px auto 0;padding:14px 18px;border:2px dashed #d9798a;border-radius:14px;background:#fff6f8;color:#9c1840;font:700 22px "Playfair Display",serif;direction:ltr;width:fit-content;max-width:100%}
+.y27 .pass{background:rgba(255,246,248,.08);color:#ffb3c4}
+.mcard .next{margin-top:20px}
 footer{text-align:center;padding:40px 18px 34vh;color:var(--muted);font-size:14px;line-height:2}
 footer .heart{font-family:var(--script);font-size:24px;color:var(--text)}
 footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-decoration:underline}
@@ -251,7 +283,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
 #music{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;width:50px;height:50px;border-radius:50%;font-size:22px;
   background:rgba(12,22,54,.7);border:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 20px rgba(0,0,0,.35)}
 #music.nudge{animation:pulse 1.4s ease-in-out infinite;border-color:var(--gold)}
-#fw{position:fixed;inset:0;width:100%;height:100%;z-index:45;pointer-events:none}
+#fw{position:fixed;inset:0;width:100%;height:100%;z-index:68;pointer-events:none}
 
 .modal{position:fixed;inset:0;z-index:55;display:grid;place-items:center;padding:20px;background:rgba(3,6,18,.72);
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .35s}
@@ -429,6 +461,27 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     </div>
   </section>
 
+  <section class="sec y27" id="y2027" hidden>
+    <p class="kicker">Hello 2027</p>
+    <h2 class="h">2027 ✨ أول سنة سوا</h2>
+    <div class="card" id="yVoice" hidden>
+      <h3 dir="ltr">A voice note for you 🎙️</h3>
+      <div class="voice" id="voiceBox"><button class="vbtn" id="vbtn" type="button" aria-label="Play">▶</button>
+        <div class="bars"></div><span class="vtime" id="vtime"></span></div>
+    </div>
+    <div class="card">
+      <h3 dir="ltr">11 things for 2027 ✨</h3>
+      <p class="intro" data-k="ny.listIntro"></p>
+      <div class="todo" id="todo"></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <h3 dir="ltr">The gift 🎁</h3>
+      <p class="intro" data-k="ny.gift"></p>
+      <div class="pass" data-k="ny.password"></div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:22px"><button class="btn ghost" id="replayNY" type="button" dir="ltr">Replay midnight 🎆</button></div>
+  </section>
+
   <footer>
     <p class="heart">Made just for you ❄️🤍</p>
     <p>من مصر… all the way to Lapland</p>
@@ -437,6 +490,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
 </main>
 
 <div id="flash"></div>
+<div id="final" aria-live="polite"><div class="f-name" id="fName"></div><div class="f-num" id="fNum">10</div><div class="f-sub" dir="ltr">2027 is almost here…</div></div>
 <canvas id="fw"></canvas>
 <button id="music" type="button" aria-label="الموسيقى" hidden>🔔</button>
 <div class="modal" id="modal"><div class="mcard" id="mcard"><button class="x" type="button" aria-label="اقفلي">✕</button><div id="mbody"></div></div></div>
@@ -579,6 +633,7 @@ document.addEventListener("visibilitychange", () => { hidden = document.hidden; 
 })();
 
 /* ================= aurora ================= */
+let AURORA = 1;
 (function aurora() {
   const c = $("#sky"), x = c.getContext("2d"), S = 0.22;
   let W, H;
@@ -608,7 +663,7 @@ document.addEventListener("visibilitychange", () => { hidden = document.hidden; 
         const h = r.len * (0.55 + 0.45 * Math.sin(u * 6 + k * 2.5 + r.ph)) * H;
         const a = r.a * Math.pow(0.5 + 0.5 * Math.sin(u * 3.3 + k * 2 + r.ph), 1.6) * (0.55 + 0.45 * Math.sin(u * 17 + k * 6));
         if (a < 0.02) continue;
-        x.globalAlpha = a; x.drawImage(r.col, i, yy, 1.4, h);
+        x.globalAlpha = Math.min(1, a * AURORA); x.drawImage(r.col, i, yy, 1.4, h);
       }
     }
     x.globalAlpha = 1;
@@ -645,7 +700,7 @@ document.addEventListener("visibilitychange", () => { hidden = document.hidden; 
 const FW = (() => {
   const c = $("#fw"), x = c.getContext("2d"), dpr = Math.min(devicePixelRatio || 1, 2);
   const cols = ["#ffd36e", "#ff6b81", "#5effc4", "#7fd8ff", "#c59bff", "#ffffff", "#ffb36b"];
-  let W, H, parts = [], rockets = [], until = 0, running = false;
+  let W, H, parts = [], rockets = [], dots = [], until = 0, running = false;
   const size = () => { W = c.width = innerWidth * dpr; H = c.height = innerHeight * dpr; };
   size(); addEventListener("resize", size);
   const g = 0.06 * dpr;
@@ -676,9 +731,32 @@ const FW = (() => {
       if (p.life <= 0) { parts.splice(i, 1); continue; }
       x.globalAlpha = p.life; x.strokeStyle = p.col; x.beginPath(); x.moveTo(p.px, p.py); x.lineTo(p.x, p.y); x.stroke();
     }
-    if (performance.now() > until && !rockets.length && !parts.length) { running = false; x.clearRect(0, 0, W, H); }
+    // sparks that fly up, hold the shape of a word, then fall like the rest
+    const t = performance.now();
+    for (let i = dots.length - 1; i >= 0; i--) {
+      const d = dots[i];
+      if (t < d.hold) { d.x += (d.tx - d.x) * .07; d.y += (d.ty - d.y) * .07; x.globalAlpha = .65 + .35 * Math.sin(t / 90 + i); }
+      else { d.vy += g * .4; d.y += d.vy; d.x += d.vx; d.life -= .012; if (d.life <= 0) { dots.splice(i, 1); continue; } x.globalAlpha = d.life; }
+      x.fillStyle = d.col; x.fillRect(d.x - d.s / 2, d.y - d.s / 2, d.s, d.s);
+    }
+    if (performance.now() > until && !rockets.length && !parts.length && !dots.length) { running = false; x.clearRect(0, 0, W, H); }
   }
-  return { start(ms = 8000) { until = Math.max(until, performance.now() + ms); for (let i = 0; i < 3; i++) setTimeout(rocket, i * 250); if (!running) { running = true; requestAnimationFrame(frame); } } };
+  function word(lines, holdMs = 4200) {
+    const o = document.createElement("canvas"), ow = Math.min(W, 900 * dpr), oh = H * .42, k = o.getContext("2d");
+    o.width = ow; o.height = oh;
+    const fs = Math.min(ow / 4.2, oh / (lines.length * 1.15));
+    k.textAlign = "center"; k.textBaseline = "middle"; k.fillStyle = "#fff";
+    lines.forEach((l, i) => { k.font = `700 ${fs}px ${l.font}`; k.direction = l.rtl ? "rtl" : "ltr"; k.fillText(l.text, ow / 2, oh / 2 + (i - (lines.length - 1) / 2) * fs * 1.1); });
+    const px = k.getImageData(0, 0, ow, oh).data, step = Math.max(4, Math.round(fs / 26)), ox = (W - ow) / 2, oy = H * .12, hold = performance.now() + holdMs;
+    for (let yy = 0; yy < oh; yy += step) for (let xx = 0; xx < ow; xx += step) {
+      if (px[(yy * ow + xx) * 4 + 3] < 140) continue;
+      const line = Math.min(lines.length - 1, Math.floor(yy / (oh / lines.length)));
+      const pal = lines[line].cols || cols;
+      dots.push({ x: W / 2 + (Math.random() - .5) * 40 * dpr, y: H, tx: ox + xx, ty: oy + yy, vx: (Math.random() - .5) * 1.2 * dpr, vy: -Math.random() * 2 * dpr, life: 1, hold, s: step * .8, col: pal[Math.random() * pal.length | 0] });
+    }
+    if (!running) { running = true; requestAnimationFrame(frame); }
+  }
+  return { word, start(ms = 8000) { until = Math.max(until, performance.now() + ms); for (let i = 0; i < 3; i++) setTimeout(rocket, i * 250); if (!running) { running = true; requestAnimationFrame(frame); } } };
 })();
 
 /* ================= music box (Jingle Bells, played live in the browser) ================= */
@@ -1045,18 +1123,79 @@ function newYear() {
   const done = () => {
     $("#nyCount").hidden = true; $("#nyDone").hidden = false; $("#nyTitle").textContent = "Our first New Year 🎆"; $("#nyTitle").dir = "ltr";
   };
-  $("#nyLetterBtn").onclick = () => modal(letterHTML(), "night");
   $("#fwBtn").onclick = () => FW.start(7000);
-  const celebrate = () => { done(); FW.start(14000); store.set("nySeen", true); setTimeout(() => modal(letterHTML(), "night"), 2500); };
-  if (now() >= NY) { done(); if (!store.get("nySeen", false)) setTimeout(celebrate, 1200); return; }
+  const sky = () => {
+    AURORA = 1.6;
+    const fin = $("#final"); fin.classList.add("show", "veil"); closeModal();
+    setTimeout(() => fin.classList.remove("show", "veil"), 6200);
+    FW.word([{ text: String(NY.getFullYear()), font: '"Playfair Display",serif' },
+             { text: "♥ " + DATA.her, font: '"Aref Ruqaa",serif', rtl: true, cols: ["#ff6b81", "#ff9fb2", "#ffd1e3", "#ffffff"] }]);
+    setTimeout(() => FW.start(12000), 3800);
+  };
+  const celebrate = () => { done(); showYear(); sky(); store.set("nySeen", true); setTimeout(() => story(letterHTML), 7500); };
+  $("#replayNY").onclick = () => { scrollTo({ top: 0, behavior: "smooth" }); setTimeout(sky, 600); setTimeout(() => story(letterHTML), 8000); };
+  $("#nyLetterBtn").onclick = () => story(letterHTML);
+  if (now() >= NY) { done(); showYear(); if (!store.get("nySeen", false)) setTimeout(celebrate, 1200); return; }
+  const fin = $("#final"), fnum = $("#fNum");
+  $("#fName").textContent = DATA.her;
   const tick = () => {
     let s = Math.ceil((NY - now()) / 1000);
+    if (s <= 10 && s > 0) {
+      if (!fin.classList.contains("show")) { fin.classList.add("show"); closeModal(); lbClose(); }
+      AURORA = 1 + (11 - s) * .12;
+      if (fnum.textContent !== String(s)) { fnum.textContent = s; fnum.classList.remove("beat"); void fnum.offsetWidth; fnum.classList.add("beat"); }
+    }
     if (s <= 0) { clearInterval(iv); celebrate(); return; }
     $("#cD").textContent = Math.floor(s / 86400); s %= 86400;
     $("#cH").textContent = Math.floor(s / 3600); s %= 3600;
     $("#cM").textContent = Math.floor(s / 60); $("#cS").textContent = s % 60;
   };
   const iv = setInterval(tick, 1000); tick();
+}
+
+/* ---- the surprises after midnight, one after another ---- */
+function story(letterHTML) {
+  const N = DATA.ny || {}, steps = [];
+  const next = i => `<button class="btn next" type="button" data-step="${i}">${i < 0 ? "🤍 Done" : "في كمان… 👀"}</button>`;
+  steps.push(() => letterHTML());
+  if (N.voice) steps.push(() => `<span class="pill" style="background:#1f3a7a;color:#c9f5ff">🎙️ Voice note</span><p class="body">${esc(N.voiceIntro || "")}</p>
+    <button class="vbtn" type="button" id="storyPlay" style="margin-top:14px">▶</button>`);
+  if (N.list) steps.push(() => `<span class="pill" style="background:#2a3f7a;color:#ffe3a3">✨ 2027</span><p class="body">${esc(N.listIntro || "")}</p>
+    <p style="margin-top:14px;font-size:15px;color:#c9d6f5">The full list is waiting for you in the site 👇</p>`);
+  if (N.gift) steps.push(() => `<span class="pill" style="background:#5a1a2e;color:#ffd1dc">🎁 Last surprise</span><p class="body">${esc(N.gift)}</p><div class="pass">${esc(N.password || "")}</div>`);
+  const show = i => {
+    modal(steps[i]() + next(i + 1 < steps.length ? i + 1 : -1), "night");
+    $("#mbody [data-step]").onclick = e => { const n = +e.target.dataset.step; if (n < 0) { closeModal(); $("#y2027").scrollIntoView({ behavior: "smooth" }); } else show(n); };
+    const p = $("#storyPlay"); if (p) p.onclick = () => playVoice(p);
+  };
+  show(0);
+}
+let voiceEl = null;
+async function playVoice(btn) {
+  const v = DATA.ny && DATA.ny.voice; if (!v) return;
+  if (!voiceEl) {
+    btn.textContent = "…";
+    try { v.url = v.url || await media(v); } catch { btn.textContent = "▶"; toast("الصوت مفتحش… جربي تاني 🎧"); return; }
+    voiceEl = new Audio(v.url);
+    const box = $("#voiceBox");
+    voiceEl.ontimeupdate = () => { const t = voiceEl.currentTime | 0; $("#vtime").textContent = `${t / 60 | 0}:${String(t % 60).padStart(2, "0")}`; };
+    voiceEl.onplay = () => { Music.pause(); box.classList.add("playing"); document.querySelectorAll(".vbtn").forEach(b => b.textContent = "❚❚"); };
+    voiceEl.onpause = voiceEl.onended = () => { Music.resume(); box.classList.remove("playing"); document.querySelectorAll(".vbtn").forEach(b => b.textContent = "▶"); };
+  }
+  if (voiceEl.paused) voiceEl.play().catch(() => toast("دوسي تاني علشان يشتغل 🎧")); else voiceEl.pause();
+}
+function showYear() {
+  const N = DATA.ny; if (!N) return;
+  const sec = $("#y2027"); if (!sec.hidden) return;
+  sec.hidden = false;
+  if (N.voice) { $("#yVoice").hidden = false; $("#voiceBox .bars").innerHTML = "<i></i>".repeat(14); [...$("#voiceBox .bars").children].forEach((b, i) => b.style.animationDelay = (i % 5) * -.18 + "s"); $("#vbtn").onclick = () => playVoice($("#vbtn")); }
+  const done = new Set(store.get("todo", []));
+  $("#todo").innerHTML = (N.list || []).map((t, i) => `<label class="${done.has(i) ? "on" : ""}"><b>${i + 1}</b><span>${esc(t)}</span><input type="checkbox" data-i="${i}" ${done.has(i) ? "checked" : ""}></label>`).join("");
+  $("#todo").onchange = e => {
+    const i = +e.target.dataset.i; e.target.checked ? done.add(i) : done.delete(i);
+    e.target.closest("label").classList.toggle("on", e.target.checked); store.set("todo", [...done]);
+    if (e.target.checked) { FW.start(1500); toast(done.size === (N.list || []).length ? "كلهم اتعملوا!! best year ever 🎆" : "One more done ✔️🤍"); }
+  };
 }
 
 /* ---- 11:11 ---- */

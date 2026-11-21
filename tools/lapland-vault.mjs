@@ -35,7 +35,10 @@ async function open(key, buf) {
 }
 
 const MIME = { ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/jpeg", ".webp": "image/jpeg", ".heic": "image/jpeg",
-  ".gif": "image/gif", ".mp4": "video/mp4", ".mov": "video/mp4" };
+  ".gif": "image/gif", ".mp4": "video/mp4", ".mov": "video/mp4",
+  // voice notes (WhatsApp .opus/.ogg, iPhone .m4a, ...) become mp3, which every phone plays
+  ".opus": "audio/mpeg", ".ogg": "audio/mpeg", ".oga": "audio/mpeg", ".m4a": "audio/mpeg", ".aac": "audio/mpeg",
+  ".mp3": "audio/mpeg", ".wav": "audio/mpeg", ".amr": "audio/mpeg", ".caf": "audio/mpeg" };
 
 async function loadMedia(file) {
   const ext = path.extname(file).toLowerCase();
@@ -44,6 +47,10 @@ async function loadMedia(file) {
   if (type === "image/jpeg") {
     const bytes = execFileSync("convert", [file, "-auto-orient", "-resize", "1600x1600>", "-strip", "-quality", "82", "jpg:-"], { maxBuffer: 1 << 28 });
     return { bytes, type, ext: ".jpg" };
+  }
+  if (type === "audio/mpeg") {
+    const bytes = execFileSync("ffmpeg", ["-v", "error", "-i", file, "-vn", "-map_metadata", "-1", "-ac", "1", "-b:a", "96k", "-f", "mp3", "pipe:1"], { maxBuffer: 1 << 28 });
+    return { bytes, type, ext: ".mp3" };
   }
   return { bytes: await readFile(file), type, ext };
 }
@@ -69,12 +76,13 @@ async function pack(dir) {
   };
   const photos = await packList(content.photos);
   const timo = content.timo ? { ...content.timo, photos: await packList(content.timo.photos) } : undefined;
+  const ny = content.ny ? { ...content.ny, voice: content.ny.voice ? (await packList([content.ny.voice]))[0] : undefined } : undefined;
   const head = Buffer.alloc(8);
   MAGIC.copy(head);
   head.writeUInt32BE(ITER, 4);
-  const body = await seal(key, Buffer.from(JSON.stringify({ ...content, photos, ...(timo ? { timo } : {}) })));
+  const body = await seal(key, Buffer.from(JSON.stringify({ ...content, photos, ...(timo ? { timo } : {}), ...(ny ? { ny } : {}) })));
   await writeFile(path.join(VAULT, "content.txt"), Buffer.concat([head, salt, body]).toString("base64"));
-  console.log(`vault ready: ${n} photo(s) in lapland/vault/`);
+  console.log(`vault ready: ${n} file(s) in lapland/vault/`);
 }
 
 async function unpack(out) {
@@ -90,6 +98,7 @@ async function unpack(out) {
   };
   data.photos = await unpackList(data.photos);
   if (data.timo) data.timo.photos = await unpackList(data.timo.photos);
+  if (data.ny && data.ny.voice) data.ny.voice = (await unpackList([data.ny.voice]))[0];
   await writeFile(path.join(out, "content.json"), JSON.stringify(data, null, 2) + "\n");
   console.log(`unpacked to ${out}`);
 }
