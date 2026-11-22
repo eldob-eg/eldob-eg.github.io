@@ -515,6 +515,21 @@ body.lite .name{filter:none}
 #tabs button.on{color:#fff;background:rgba(255,255,255,.08)}
 #tabs button.on span{color:var(--gold)}
 #tabs button.dot::after{content:"";position:absolute;top:6px;right:calc(50% - 20px);width:9px;height:9px;border-radius:50%;background:#ff5b6e;box-shadow:0 0 8px #ff5b6e}
+/* ---- apology gate ---- */
+#gate{position:relative;z-index:4;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:24px 18px 30vh;transition:opacity .8s,filter .8s}
+#gate.gone{opacity:0;filter:blur(10px);pointer-events:none}
+.gate-card{width:min(420px,100%);text-align:center;padding:30px 22px 24px;border-radius:30px;
+  background:linear-gradient(165deg,rgba(40,70,140,.42),rgba(8,16,44,.72));border:1px solid rgba(200,228,255,.26);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 24px 70px rgba(0,0,0,.5)}
+.gate-card h1{font:700 clamp(34px,9vw,54px)/1.45 "Aref Ruqaa",serif;background:linear-gradient(100deg,#5effc4,#7fd8ff 35%,#c59bff 65%,#ffe3a3);
+  -webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 20px rgba(94,255,196,.3))}
+.gate-card .lead{color:var(--muted);margin:10px 0 12px;line-height:1.8}
+.gate-pass{display:inline-block;padding:10px 18px;border-radius:14px;border:2px dashed #ff9fb2;background:rgba(255,159,178,.1);color:#ffd1dc;font:700 22px "Aref Ruqaa",serif;margin-bottom:16px}
+.gate-card input{width:100%;height:56px;border-radius:16px;padding:0 16px;text-align:center;font:600 19px "Cairo",sans-serif;color:#fff;outline:none;
+  background:linear-gradient(180deg,rgba(215,238,255,.16),rgba(160,200,255,.06));border:1px solid rgba(210,235,255,.38)}
+.gate-card input:focus{border-color:var(--aurora);box-shadow:0 0 0 4px rgba(94,255,196,.15)}
+.gate-card .btn{margin-top:14px;width:100%}
+#gateMsg{min-height:26px;margin-top:12px;color:var(--warm);line-height:1.7;white-space:pre-line}
 footer{text-align:center;padding:40px 18px 34vh;color:var(--muted);font-size:14px;line-height:2}
 footer .heart{font-family:var(--script);font-size:24px;color:var(--text)}
 footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-decoration:underline}
@@ -567,6 +582,17 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
 <svg class="sleigh" id="sleigh" viewBox="-60 -40 190 64" aria-hidden="true"></svg>
 <svg id="land" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
 <canvas id="snow"></canvas>
+
+<section id="gate" hidden>
+  <form class="gate-card" id="gateForm" autocomplete="off">
+    <h1>علشان خاطر عيون اشرررروف</h1>
+    <p class="lead">الموقع مقفول دلوقتي 🔒<br>ومش هيرجع يشتغل غير لما تكتبي كلمة السر دي:</p>
+    <div class="gate-pass" id="gatePass"></div>
+    <input id="gateIn" type="text" placeholder="اكتبيها هنا…" aria-label="كلمة السر" dir="rtl">
+    <button class="btn" type="submit">ابعتي 🥺</button>
+    <p id="gateMsg"></p>
+  </form>
+</section>
 
 <section id="lock">
   <form class="lock-card" id="lockForm" autocomplete="off">
@@ -1281,13 +1307,42 @@ function enter(r, withFlash) {
   }, withFlash ? 600 : 0);
 }
 
-(async function auto() {
+/* ---- apology gate: the site stays shut until she types the sorry line ---- */
+const GATE = { on: true, show: "أنا آسفة يا سلومتي 🥺", accept: ["انا اسفه يا سلومتي", "انا اسفه يا سلموتي"] };
+const normAr = t => String(t).normalize("NFKC").replace(/[\u064B-\u065F\u0670\u0640]/g, "").replace(/[أإآٱ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي")
+  .replace(/[^\u0621-\u064Aa-z0-9]/gi, "").toLowerCase();
+function gateThen(next) {
+  if (!GATE.on || store.get("sorry", false)) return next();
+  $("#gate").hidden = false; $("#lock").hidden = true;
+  $("#gatePass").textContent = GATE.show;
+  const ok = new Set(GATE.accept.map(normAr));
+  $("#gateForm").onsubmit = e => {
+    e.preventDefault();
+    const v = normAr($("#gateIn").value);
+    if (!v) { $("#gateMsg").textContent = "اكتبيها الأول 😤"; return; }
+    if (!ok.has(v)) {
+      $("#gateMsg").textContent = "مش كده 😤\nاكتبيها زي ما هي بالظبط";
+      const c = $("#gateForm"); c.classList.remove("shake"); void c.offsetWidth; c.classList.add("shake"); return;
+    }
+    store.set("sorry", true);
+    $("#gateMsg").textContent = "😌 ماشي… سامحتك\nاتفضلي ادخلي ❄️";
+    if (store.get("music", true)) Music.prime();
+    setTimeout(() => {
+      $("#flash").classList.remove("go"); void $("#flash").offsetWidth; $("#flash").classList.add("go");
+      $("#gate").classList.add("gone");
+      setTimeout(() => { $("#gate").hidden = true; $("#lock").hidden = false; next(); }, 700);
+      setTimeout(() => $("#flash").classList.remove("go"), 1800);
+    }, 1100);
+  };
+}
+async function auto() {
   const k = store.get("k", null);
   if (!k) return;
   $("#hint").textContent = "Welcome back ❄️";
   try { const r = await tryPass(k); if (r) { enter(r, false); return; } } catch {}
   store.del("k"); $("#hint").textContent = "";
-})();
+}
+gateThen(auto);
 addEventListener("pointerdown", function first() {
   if (DATA && !Music.on && store.get("music", true)) { Music.start(); setMusicBtn(); }
 }, { capture: true });
