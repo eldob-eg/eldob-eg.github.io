@@ -418,6 +418,64 @@ footer .heart{cursor:pointer}
 .songs-pick{display:flex;flex-direction:column;gap:8px;margin-top:12px}
 .songs-pick button{padding:13px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:#fff;font-weight:700;direction:ltr}
 .songs-pick button.on{background:linear-gradient(135deg,#ffe3a3,#f3ad5f);color:#2b1705}
+/* ---- seasons ---- */
+.season-tag{font-size:12.5px;color:rgba(220,235,255,.75);margin-top:6px;direction:ltr}
+body.s-spring{background:radial-gradient(130% 75% at 50% 0%,#3d55a8 0%,#25397a 45%,#121c44 100%) fixed}
+body.s-spring .ga{stop-color:#d6ecc8}body.s-spring .gb{stop-color:#6f9f6a}body.s-spring .gc{stop-color:#e6f4dc}body.s-spring .gd{stop-color:#7fae78}
+body.s-spring .stars{opacity:.6}
+body.s-summer{background:linear-gradient(180deg,#24306a 0%,#6a4a8a 38%,#e98a6b 70%,#ffcf8a 100%) fixed}
+body.s-summer .ga{stop-color:#9fd38a}body.s-summer .gb{stop-color:#4f8a4a}body.s-summer .gc{stop-color:#b5e09a}body.s-summer .gd{stop-color:#5f9a55}
+body.s-summer .stars{opacity:.15}
+body.s-summer .moon{top:auto;bottom:38vh;left:64vw;width:96px;height:96px;background:radial-gradient(circle,#fffbe0,#ffd36e 55%,#ff9e4a);box-shadow:0 0 90px 36px rgba(255,190,100,.55)}
+body.s-summer .moon::after{display:none}
+body.s-autumn{background:radial-gradient(130% 75% at 50% 0%,#1f2c62 0%,#121a40 50%,#070b1d 100%) fixed}
+body.s-autumn .ga{stop-color:#e0a25a}body.s-autumn .gb{stop-color:#8a4a24}body.s-autumn .gc{stop-color:#f0b56a}body.s-autumn .gd{stop-color:#9a5428}
+.next-m{text-align:center;margin-top:12px;color:var(--gold);font-size:14.5px;unicode-bidi:plaintext}
+/* ---- passport ---- */
+.pp{max-width:560px;margin:0 auto;border-radius:14px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.5)}
+.pp-cover{padding:20px 18px;text-align:center;background:linear-gradient(160deg,#7a1630,#4a0d1d);color:#f6d58e;border-bottom:3px solid #c9993b}
+.pp-cover .emb{font-size:34px}
+.pp-cover h3{font:700 22px "Playfair Display",serif;letter-spacing:.08em;direction:ltr}
+.pp-cover p{font-size:13px;opacity:.85;direction:ltr}
+.pp-cover .holder{margin-top:8px;font:700 26px "Aref Ruqaa",serif;color:#fff}
+.pp-page{padding:18px 14px 20px;background:linear-gradient(170deg,#fbf5e6,#efe3c8);color:#4a3a2a}
+.pp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 8px;direction:ltr}
+.stamp{aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:2px dashed rgba(120,100,70,.35);color:rgba(120,100,70,.5);font-size:10px;line-height:1.2;padding:4px}
+.stamp b{font-size:20px;filter:grayscale(1);opacity:.35}
+.stamp.on{border:3px double var(--c);color:var(--c);transform:rotate(var(--r));background:radial-gradient(circle,rgba(255,255,255,.4),transparent 70%)}
+.stamp.on b{filter:none;opacity:1}
+.stamp.new{animation:stampin .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes stampin{from{transform:scale(2.2) rotate(0);opacity:0}}
+.stamp small{font-size:8.5px;opacity:.8;margin-top:1px}
+.pp-count{text-align:center;margin-top:14px;font:700 15px "Cairo",sans-serif;direction:ltr}
+.cert{border:4px double #c9993b;border-radius:10px;padding:20px 14px;margin-top:6px;background:#fffaf0}
+.cert h4{font:700 24px "Playfair Display",serif;color:#7a1630;direction:ltr}
+.cert .nm{font:700 40px "Aref Ruqaa",serif;color:#3a2a1a;margin:6px 0}
+.cert .cseal{font-size:40px}
+/* ---- constellation ---- */
+.sky{position:relative;width:min(380px,92vw);aspect-ratio:1;margin:0 auto;border-radius:22px;background:radial-gradient(circle at 50% 40%,#13245a,#060b22 75%);box-shadow:inset 0 0 40px rgba(127,216,255,.15),0 16px 40px rgba(0,0,0,.45);overflow:hidden}
+.sky svg{position:absolute;inset:0;width:100%;height:100%}
+.sky .st{cursor:pointer}
+.sky .st circle.core{fill:#fff;filter:drop-shadow(0 0 4px #fff)}
+.sky .st.next circle.core{animation:pulse 1s ease-in-out infinite;fill:#ffe3a3;filter:drop-shadow(0 0 8px #ffd36e)}
+.sky .st.done circle.core{fill:#ffd36e}
+.sky.full path.ln{stroke:#ffd36e;filter:drop-shadow(0 0 6px #ffd36e)}
+.starcap{min-height:56px;margin-top:14px;text-align:center;font:600 19px/1.6 var(--script);white-space:pre-line;unicode-bidi:plaintext}
+/* ---- snowman ---- */
+.snowman{display:block;width:min(300px,80vw);margin:0 auto;border-radius:22px;background:radial-gradient(120% 80% at 50% 0%,#cfe0fb,#eef4ff 60%,#f9fbff);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+.opts{display:grid;gap:8px;max-width:420px;margin:16px auto 0}
+.opts .row2{display:flex;align-items:center;gap:6px;justify-content:center;flex-wrap:wrap}
+.opts .row2 span{font-size:13px;color:var(--muted);width:62px;text-align:center;direction:ltr}
+.opts button{min-width:44px;height:40px;padding:0 10px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid var(--line);font-size:18px}
+.opts button.on{background:linear-gradient(135deg,#ffe3a3,#f3ad5f);border-color:transparent}
+/* ---- aurora painter ---- */
+.paint{position:relative;width:100%;height:360px;border-radius:20px;overflow:hidden;touch-action:none;cursor:crosshair;
+  background:radial-gradient(circle,#fff 1px,transparent 1.5px) 0 0/40px 40px,radial-gradient(circle,rgba(255,255,255,.6) 1px,transparent 1.5px) 20px 13px/31px 31px,linear-gradient(180deg,#040817,#0b1638 70%,#1b2a55);box-shadow:0 16px 40px rgba(0,0,0,.45)}
+.paint canvas{position:absolute;inset:0;width:100%;height:100%}
+.paint .hill{position:absolute;left:0;right:0;bottom:0;height:60px;background:radial-gradient(60% 100% at 25% 100%,#0a1230 60%,transparent 61%),radial-gradient(70% 100% at 80% 100%,#070d24 60%,transparent 61%);pointer-events:none}
+.pal{display:flex;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+.pal button{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.25)}
+.pal button.on{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
 footer{text-align:center;padding:40px 18px 34vh;color:var(--muted);font-size:14px;line-height:2}
 footer .heart{font-family:var(--script);font-size:24px;color:var(--text)}
 footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-decoration:underline}
@@ -492,6 +550,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
   <section class="hero">
     <p class="kicker">Welcome to Lapland</p>
     <p class="coords">ROVANIEMI · 66°33′ N</p>
+    <p class="season-tag" id="seasonTag"></p>
     <p class="hi">أهلاً بيكي في لابلاند يا</p>
     <h1 class="name" data-k="her"></h1>
     <p class="nick" data-k="nick"></p>
@@ -511,6 +570,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     </div>
     <p class="since-from" id="sinceFrom"></p>
     <p class="since-line" data-k="sinceLine"></p>
+    <p class="next-m" id="nextM"></p>
   </section>
 
   <section class="sec reveal" id="story">
@@ -519,6 +579,16 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     <p class="sub">Everything good between us has an 11 in it…
 حتى لو مكناش قاصدين ✨</p>
     <div class="timeline" id="timeline"></div>
+  </section>
+
+  <section class="sec reveal" id="passport">
+    <p class="kicker">Republic of Lapland</p>
+    <h2 class="h" dir="ltr">Your Lapland passport 🛂</h2>
+    <p class="sub">كل حاجة تعمليها في الموقع بتاخدي عليها ختم…
+كمّلي الـ 12 ختم وتبقي مواطنة رسمي في لابلاند ✨</p>
+    <div class="pp"><div class="pp-cover"><div class="emb">❄️</div><h3>PASSPORT</h3><p>REPUBLIC OF LAPLAND · 66°33′ N</p><div class="holder" data-k="her"></div></div>
+      <div class="pp-page"><div class="pp-grid" id="ppGrid"></div><p class="pp-count" id="ppCount"></p></div></div>
+    <div class="share" id="ppShare"></div>
   </section>
 
   <section class="sec reveal" id="letter">
@@ -576,6 +646,33 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
       <span class="base"><b data-k="globe.label"></b></span></button></div>
     <p class="reason" id="reason"></p>
     <p class="rcount" id="rcount"></p>
+  </section>
+
+  <section class="sec reveal" id="starsSec">
+    <p class="kicker">Connect the stars</p>
+    <h2 class="h" data-k="stars.title"></h2>
+    <p class="sub">كل نجمة ذكرى… دوسي على النجمة اللي بتنوّر وكمّلي لحد الآخر</p>
+    <div class="sky" id="sky2"><svg viewBox="0 0 300 300" id="skySvg"></svg></div>
+    <p class="starcap" id="starCap"></p>
+    <div class="share" id="starShare"></div>
+  </section>
+
+  <section class="sec reveal" id="snowSec">
+    <p class="kicker">Build a snowman</p>
+    <h2 class="h" dir="ltr">Snowman studio ⛄</h2>
+    <p class="sub">لبّسيه زي ما تحبي… وخدي سكرين شوت وابعتيهولي 📸</p>
+    <svg class="snowman" id="snowSvg" viewBox="0 0 300 340"></svg>
+    <div class="opts" id="snowOpts"></div>
+    <div class="share" id="snowShare"></div>
+  </section>
+
+  <section class="sec reveal" id="paintSec">
+    <p class="kicker">Paint the sky</p>
+    <h2 class="h" dir="ltr">Paint the aurora 🎨</h2>
+    <p class="sub">امشي بصباعك في السما… والشفق هيترسم وراكي 🌌</p>
+    <div class="paint" id="paint"><canvas id="paintCv"></canvas><div class="hill"></div></div>
+    <div class="pal" id="pal"></div>
+    <div class="share" id="paintShare"></div>
   </section>
 
   <section class="sec reveal" id="timo">
@@ -738,6 +835,9 @@ const params = new URLSearchParams(location.search);
 const OFFSET = params.get("now") && !isNaN(Date.parse(params.get("now"))) ? Date.parse(params.get("now")) - Date.now() : 0;
 const now = () => new Date(Date.now() + OFFSET);
 const REDUCE = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const SEASON = (m => m >= 10 || m <= 2 ? "winter" : m <= 4 ? "spring" : m <= 7 ? "summer" : "autumn")(now().getMonth());
+document.body.classList.add("s-" + SEASON);
+const SEASON_AURORA = { winter: 1, autumn: .9, spring: .45, summer: 0 }[SEASON];
 const store = {
   get(k, d) { try { const v = localStorage.getItem("lap." + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem("lap." + k, JSON.stringify(v)); } catch {} },
@@ -768,8 +868,8 @@ document.addEventListener("visibilitychange", () => { hidden = document.hidden; 
   const svg = $("#land"), W = 1200, H = 400;
   let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   let out = `<defs>
-    <linearGradient id="g-snow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9d8f5"/><stop offset="1" stop-color="#7189c4"/></linearGradient>
-    <linearGradient id="g-snow2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4edff"/><stop offset="1" stop-color="#8ea3d6"/></linearGradient>
+    <linearGradient id="g-snow" x1="0" y1="0" x2="0" y2="1"><stop class="ga" offset="0" stop-color="#c9d8f5"/><stop class="gb" offset="1" stop-color="#7189c4"/></linearGradient>
+    <linearGradient id="g-snow2" x1="0" y1="0" x2="0" y2="1"><stop class="gc" offset="0" stop-color="#e4edff"/><stop class="gd" offset="1" stop-color="#8ea3d6"/></linearGradient>
     <linearGradient id="g-far" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22336a"/><stop offset="1" stop-color="#121d44"/></linearGradient>
     <radialGradient id="g-warm"><stop offset="0" stop-color="#ffcf7a" stop-opacity=".55"/><stop offset="1" stop-color="#ffcf7a" stop-opacity="0"/></radialGradient>
     <filter id="f-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
@@ -896,7 +996,7 @@ let AURORA = 1;
         const h = r.len * (0.55 + 0.45 * Math.sin(u * 6 + k * 2.5 + r.ph)) * H;
         const a = r.a * Math.pow(0.5 + 0.5 * Math.sin(u * 3.3 + k * 2 + r.ph), 1.6) * (0.55 + 0.45 * Math.sin(u * 17 + k * 6));
         if (a < 0.02) continue;
-        x.globalAlpha = Math.min(1, a * AURORA); x.drawImage(r.col, i, yy, 1.4, h);
+        if (!SEASON_AURORA) continue; x.globalAlpha = Math.min(1, a * AURORA * SEASON_AURORA); x.drawImage(r.col, i, yy, 1.4, h);
       }
     }
     x.globalAlpha = 1;
@@ -909,7 +1009,9 @@ let AURORA = 1;
   const c = $("#snow"), x = c.getContext("2d"), dpr = Math.min(devicePixelRatio || 1, 2);
   let W, H, flakes = [];
   const N = REDUCE ? 40 : innerWidth < 700 ? 110 : 190;
-  const make = top => ({ x: Math.random() * W, y: top ? -10 : Math.random() * H, r: (0.7 + Math.random() ** 2 * 2.8) * dpr, d: Math.random() * 6.28, o: .35 + Math.random() * .6 });
+  const PAL = { winter: ["#fff"], spring: ["#ffc9dc", "#ffe1ec", "#fff"], summer: ["#ffe28a", "#fff3b0"], autumn: ["#ff8a3d", "#e2473b", "#ffc04d", "#c2571a"] }[SEASON];
+  const make = top => ({ x: Math.random() * W, y: top ? -10 : Math.random() * H, r: (0.7 + Math.random() ** 2 * 2.8) * dpr * (SEASON === "winter" ? 1 : 1.6), d: Math.random() * 6.28, o: .35 + Math.random() * .6,
+    rot: Math.random() * 6.28, col: PAL[Math.random() * PAL.length | 0] });
   const size = () => { W = c.width = innerWidth * dpr; H = c.height = innerHeight * dpr; };
   size(); addEventListener("resize", size);
   for (let i = 0; i < N; i++) flakes.push(make(false));
@@ -917,12 +1019,17 @@ let AURORA = 1;
     requestAnimationFrame(frame);
     if (hidden) return;
     const wind = Math.sin(ms / 5000) * 0.5 * dpr;
-    x.clearRect(0, 0, W, H); x.fillStyle = "#fff";
+    x.clearRect(0, 0, W, H);
     for (const f of flakes) {
-      f.d += 0.012; f.y += (0.25 + f.r * 0.22); f.x += wind + Math.sin(f.d) * 0.35 * dpr;
+      f.d += 0.012; f.rot += .02;
+      if (SEASON === "summer") { f.y -= .25 * dpr; f.x += Math.sin(f.d * 2) * .4 * dpr; if (f.y < -10) f.y = H + 10; }
+      else { f.y += (0.25 + f.r * (SEASON === "winter" ? 0.22 : 0.1)); f.x += wind + Math.sin(f.d) * (SEASON === "winter" ? .35 : .9) * dpr; }
       if (f.y > H + 10) Object.assign(f, make(true));
       if (f.x > W + 10) f.x = -10; else if (f.x < -10) f.x = W + 10;
-      x.globalAlpha = f.o; x.beginPath(); x.arc(f.x, f.y, f.r, 0, 6.283); x.fill();
+      x.fillStyle = f.col;
+      if (SEASON === "winter") { x.globalAlpha = f.o; x.beginPath(); x.arc(f.x, f.y, f.r, 0, 6.283); x.fill(); }
+      else if (SEASON === "summer") { x.globalAlpha = f.o * (.5 + .5 * Math.sin(ms / 300 + f.d * 9)); x.shadowColor = f.col; x.shadowBlur = 8 * dpr; x.beginPath(); x.arc(f.x, f.y, f.r * .6, 0, 6.283); x.fill(); x.shadowBlur = 0; }
+      else { x.globalAlpha = f.o; x.save(); x.translate(f.x, f.y); x.rotate(f.rot); x.beginPath(); x.ellipse(0, 0, f.r * 1.4, f.r * .7, 0, 0, 6.283); x.fill(); x.restore(); }
     }
     x.globalAlpha = 1;
   }
@@ -1125,7 +1232,7 @@ const get = (o, path) => path.split(".").reduce((a, k) => a && a[k], o);
 function render() {
   document.querySelectorAll("[data-k]").forEach(el => el.textContent = get(DATA, el.dataset.k) || "");
   document.title = `Lapland ❄️ ${DATA.her}`;
-  greet(); sinceInit(); timeline(); letter(); gallery(); tree(); scratch(); globe(); timo(); diary(); game(); quiz(); arcade(); wrapped(); openWhen(); playlist(); menu(); eggs(); songs(); advent(); wish(); newYear(); eleven();
+  greet(); seasonTag(); sinceInit(); monthly(); passport(); timeline(); letter(); gallery(); tree(); scratch(); globe(); timo(); diary(); game(); quiz(); arcade(); wrapped(); openWhen(); playlist(); menu(); eggs(); songs(); constellation(); snowman(); painter(); advent(); passportCatchUp(); wish(); newYear(); eleven();
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
   document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 }
@@ -1271,7 +1378,7 @@ function timo() {
     });
   };
   const win = () => {
-    if (found) return; found = true; store.set("timoFound", true);
+    if (found) return; found = true; store.set("timoFound", true); award("timo");
     cat.classList.add("found"); $("#timoBubble").classList.add("show"); hunt.classList.remove("hinting");
     hint.textContent = "You found the king! 👑\nمعرض صوره الملكي اتفتح تحت";
     hint.insertAdjacentHTML("beforeend", `<div class="share">${waBtn(`🦁 لقيت تيمو مستخبي في تلج لابلاند ❄️\nThe king says ROAR (meow) 👑`)}</div>`);
@@ -1383,7 +1490,7 @@ function game() {
         if (it.veg) { lives--; shake = 12; pops.push({ s: "🤢", x: it.x, y: it.y, t: 40, c: "#2e7d32" }); }
         else { score++; pops.push({ s: "+1", x: it.x, y: it.y, t: 40, c: "#b5182f" }); }
         hud();
-        if (score === 11 && !won) { won = true; store.set("gameWon", true); playing = false; FW.start(2500);
+        if (score === 11 && !won) { won = true; store.set("gameWon", true); award("king"); playing = false; FW.start(2500);
           modal(`<span class="pill coupon">🐟 11 fish!</span><div class="prize">${esc(DATA.game && DATA.game.coupon || "")}</div><button class="btn" type="button" id="gGo">Keep playing 🎮</button><div class="share">${waBtn("🐟 مسكت 11 سمكة في Feed the King!\nوكسبت كوبون treats لتيمو 🎟️\nالملك مستني 👑")}</div>`);
           $("#gGo").onclick = () => { closeModal(); playing = true; last = 0; requestAnimationFrame(loop); }; return; }
         continue;
@@ -1422,7 +1529,7 @@ function quiz() {
   };
   const result = sc => {
     const n = Q.questions.length, keys = Object.keys(Q.lines).map(Number).sort((a, b) => b - a), line = Q.lines[keys.find(k => sc >= k)];
-    store.set("quizBest", Math.max(sc, store.get("quizBest", 0)));
+    store.set("quizBest", Math.max(sc, store.get("quizBest", 0))); if (sc >= 8) award("quiz");
     box.innerHTML = `<p class="big">${sc} / ${n}</p><p class="line"></p><span class="pill coupon">🎁 Your prize</span><div class="prize"></div><div class="share">${waBtn(`🧠 جبت ${sc} / ${n} في كويز «How well do you know us»\n${sc >= 8 ? "حافظاك 😎" : "محتاجين نتكلم أكتر 😂"}\nوالجايزة: Real snow date ❄️ — I'm waiting 😏`)}</div><button class="btn ghost" type="button" id="qAgain">Play again 🔁</button>`;
     box.querySelector(".line").textContent = line; box.querySelector(".prize").textContent = Q.prize;
     $("#qAgain").onclick = () => ask(0, 0);
@@ -1486,7 +1593,7 @@ function playlist() {
 
 /* ---- menu ---- */
 function menu() {
-  const items = [["hero", "❄️ Home"], ["story", "📖 Our story"], ["letter", "💌 11:11"], ["memories", "📸 Us"], ["treeSec", "🎄 Tree"], ["scratchSec", "🎫 Scratch"], ["globe", "🔮 Snow globe"], ["timo", "🦁 Timo"],
+  const items = [["hero", "❄️ Home"], ["story", "📖 Our story"], ["letter", "💌 11:11"], ["passport", "🛂 Passport"], ["memories", "📸 Us"], ["treeSec", "🎄 Tree"], ["scratchSec", "🎫 Scratch"], ["globe", "🔮 Snow globe"], ["starsSec", "✨ Stars"], ["snowSec", "⛄ Snowman"], ["paintSec", "🎨 Paint"], ["timo", "🦁 Timo"],
     ["quiz", "🧠 Quiz"], ["arcade", "🎮 Arcade"], ["wrapped", "🎧 Wrapped"], ["openwhen", "✉️ Open when"], ["playlist", "🎶 Playlist"], ["advent", "🎁 Doors"], ["wish", "✨ Wish"], ["newyear", "🎆 New Year"], ["y2027", "🌟 2027"]];
   $("#menuBtn").onclick = () => {
     const vis = items.filter(([id]) => id === "hero" || (document.getElementById(id) && !document.getElementById(id).hidden));
@@ -1502,7 +1609,7 @@ function menu() {
 const EGGS = ["name", "letter", "timo", "footer"];
 function egg(k) {
   const E = DATA.eggs || {}; if (!E[k]) return;
-  const found = new Set(store.get("eggs", [])); found.add(k); store.set("eggs", [...found]);
+  const found = new Set(store.get("eggs", [])); found.add(k); store.set("eggs", [...found]); if (found.size >= EGGS.length) setTimeout(() => award("eggs"), 1500);
   modal(`<span class="pill" style="background:#3b2a0b;color:#ffe3a3">🥚 ${found.size} / ${EGGS.length}</span><p class="body">${esc(E[k])}</p>` + waBtn(`🥚 لقيت Secret #${found.size} من ${EGGS.length} في الموقع 👀\n${found.size < EGGS.length ? "وهلاقي الباقي 😏" : "لقيتهم كلهم!! 🏆"}`), "night");
   showEggs();
 }
@@ -1563,7 +1670,7 @@ function memoryGame(area, A) {
       a.classList.replace("open", "done"); b.classList.replace("open", "done"); done += 2;
       if (done === cards.length) {
         clearInterval(tick); FW.start(3000);
-        if (!best || moves < best) store.set("memBest", moves);
+        if (!best || moves < best) store.set("memBest", moves); award("memory");
         $("#mRes").textContent = `${moves} moves · ${Math.round((Date.now() - t0) / 1000)}s 🎉\n` + (A.memoryLine || "");
         area.insertAdjacentHTML("beforeend", `<div class="share">${waBtn(`🃏 خلصت Memory في ${moves} moves و ${Math.round((Date.now() - t0) / 1000)} ثانية 😎\nBeat that!`)}</div><button class="btn ghost" type="button" id="mAgain" dir="ltr">Play again 🔁</button>`);
         $("#mAgain").onclick = () => memoryGame(area, A);
@@ -1603,7 +1710,7 @@ function padelGame(area, A) {
   const point = meWon => {
     live = false; meWon ? sMe++ : sHim++; hud(); draw();
     if (sMe === 5 || sHim === 5) {
-      over = true; const win = sMe === 5; if (win) FW.start(3500);
+      over = true; const win = sMe === 5; if (win) { FW.start(3500); store.set("padelWon", true); award("padel"); }
       $("#pRes").textContent = (win ? "You win! 🏆\n" + (A.padelWin || "") : (A.padelLose || ""));
       $("#pShare").innerHTML = waBtn(win ? `🎾 كسبتك في Padel ${sMe}–${sHim} 😎🏆\nوالخسران يعزم على الأكل 🍝` : `🎾 خسرت قدامك في Padel ${sMe}–${sHim} 😤\nRematch… والمرة الجاية في الملعب بجد`);
       $("#pGo").hidden = false; $("#pGo").textContent = "Rematch 🔁"; return;
@@ -1649,7 +1756,7 @@ function clockGame(area, A) {
     const d = s - TARGET, ad = Math.abs(d);
     if (best === null || ad < best) { best = ad; store.set("clockBest", best); }
     clk.classList.toggle("hit", ad === 0);
-    if (ad === 0) { const sh = document.createElement("div"); sh.className = "shoot"; document.body.appendChild(sh); setTimeout(() => sh.remove(), 1700); FW.start(4000); }
+    if (ad === 0) { award("clock"); const sh = document.createElement("div"); sh.className = "shoot"; document.body.appendChild(sh); setTimeout(() => sh.remove(), 1700); FW.start(4000); }
     $("#cRes").textContent = ad === 0 ? (A.elevenPerfect || "Perfect ✨") : ad <= 2 ? `So close!! 😱 ${ad}s ${d < 0 ? "early" : "late"}` : d < 0 ? `Too early by ${ad}s ⏳` : `Too late by ${ad}s 😅`;
     $("#cShare").innerHTML = waBtn(ad === 0 ? "⏱️ وقفت الساعة على 11:11:11 بالظبط!! ✨\nواتمنيت أمنية 🤍" : `⏱️ وقفت الساعة على ${fmt(s)}\n${ad} ثانية بس من 11:11:11 😤`);
     btn.textContent = "Try again 🔁"; showBest();
@@ -1667,7 +1774,7 @@ function wordsGame(area, A) {
   const show = () => {
     if (i >= L.length) {
       area.innerHTML = `<p class="clock" style="font-size:64px">${score} / ${L.length}</p><p class="res">${score === L.length ? "All of them!! 🎉" : "Not bad 😄"}</p><div class="share">${waBtn(`🔤 حليت ${score} من ${L.length} كلمات في Unscramble ✅\n${score === L.length ? "كلهم!! 🏆" : "مش بطال 😄"}`)}</div><button class="btn ghost" type="button" id="wAgain" dir="ltr">Play again 🔁</button>`;
-      if (score >= L.length - 1) FW.start(3000);
+      if (score >= L.length - 1) FW.start(3000); if (score === L.length) { store.set("wordsAll", true); award("words"); }
       $("#wAgain").onclick = () => { i = 0; score = 0; show(); }; return;
     }
     const w = L[i].w; let mix; do { mix = shuffle([...w]); } while (mix.join("") === w && w.length > 1);
@@ -1696,6 +1803,7 @@ function wordsGame(area, A) {
 }
 
 /* ---- greeting by time of day ---- */
+function seasonTag() { $("#seasonTag").textContent = { winter: "❄️ Polar night season", spring: "🌸 Spring in Lapland", summer: "☀️ Midnight sun season", autumn: "🍂 Ruska season" }[SEASON]; }
 function greet() {
   const G = DATA.greet; if (!G) return;
   const h = now().getHours();
@@ -1704,6 +1812,33 @@ function greet() {
   if (k === "night" || k === "late") AURORA = Math.max(AURORA, 1.3);
 }
 const dayIndex = () => Math.floor((new Date(now().toDateString()) - new Date(parseLocal(DATA.met).toDateString())) / 864e5);
+
+/* ---- every 11th: a monthiversary; 11 · 10 a year ---- */
+function monthly() {
+  const met = parseLocal(DATA.met), t = now(), M = DATA.months || {};
+  const monthsAt = d => (d.getFullYear() - met.getFullYear()) * 12 + d.getMonth() - met.getMonth() - (d.getDate() < met.getDate() ? 1 : 0);
+  const n = monthsAt(t);
+  // the next one
+  let nx = new Date(t.getFullYear(), t.getMonth(), met.getDate()); if (nx <= new Date(t.toDateString())) nx = new Date(t.getFullYear(), t.getMonth() + 1, met.getDate());
+  const nn = monthsAt(nx), days = Math.round((nx - new Date(t.toDateString())) / 864e5);
+  const label = k => k % 12 === 0 ? `${k / 12} year${k > 12 ? "s" : ""} 🎉` : `${k} months 🤍`;
+  $("#nextM").textContent = `Next: ${label(nn)} — ${nx.getDate()} · ${nx.getMonth() + 1} (in ${days} day${days === 1 ? "" : "s"})`;
+  if (t.getDate() !== met.getDate() || n < 3) return;          // month 2 has its own golden door
+  const key = "month" + n; if (store.get(key, false)) return;
+  store.set(key, true);
+  setTimeout(() => {
+    FW.start(6000);
+    if (n % 12 === 0 && DATA.oneYear) {
+      const Y = DATA.oneYear;
+      modal(`<span class="pill coupon" dir="ltr">🎉 ${label(n)}</span><p class="when">${esc(n === 12 ? Y.when : `${t.getDate()} · ${t.getMonth() + 1} · ${t.getFullYear()}`)}</p><p class="body">${esc(Y.text)}</p><p class="sign">— ${esc(DATA.from || "أنا")} 🤍</p>` +
+        waBtn(`🎉 Happy ${label(n)} يا ${DATA.from || ""} 🤍\nقريت جوابك…`), "paperm");
+    } else {
+      const txt = (M[n] || M.later || "{n} months 🤍").replace("{n}", n);
+      modal(`<span class="pill" dir="ltr" style="background:#2a3f7a;color:#ffe3a3">🎉 ${t.getDate()} · ${t.getMonth() + 1}</span><p class="body">${esc(txt)}</p><p class="sign">— ${esc(DATA.from || "أنا")} 🤍</p>` +
+        waBtn(`🎉 Happy ${label(n)} 🤍\n${firstLine(txt)}`), "night");
+    }
+  }, 2200);
+}
 
 /* ---- decorate the tree ---- */
 function tree() {
@@ -1727,7 +1862,7 @@ function tree() {
   };
   const check = (fresh) => {
     if (placed.size < O.length) return;
-    svg.classList.add("lit");
+    svg.classList.add("lit"); award("tree");
     if (fresh) { FW.start(4000); say(T.done); }
     $("#treeShare").innerHTML = waBtn("🎄 زيّنت شجرتنا كلها والنجمة نوّرت ✨\n" + T.done.replace(/\n/g, " "));
   };
@@ -1766,7 +1901,7 @@ function scratch() {
     if (++moves % 8 === 0) {
       const px = x.getImageData(0, 0, W, H).data; let clear = 0, n = 0;
       for (let i = 3; i < px.length; i += 4 * 37) { n++; if (px[i] === 0) clear++; }
-      if (clear / n > .5) { done = true; cv.style.opacity = 0; setTimeout(() => cv.style.display = "none", 600); store.set("scratchDay", d); FW.start(1800); share(); }
+      if (clear / n > .5) { done = true; cv.style.opacity = 0; setTimeout(() => cv.style.display = "none", 600); store.set("scratchDay", d); FW.start(1800); share(); scratchStreak(d); }
     }
   };
   cv.addEventListener("pointerdown", e => { down = true; cv.setPointerCapture(e.pointerId); scr(e); });
@@ -1796,6 +1931,148 @@ function songs() {
       if (!Music.on) { Music.start(); store.set("music", true); setMusicBtn(); }
       $("#mbody .songs-pick").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
     };
+  };
+}
+
+/* ---- the passport: stamps for everything she does ---- */
+function award(id) {
+  const P = DATA.passport; if (!P) return;
+  const st = store.get("stamps", {}); if (st[id]) return;
+  const def = P.stamps.find(x => x.id === id); if (!def) return;
+  st[id] = now().toLocaleDateString("en-GB", { day: "numeric", month: "short" }); store.set("stamps", st);
+  toast(`🛂 New stamp: ${def.e} ${def.t}`);
+  passport(id);
+  if (Object.keys(st).length === P.stamps.length && !store.get("citizen", false)) { store.set("citizen", true); setTimeout(certificate, 2600); }
+}
+function certificate() {
+  const P = DATA.passport; FW.start(5000);
+  modal(`<div class="cert"><div class="cseal">🏛️</div><h4>Official Lapland Citizen</h4><p class="day" dir="ltr">This certifies that</p><p class="nm">${esc(DATA.her)}</p>
+    <p class="day" dir="ltr">collected all ${P.stamps.length} stamps · ${now().toLocaleDateString("en-GB")}</p></div><p class="body" style="margin-top:12px">${esc(P.reward || "")}</p>` +
+    waBtn(`🛂 خلصت الـ ${P.stamps.length} ختم في الباسبور!!\\nبقيت Official Lapland Citizen 🏛️❄️\\nفين جايزتي؟ 😏`));
+}
+function passport(fresh) {
+  const P = DATA.passport; if (!P) { $("#passport").hidden = true; return; }
+  const st = store.get("stamps", {}), cols = ["#7a1630", "#1f5fc9", "#11634b", "#8a4a12", "#5b2a86", "#b5182f"];
+  $("#ppGrid").innerHTML = P.stamps.map((x, i) => st[x.id]
+    ? `<div class="stamp on${x.id === fresh ? " new" : ""}" style="--c:${cols[i % cols.length]};--r:${(i * 37 % 24) - 12}deg"><b>${x.e}</b>${esc(x.t)}<small>${esc(st[x.id])}</small></div>`
+    : `<div class="stamp"><b>${x.e}</b>?</div>`).join("");
+  const n = Object.keys(st).length;
+  $("#ppCount").textContent = `${n} / ${P.stamps.length} stamps` + (n === P.stamps.length ? " — Citizen 🏛️" : "");
+  $("#ppShare").innerHTML = n ? waBtn(`🛂 معايا ${n} / ${P.stamps.length} ختم في باسبور لابلاند ✨`) + (n === P.stamps.length ? `<button class="btn ghost" type="button" id="certBtn" style="margin:14px 0 0 10px" dir="ltr">My certificate 🏛️</button>` : "") : "";
+  if ($("#certBtn")) $("#certBtn").onclick = certificate;
+}
+function passportCatchUp() {
+  // stamps for things she did before the passport existed
+  const S = k => store.get(k, null);
+  if (S("timoFound")) award("timo");
+  if ((S("tree") || []).length >= ((DATA.tree || {}).ornaments || []).length && (S("tree") || []).length) award("tree");
+  if (S("clockBest") === 0) award("clock");
+  if ((S("eggs") || []).length >= 4) award("eggs");
+  if (S("gameWon")) award("king");
+  if ((S("quizBest") || 0) >= 8) award("quiz");
+  if (S("memBest")) award("memory");
+  if (S("padelWon")) award("padel");
+  if (S("wordsAll")) award("words");
+  if ((S("doors") || []).length >= 20) award("doors");
+  if (S("starsDone")) award("stars");
+}
+function scratchStreak(d) {
+  const days = new Set(store.get("scratchDays", [])); days.add(d); store.set("scratchDays", [...days]);
+  let k = 0; while (days.has(d - k)) k++;
+  if (k >= 7) award("scratch");
+}
+
+/* ---- the 11 constellation ---- */
+function constellation() {
+  const C = DATA.stars; if (!C) { $("#starsSec").hidden = true; return; }
+  // 11 stars on a heart
+  const pts = [[150, 98], [178, 66], [220, 64], [246, 98], [238, 142], [208, 184], [150, 240], [92, 184], [62, 142], [54, 98], [80, 64]];
+  const svg = $("#skySvg"), sky = $("#sky2"), cap = $("#starCap");
+  let done = store.get("starsDone", false) ? 11 : 0;
+  const draw = () => {
+    const line = pts.slice(0, Math.max(done, 1)).map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ") + (done === 11 ? " Z" : "");
+    svg.innerHTML = [...Array(40)].map(() => `<circle cx="${(Math.random() * 300).toFixed(0)}" cy="${(Math.random() * 300).toFixed(0)}" r="${(Math.random() * .9 + .3).toFixed(1)}" fill="#fff" opacity="${(Math.random() * .5 + .2).toFixed(2)}"/>`).join("") +
+      `<path class="ln" d="${line}" fill="none" stroke="rgba(200,228,255,.75)" stroke-width="1.6" stroke-linejoin="round"/>` +
+      pts.map((p, i) => `<g class="st${i < done ? " done" : ""}${i === done ? " next" : ""}" data-i="${i}"><circle cx="${p[0]}" cy="${p[1]}" r="16" fill="transparent"/><circle class="core" cx="${p[0]}" cy="${p[1]}" r="${i === done ? 5 : 3.6}"/></g>`).join("");
+    sky.classList.toggle("full", done === 11);
+  };
+  draw();
+  if (done === 11) { cap.textContent = C.done; $("#starShare").innerHTML = waBtn("✨ وصلت نجوم «The 11 constellation»… وطلعت قلب 🤍"); }
+  else cap.textContent = "ابدئي من النجمة اللي بتنوّر ✨";
+  svg.onclick = e => {
+    const g = e.target.closest(".st"); if (!g) return; const i = +g.dataset.i;
+    if (i < done) { cap.textContent = C.labels[i]; return; }
+    if (i !== done) { cap.textContent = "مش دي… دوري على النجمة اللي بتنوّر ✨"; return; }
+    done++; cap.textContent = C.labels[i]; draw();
+    if (done === 11) { store.set("starsDone", true); FW.start(4000); setTimeout(() => { cap.textContent = C.done; }, 1400); $("#starShare").innerHTML = waBtn("✨ وصلت نجوم «The 11 constellation»… وطلعت قلب 🤍"); award("stars"); }
+  };
+}
+
+/* ---- snowman studio ---- */
+function snowman() {
+  const svg = $("#snowSvg"), opts = $("#snowOpts");
+  const st = Object.assign({ hat: 1, scarf: 1, glasses: 0, nose: 1, timo: 0, arms: 1 }, store.get("snowman", {}));
+  const cat = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(catSVG());
+  const scarfCols = [null, ["#e2475b", "#b5182f"], ["#1f7a5e", "#11463a"], ["#ffd36e", "#e2475b"]];
+  const draw = () => {
+    const sc = scarfCols[st.scarf];
+    svg.innerHTML = `<ellipse cx="150" cy="322" rx="120" ry="14" fill="#c9d8f5"/>
+      ${st.arms ? `<path d="M100,190 L52,160 M62,166 L50,148 M200,190 L250,156 M240,162 L252,146" stroke="#6b4a2a" stroke-width="5" stroke-linecap="round" fill="none"/>` : ""}
+      <circle cx="150" cy="262" r="66" fill="#fff" stroke="#d6e2f5" stroke-width="2"/>
+      <circle cx="150" cy="178" r="48" fill="#fff" stroke="#d6e2f5" stroke-width="2"/>
+      <circle cx="150" cy="104" r="36" fill="#fff" stroke="#d6e2f5" stroke-width="2"/>
+      <circle cx="150" cy="166" r="4.5" fill="#2b2b3a"/><circle cx="150" cy="188" r="4.5" fill="#2b2b3a"/><circle cx="150" cy="246" r="5" fill="#2b2b3a"/><circle cx="150" cy="270" r="5" fill="#2b2b3a"/>
+      <circle cx="138" cy="98" r="4" fill="#2b2b3a"/><circle cx="162" cy="98" r="4" fill="#2b2b3a"/>
+      ${[-12, -6, 0, 6, 12].map((dx, k) => `<circle cx="${150 + dx}" cy="${120 + Math.abs(dx) * -.25 + (k === 2 ? 2 : 0)}" r="2" fill="#2b2b3a"/>`).join("")}
+      ${st.nose ? `<polygon points="150,104 150,110 180,108" fill="#ff8a3d"/>` : ""}
+      ${st.glasses ? `<g fill="none" stroke="#111" stroke-width="3"><circle cx="137" cy="98" r="11"/><circle cx="163" cy="98" r="11"/><path d="M148,97 Q150,94 152,97 M126,96 L116,92 M174,96 L184,92"/></g>` : ""}
+      ${sc ? `<path d="M110,138 Q150,152 190,138 L190,150 Q150,165 110,150 Z" fill="${sc[0]}"/><path d="M170,148 L176,190 L190,186 L184,146 Z" fill="${sc[1]}"/>` : ""}
+      ${st.hat === 1 ? `<rect x="118" y="70" width="64" height="8" rx="3" fill="#1b1b2a"/><rect x="128" y="30" width="44" height="44" rx="4" fill="#1b1b2a"/><rect x="128" y="62" width="44" height="7" fill="#e2475b"/>` : ""}
+      ${st.hat === 2 ? `<path d="M116,82 Q150,30 184,82 Z" fill="#e2475b"/><rect x="114" y="76" width="72" height="10" rx="5" fill="#fff"/><circle cx="150" cy="40" r="8" fill="#fff"/>` : ""}
+      ${st.hat === 3 ? `<path d="M118,80 L176,78 L196,36 Z" fill="#e2475b"/><rect x="112" y="74" width="72" height="12" rx="6" fill="#fff"/><circle cx="198" cy="36" r="9" fill="#fff"/>` : ""}
+      ${st.timo ? `<image href="${cat}" x="212" y="256" width="72" height="72"/><text x="248" y="258" font-size="16" text-anchor="middle">👑</text>` : ""}`;
+  };
+  const rows = [["Hat", "hat", ["✖", "🎩", "🧶", "🎅"]], ["Scarf", "scarf", ["✖", "🔴", "🟢", "🟡"]], ["Glasses", "glasses", ["✖", "👓"]], ["Nose", "nose", ["✖", "🥕"]], ["Arms", "arms", ["✖", "🪵"]], ["Timo", "timo", ["✖", "🦁"]]];
+  const ui = () => {
+    opts.innerHTML = rows.map(([lab, k, vals]) => `<div class="row2"><span>${lab}</span>${vals.map((v, i) => `<button type="button" data-k="${k}" data-v="${i}" class="${st[k] === i ? "on" : ""}">${v}</button>`).join("")}</div>`).join("");
+  };
+  opts.onclick = e => {
+    const b = e.target.closest("button"); if (!b) return;
+    st[b.dataset.k] = +b.dataset.v; store.set("snowman", st); draw(); ui();
+    $("#snowShare").innerHTML = waBtn("⛄ عملت سنومان في لابلاند" + (st.glasses ? " ولابس نضارة زيك 👓" : "") + (st.timo ? " وتيمو جنبه 🦁" : "") + "\\nاستنى السكرين شوت 📸");
+  };
+  draw(); ui();
+}
+
+/* ---- paint the aurora with a finger ---- */
+function painter() {
+  const box = $("#paint"), cv = $("#paintCv"), x = cv.getContext("2d"), dpr = Math.min(devicePixelRatio || 1, 2);
+  const pals = [["🟢", ["94,255,196", "58,214,170"]], ["🟣", ["197,155,255", "160,110,255"]], ["🔵", ["127,216,255", "80,160,255"]], ["🩷", ["255,140,190", "255,100,160"]], ["🌈", ["94,255,196", "127,216,255", "197,155,255", "255,140,190"]]];
+  let pi = 4, W, H, down = false, last = null, raf = 0, hue = 0, painted = 0;
+  $("#pal").innerHTML = pals.map((p, i) => `<button type="button" data-i="${i}" class="${i === pi ? "on" : ""}" style="background:${i === 4 ? "conic-gradient(#5effc4,#7fd8ff,#c59bff,#ff8cbe,#5effc4)" : `rgb(${p[1][0]})`}" aria-label="${p[0]}"></button>`).join("") +
+    `<button type="button" id="pClear" style="width:auto;padding:0 14px;border-radius:20px;background:rgba(255,255,255,.08);color:#fff;direction:ltr">Clear ↺</button>`;
+  const size = () => { const r = box.getBoundingClientRect(); W = cv.width = r.width * dpr; H = cv.height = r.height * dpr; };
+  size(); addEventListener("resize", size);
+  const ray = (px, py) => {
+    const P = pals[pi][1], c = P[(hue++ >> 3) % P.length], h = (70 + Math.random() * 70) * dpr;
+    const g = x.createLinearGradient(0, py - h, 0, py + 10 * dpr);
+    g.addColorStop(0, `rgba(${c},0)`); g.addColorStop(.7, `rgba(${c},.35)`); g.addColorStop(.95, `rgba(${c},.9)`); g.addColorStop(1, `rgba(${c},0)`);
+    x.globalCompositeOperation = "lighter"; x.fillStyle = g; x.fillRect(px - 3 * dpr, py - h, 6 * dpr, h + 10 * dpr);
+  };
+  const fade = () => { x.globalCompositeOperation = "destination-out"; x.fillStyle = "rgba(0,0,0,.012)"; x.fillRect(0, 0, W, H); raf = requestAnimationFrame(fade); };
+  const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * dpr, (e.clientY - r.top) * dpr]; };
+  cv.addEventListener("pointerdown", e => { down = true; cv.setPointerCapture(e.pointerId); last = pos(e); if (!raf) raf = requestAnimationFrame(fade); });
+  cv.addEventListener("pointermove", e => {
+    if (!down) return; const p = pos(e), dx = p[0] - last[0], dy = p[1] - last[1], n = Math.max(1, Math.hypot(dx, dy) / (4 * dpr));
+    for (let k = 1; k <= n; k++) ray(last[0] + dx * k / n, last[1] + dy * k / n);
+    last = p;
+    if (++painted === 60) $("#paintShare").innerHTML = waBtn("🎨 رسمت شفق في سما لابلاند ✨\\nاستنى السكرين شوت 📸");
+  });
+  const up = () => down = false; cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", up);
+  $("#pal").onclick = e => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.id === "pClear") { x.clearRect(0, 0, W, H); return; }
+    pi = +b.dataset.i; $("#pal").querySelectorAll("[data-i]").forEach(z => z.classList.toggle("on", z === b));
   };
 }
 
@@ -1830,7 +2107,7 @@ function advent() {
     d.onclick = () => {
       if (!unlocked) { d.classList.remove("wiggle"); void d.offsetWidth; d.classList.add("wiggle"); toast(`Too early 🤫 استني لحد ${n} December`); return; }
       const first = !opened.has(n);
-      opened.add(n); store.set("doors", [...opened]); d.classList.add("opened");
+      opened.add(n); store.set("doors", [...opened]); if (opened.size >= 20) award("doors"); d.classList.add("opened");
       if (it.kind === "letter") {
         setTimeout(() => { FW.start(4000); modal(`<span class="pill coupon">💌 ${esc(it.title || "A letter for you")}</span><p class="when">${esc(it.when || "")}</p><p class="body">${esc(it.text)}</p><p class="sign">— ${esc(DATA.from || "أنا")} 🤍</p>` +
           waBtn(`💌 قريت جواب الشهرين 🤍\n${it.when || ""}\nHappy two months يا ${DATA.from || ""}`), "paperm"); }, first ? 650 : 0);
