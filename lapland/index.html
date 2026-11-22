@@ -377,6 +377,8 @@ footer .heart{cursor:pointer}
 .tiles button{background:linear-gradient(180deg,#fffaf0,#f2e6cc);color:#3a2a1a;box-shadow:0 4px 0 #c9b48a}
 .tiles button[disabled]{visibility:hidden}
 .wrow{display:flex;gap:10px;justify-content:center;margin-top:10px}
+.wa{display:inline-flex;margin-top:14px;text-decoration:none;color:#03361a;background:linear-gradient(135deg,#7cf0a4,#25d366);box-shadow:0 10px 26px rgba(37,211,102,.35),inset 0 1px 0 rgba(255,255,255,.5);direction:ltr}
+.share{display:flex;justify-content:center}
 footer{text-align:center;padding:40px 18px 34vh;color:var(--muted);font-size:14px;line-height:2}
 footer .heart{font-family:var(--script);font-size:24px;color:var(--text)}
 footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-decoration:underline}
@@ -535,6 +537,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
         <canvas id="gameCv"></canvas>
         <div class="gbar"><span id="gScore">🐟 0</span><span id="gBest"></span><span id="gLives">❤️❤️❤️</span></div>
         <button class="btn" id="gStart" type="button">Start 🎮</button>
+        <div class="share" id="gShare"></div>
       </div>
   </section>
 
@@ -1195,6 +1198,7 @@ function timo() {
     if (found) return; found = true; store.set("timoFound", true);
     cat.classList.add("found"); $("#timoBubble").classList.add("show"); hunt.classList.remove("hinting");
     hint.textContent = "You found the king! 👑\nمعرض صوره الملكي اتفتح تحت";
+    hint.insertAdjacentHTML("beforeend", `<div class="share">${waBtn(`🦁 لقيت تيمو مستخبي في تلج لابلاند ❄️\nThe king says ROAR (meow) 👑`)}</div>`);
     setTimeout(reveal, 900);
   };
   let pokes = 0;
@@ -1289,6 +1293,7 @@ function game() {
     if (score > best) { best = score; store.set("best", best); }
     hud(); $("#gStart").hidden = false; $("#gStart").textContent = "Play again 🔁";
     toast(score >= 11 ? `${score} fish! The king is proud 👑` : `${score} fish… الملك لسه جعان 😾`);
+    $("#gShare").innerHTML = waBtn(`🐟 Feed the King: مسكت ${score} سمكة لتيمو 👑\nBest: ${best}\nBeat that 😎`);
   };
   const loop = t => {
     if (!playing) return;
@@ -1303,7 +1308,7 @@ function game() {
         else { score++; pops.push({ s: "+1", x: it.x, y: it.y, t: 40, c: "#b5182f" }); }
         hud();
         if (score === 11 && !won) { won = true; store.set("gameWon", true); playing = false; FW.start(2500);
-          modal(`<span class="pill coupon">🐟 11 fish!</span><div class="prize">${esc(DATA.game && DATA.game.coupon || "")}</div><button class="btn" type="button" id="gGo">Keep playing 🎮</button>`);
+          modal(`<span class="pill coupon">🐟 11 fish!</span><div class="prize">${esc(DATA.game && DATA.game.coupon || "")}</div><button class="btn" type="button" id="gGo">Keep playing 🎮</button><div class="share">${waBtn("🐟 مسكت 11 سمكة في Feed the King!\nوكسبت كوبون treats لتيمو 🎟️\nالملك مستني 👑")}</div>`);
           $("#gGo").onclick = () => { closeModal(); playing = true; last = 0; requestAnimationFrame(loop); }; return; }
         continue;
       }
@@ -1314,7 +1319,7 @@ function game() {
     if (lives <= 0) return end();
     requestAnimationFrame(loop);
   };
-  $("#gStart").onclick = () => { size(); items = []; pops = []; score = 0; lives = 3; last = 0; spawn = 300; playing = true; $("#gStart").hidden = true; hud(); requestAnimationFrame(loop); };
+  $("#gStart").onclick = () => { $("#gShare").innerHTML = ""; size(); items = []; pops = []; score = 0; lives = 3; last = 0; spawn = 300; playing = true; $("#gStart").hidden = true; hud(); requestAnimationFrame(loop); };
   addEventListener("resize", () => { if (!playing) { size(); draw(); } });
   img.onload = () => { size(); draw(); };
   hud();
@@ -1342,7 +1347,7 @@ function quiz() {
   const result = sc => {
     const n = Q.questions.length, keys = Object.keys(Q.lines).map(Number).sort((a, b) => b - a), line = Q.lines[keys.find(k => sc >= k)];
     store.set("quizBest", Math.max(sc, store.get("quizBest", 0)));
-    box.innerHTML = `<p class="big">${sc} / ${n}</p><p class="line"></p><span class="pill coupon">🎁 Your prize</span><div class="prize"></div><button class="btn ghost" type="button" id="qAgain">Play again 🔁</button>`;
+    box.innerHTML = `<p class="big">${sc} / ${n}</p><p class="line"></p><span class="pill coupon">🎁 Your prize</span><div class="prize"></div><div class="share">${waBtn(`🧠 جبت ${sc} / ${n} في كويز «How well do you know us»\n${sc >= 8 ? "حافظاك 😎" : "محتاجين نتكلم أكتر 😂"}\nوالجايزة: Real snow date ❄️ — I'm waiting 😏`)}</div><button class="btn ghost" type="button" id="qAgain">Play again 🔁</button>`;
     box.querySelector(".line").textContent = line; box.querySelector(".prize").textContent = Q.prize;
     $("#qAgain").onclick = () => ask(0, 0);
     if (sc >= 8) FW.start(3000);
@@ -1366,13 +1371,14 @@ function wrapped() {
     bars.innerHTML = S.map((_, k) => `<i class="${k < n ? "done" : k === n ? "on" : ""}"><b></b></i>`).join("");
     const d = S[n];
     sl.innerHTML = `<p class="t"></p><p class="b"></p><p class="s"></p>${n === 0 ? '<p class="tap">tap to continue ›</p>' : ""}`;
+    if (n === S.length - 1) sl.insertAdjacentHTML("beforeend", waBtn("🎧 شفت Wrapped 2026 بتاعنا\nRating: ★★★★★\nSee you in 2027 🤍"));
     sl.querySelector(".t").textContent = d.top; sl.querySelector(".b").textContent = String(d.big).replace("{days}", days()); sl.querySelector(".s").textContent = d.small;
     sl.style.animation = "none"; void sl.offsetWidth; sl.style.animation = "";
     if (n === S.length - 1) FW.start(3500);
     timer = setTimeout(() => show(i + 1), 5000);
   };
   const close = () => { clearTimeout(timer); W.hidden = true; };
-  sl.onclick = e => { const r = sl.getBoundingClientRect(); show(e.clientX - r.left < r.width * .3 ? i - 1 : i + 1); };
+  sl.onclick = e => { if (e.target.closest("a")) { clearTimeout(timer); return; } const r = sl.getBoundingClientRect(); show(e.clientX - r.left < r.width * .3 ? i - 1 : i + 1); };
   $("#wclose").onclick = close;
   $("#wrapBtn").onclick = () => { W.hidden = false; show(0); };
 }
@@ -1389,7 +1395,7 @@ function openWhen() {
     const o = L[+b.dataset.k]; b.querySelector("span:last-child").textContent = o.label;
     b.onclick = () => {
       const k = +b.dataset.k; read.add(k); store.set("owDay", { day, read: [...read] }); b.classList.add("read");
-      modal(`<span class="pill" style="background:#ffe4e8;color:#b5182f">${o.icon} Open when ${esc(o.label)}</span><p class="day" dir="ltr">Today's letter ✨</p><p class="body">${esc(pick(o, k))}</p><p class="sign">— ${esc(DATA.from || "أنا")} 🤍</p>`);
+      modal(`<span class="pill" style="background:#ffe4e8;color:#b5182f">${o.icon} Open when ${esc(o.label)}</span><p class="day" dir="ltr">Today's letter ✨</p><p class="body">${esc(pick(o, k))}</p><p class="sign">— ${esc(DATA.from || "أنا")} 🤍</p>` + waBtn(`✉️ فتحت جواب «Open when ${o.label}» ${o.icon}\n«${firstLine(pick(o, k))}»`));
     };
   });
 }
@@ -1421,7 +1427,7 @@ const EGGS = ["name", "letter", "timo", "footer"];
 function egg(k) {
   const E = DATA.eggs || {}; if (!E[k]) return;
   const found = new Set(store.get("eggs", [])); found.add(k); store.set("eggs", [...found]);
-  modal(`<span class="pill" style="background:#3b2a0b;color:#ffe3a3">🥚 ${found.size} / ${EGGS.length}</span><p class="body">${esc(E[k])}</p>`, "night");
+  modal(`<span class="pill" style="background:#3b2a0b;color:#ffe3a3">🥚 ${found.size} / ${EGGS.length}</span><p class="body">${esc(E[k])}</p>` + waBtn(`🥚 لقيت Secret #${found.size} من ${EGGS.length} في الموقع 👀\n${found.size < EGGS.length ? "وهلاقي الباقي 😏" : "لقيتهم كلهم!! 🏆"}`), "night");
   showEggs();
 }
 function showEggs() {
@@ -1435,6 +1441,11 @@ function eggs() {
   document.querySelector("footer .heart").onclick = () => egg("footer");
   showEggs();
 }
+
+/* ---- "Send to him" on WhatsApp, after everything she does ---- */
+const waLink = t => "https://wa.me/" + (DATA.wa || "") + "?text=" + encodeURIComponent(t + "\n\n— from Lapland ❄️");
+const waBtn = t => `<a class="btn wa" target="_blank" rel="noopener" href="${esc(waLink(t))}">Send to ${esc(DATA.from || "him")} 💬</a>`;
+const firstLine = t => String(t).split("\n")[0];
 
 /* ---- arcade ---- */
 function arcade() {
@@ -1478,7 +1489,7 @@ function memoryGame(area, A) {
         clearInterval(tick); FW.start(3000);
         if (!best || moves < best) store.set("memBest", moves);
         $("#mRes").textContent = `${moves} moves · ${Math.round((Date.now() - t0) / 1000)}s 🎉\n` + (A.memoryLine || "");
-        area.insertAdjacentHTML("beforeend", `<button class="btn ghost" type="button" id="mAgain" dir="ltr">Play again 🔁</button>`);
+        area.insertAdjacentHTML("beforeend", `<div class="share">${waBtn(`🃏 خلصت Memory في ${moves} moves و ${Math.round((Date.now() - t0) / 1000)} ثانية 😎\nBeat that!`)}</div><button class="btn ghost" type="button" id="mAgain" dir="ltr">Play again 🔁</button>`);
         $("#mAgain").onclick = () => memoryGame(area, A);
       }
     } else { lock = true; setTimeout(() => { a.classList.remove("open"); b.classList.remove("open"); lock = false; }, 850); }
@@ -1490,7 +1501,7 @@ function padelGame(area, A) {
   area.innerHTML = `<p class="note">حركي المضرب بصباعك… أول واحد يجيب 5 يكسب 🎾</p>
     <canvas class="court" id="court"></canvas>
     <div class="gbar"><span id="pMe">حور 0</span><span id="pHim">سلومتك 0</span></div>
-    <button class="btn" type="button" id="pGo">Serve 🎾</button><p class="res" id="pRes"></p>`;
+    <button class="btn" type="button" id="pGo">Serve 🎾</button><p class="res" id="pRes"></p><div class="share" id="pShare"></div>`;
   const cv = $("#court"), x = cv.getContext("2d"), dpr = Math.min(devicePixelRatio || 1, 2);
   const r = cv.getBoundingClientRect(), W = r.width, H = r.height;
   cv.width = W * dpr; cv.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1512,12 +1523,13 @@ function padelGame(area, A) {
     x.fillText("سلومتك", him.x, 48); x.fillText("حور 🎀", me.x, H - 38);
     x.fillStyle = "#d7ff3a"; x.shadowColor = "#d7ff3a"; x.shadowBlur = 10; x.beginPath(); x.arc(ball.x, ball.y, ball.r, 0, 6.283); x.fill(); x.shadowBlur = 0;
   };
-  const serve = dir => { ball.x = W / 2; ball.y = H / 2; const a = (Math.random() - .5) * .9; ball.vx = Math.sin(a) * base; ball.vy = dir * Math.cos(a) * base; rally = 0; err = (Math.random() - .5) * him.w * .9; live = true; last = 0; $("#pGo").hidden = true; raf = requestAnimationFrame(step); };
+  const serve = dir => { if (!cv.isConnected) return; ball.x = W / 2; ball.y = H / 2; const a = (Math.random() - .5) * .9; ball.vx = Math.sin(a) * base; ball.vy = dir * Math.cos(a) * base; rally = 0; err = (Math.random() - .5) * him.w * .9; live = true; last = 0; $("#pGo").hidden = true; raf = requestAnimationFrame(step); };
   const point = meWon => {
     live = false; meWon ? sMe++ : sHim++; hud(); draw();
     if (sMe === 5 || sHim === 5) {
       over = true; const win = sMe === 5; if (win) FW.start(3500);
       $("#pRes").textContent = (win ? "You win! 🏆\n" + (A.padelWin || "") : (A.padelLose || ""));
+      $("#pShare").innerHTML = waBtn(win ? `🎾 كسبتك في Padel ${sMe}–${sHim} 😎🏆\nوالخسران يعزم على الأكل 🍝` : `🎾 خسرت قدامك في Padel ${sMe}–${sHim} 😤\nRematch… والمرة الجاية في الملعب بجد`);
       $("#pGo").hidden = false; $("#pGo").textContent = "Rematch 🔁"; return;
     }
     setTimeout(() => serve(meWon ? -1 : 1), 700);
@@ -1542,15 +1554,15 @@ function padelGame(area, A) {
     if (ball.y < -20) return point(true);
     draw(); raf = requestAnimationFrame(step);
   };
-  $("#pGo").onclick = () => { if (over) { sMe = sHim = 0; over = false; hud(); $("#pRes").textContent = ""; } serve(1); };
+  $("#pGo").onclick = () => { if (over) { sMe = sHim = 0; over = false; hud(); $("#pRes").textContent = ""; $("#pShare").innerHTML = ""; } serve(1); };
   draw();
-  return () => { live = false; cancelAnimationFrame(raf); };
+  return () => { live = false; cancelAnimationFrame(raf); cv.remove(); };
 }
 
 function clockGame(area, A) {
   area.innerHTML = `<p class="note">الساعة هتجري بسرعة…
 وقفيها على 11:11:11 بالظبط ✨</p><div class="clock" id="clk">11:10:30</div>
-    <button class="btn" type="button" id="cGo">Start ⏱️</button><p class="res" id="cRes"></p><p class="rcount" id="cBest"></p>`;
+    <button class="btn" type="button" id="cGo">Start ⏱️</button><p class="res" id="cRes"></p><div class="share" id="cShare"></div><p class="rcount" id="cBest"></p>`;
   const clk = $("#clk"), btn = $("#cGo"), MS = 42, TARGET = 41;
   let raf = 0, t0 = 0, run = false, best = store.get("clockBest", null);
   const fmt = s => `11:${String(10 + Math.floor((30 + s) / 60)).padStart(2, "0")}:${String((30 + s) % 60).padStart(2, "0")}`;
@@ -1563,11 +1575,12 @@ function clockGame(area, A) {
     clk.classList.toggle("hit", ad === 0);
     if (ad === 0) { const sh = document.createElement("div"); sh.className = "shoot"; document.body.appendChild(sh); setTimeout(() => sh.remove(), 1700); FW.start(4000); }
     $("#cRes").textContent = ad === 0 ? (A.elevenPerfect || "Perfect ✨") : ad <= 2 ? `So close!! 😱 ${ad}s ${d < 0 ? "early" : "late"}` : d < 0 ? `Too early by ${ad}s ⏳` : `Too late by ${ad}s 😅`;
+    $("#cShare").innerHTML = waBtn(ad === 0 ? "⏱️ وقفت الساعة على 11:11:11 بالظبط!! ✨\nواتمنيت أمنية 🤍" : `⏱️ وقفت الساعة على ${fmt(s)}\n${ad} ثانية بس من 11:11:11 😤`);
     btn.textContent = "Try again 🔁"; showBest();
   };
   btn.onclick = () => {
     if (run) return stopIt(Math.floor((performance.now() - t0) / MS));
-    run = true; clk.classList.remove("hit"); $("#cRes").textContent = ""; btn.textContent = "STOP ✋"; t0 = performance.now(); raf = requestAnimationFrame(tick);
+    run = true; clk.classList.remove("hit"); $("#cRes").textContent = ""; $("#cShare").innerHTML = ""; btn.textContent = "STOP ✋"; t0 = performance.now(); raf = requestAnimationFrame(tick);
   };
   showBest();
   return () => { run = false; cancelAnimationFrame(raf); };
@@ -1577,7 +1590,7 @@ function wordsGame(area, A) {
   const L = A.words || []; let i = 0, score = 0;
   const show = () => {
     if (i >= L.length) {
-      area.innerHTML = `<p class="clock" style="font-size:64px">${score} / ${L.length}</p><p class="res">${score === L.length ? "All of them!! 🎉" : "Not bad 😄"}</p><button class="btn ghost" type="button" id="wAgain" dir="ltr">Play again 🔁</button>`;
+      area.innerHTML = `<p class="clock" style="font-size:64px">${score} / ${L.length}</p><p class="res">${score === L.length ? "All of them!! 🎉" : "Not bad 😄"}</p><div class="share">${waBtn(`🔤 حليت ${score} من ${L.length} كلمات في Unscramble ✅\n${score === L.length ? "كلهم!! 🏆" : "مش بطال 😄"}`)}</div><button class="btn ghost" type="button" id="wAgain" dir="ltr">Play again 🔁</button>`;
       if (score >= L.length - 1) FW.start(3000);
       $("#wAgain").onclick = () => { i = 0; score = 0; show(); }; return;
     }
@@ -1639,7 +1652,8 @@ function advent() {
       const first = !opened.has(n);
       opened.add(n); store.set("doors", [...opened]); d.classList.add("opened");
       setTimeout(() => modal(`<span class="pill ${k[2]}">${k[0]} ${k[1]}</span><p class="day">December ${n}</p><p class="body">${esc(it.text)}</p>` +
-        (it.kind === "coupon" ? `<p class="foot">Valid forever… استخدميه وقت ما تحبي 😉</p>` : ""), k[2]), first ? 650 : 0);
+        (it.kind === "coupon" ? `<p class="foot">Valid forever… استخدميه وقت ما تحبي 😉</p>` : "") +
+        waBtn(it.kind === "coupon" ? `🎟️ فتحت باب ${n} ديسمبر وطلعلي كوبون:\n«${it.text.replace(/\n/g, " ")}»\nI'm using it 😏` : it.kind === "challenge" ? `🎯 باب ${n} ديسمبر — التحدي:\n«${firstLine(it.text)}»\nChallenge accepted 💪` : `🎁 فتحت باب ${n} ديسمبر 💌\n«${firstLine(it.text)}»`), k[2]), first ? 650 : 0);
     };
     box.appendChild(d);
   });
@@ -1665,8 +1679,7 @@ function wish() {
     const w = store.get("wishes", []); w.push(text); store.set("wishes", w);
     setTimeout(() => {
       ta.classList.remove("fold"); ta.value = "";
-      const share = "https://wa.me/" + (DATA.wa || "") + "?text=" + encodeURIComponent("My wish for 2027 ✨\n" + text);
-      $("#wishOut").innerHTML = `<p class="wish-reply">${esc(DATA.wishReply || "Your wish is on its way ✨")}</p><a class="btn ghost" style="margin-top:12px;text-decoration:none" target="_blank" rel="noopener" href="${share}">Send it to me on WhatsApp 💬</a>`;
+      $("#wishOut").innerHTML = `<p class="wish-reply">${esc(DATA.wishReply || "Your wish is on its way ✨")}</p>${waBtn("✨ My wish for 2027:\n" + text)}`;
       show();
     }, 900);
   };
@@ -1718,7 +1731,7 @@ function story(letterHTML) {
     <button class="vbtn" type="button" id="storyPlay" style="margin-top:14px">▶</button>`);
   if (N.list) steps.push(() => `<span class="pill" style="background:#2a3f7a;color:#ffe3a3">✨ 2027</span><p class="body">${esc(N.listIntro || "")}</p>
     <p style="margin-top:14px;font-size:15px;color:#c9d6f5">The full list is waiting for you in the site 👇</p>`);
-  if (N.gift) steps.push(() => `<span class="pill" style="background:#5a1a2e;color:#ffd1dc">🎁 Last surprise</span><p class="body">${esc(N.gift)}</p><div class="pass">${esc(N.password || "")}</div>`);
+  if (N.gift) steps.push(() => `<span class="pill" style="background:#5a1a2e;color:#ffd1dc">🎁 Last surprise</span><p class="body">${esc(N.gift)}</p><div class="pass">${esc(N.password || "")}</div><div class="share">${waBtn("🎁 قولت كلمة السر لأختي…\nTimo Hoor Asd El8aba 🦁\nوأخدت الهدية!! 🤍")}</div>`);
   const show = i => {
     modal(steps[i]() + next(i + 1 < steps.length ? i + 1 : -1), "night");
     $("#mbody [data-step]").onclick = e => { const n = +e.target.dataset.step; if (n < 0) { closeModal(); $("#y2027").scrollIntoView({ behavior: "smooth" }); } else show(n); };
@@ -1750,7 +1763,8 @@ function showYear() {
   $("#todo").onchange = e => {
     const i = +e.target.dataset.i; e.target.checked ? done.add(i) : done.delete(i);
     e.target.closest("label").classList.toggle("on", e.target.checked); store.set("todo", [...done]);
-    if (e.target.checked) { FW.start(1500); toast(done.size === (N.list || []).length ? "كلهم اتعملوا!! best year ever 🎆" : "One more done ✔️🤍"); }
+    if (e.target.checked) { FW.start(1500); const all = done.size === (N.list || []).length;
+      modal(`<span class="pill" style="background:#2a3f7a;color:#ffe3a3">✔️ ${done.size} / ${(N.list || []).length}</span><p class="body">${esc(N.list[i])}</p><p class="day" dir="ltr">${all ? "كلهم اتعملوا!! best year ever 🎆" : "One more done 🤍"}</p>` + waBtn(`✔️ علّمت على حاجة من لستة 2027:\n«${N.list[i].replace(/\n/g, " ")}»\n${done.size} / ${(N.list || []).length} done`), "night"); }
   };
 }
 
