@@ -228,15 +228,19 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .hunt::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,#fff 1.4px,transparent 1.6px) 0 0/22px 22px;opacity:.7;animation:fall 6s linear infinite}
 @keyframes fall{to{background-position:6px 22px}}
 .drift{position:absolute;border-radius:50% 50% 40% 40%;background:radial-gradient(circle at 40% 30%,#fff 0 55%,#e2eafa 100%);box-shadow:0 8px 14px rgba(120,145,200,.28);pointer-events:none}
-.timo{position:absolute;width:58px;height:58px;padding:0;transform:translate(-50%,-80%);transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.timo{position:absolute;width:58px;height:58px;padding:0;transform:translate(-50%,-80%);transition:left 1.1s ease-in-out,top 1.1s ease-in-out,transform .5s cubic-bezier(.3,1.6,.5,1)}
+.timo.dash{transition:left .35s cubic-bezier(.2,.8,.3,1),top .35s cubic-bezier(.2,.8,.3,1),transform .5s}
+.timo .peek{display:block;width:100%;height:100%;animation:peek 2.1s ease-in-out infinite}
+@keyframes peek{0%,100%{transform:translateY(26px)}30%,70%{transform:translateY(0)}}
+.timo.found .peek,.timo.caught .peek{animation:none;transform:none}
 .timo svg{width:100%;height:100%;overflow:visible}
 .timo .crown{opacity:0;transition:opacity .4s .2s}
 .timo.found{transform:translate(-50%,-115%) scale(1.5);z-index:250!important}
 .timo.found .crown{opacity:1}
 .hunt.hinting .eye{animation:eyeglow 1.2s ease-in-out infinite}
 @keyframes eyeglow{50%{fill:#1e7dff;r:3.2}}
-.bubble{position:absolute;z-index:300;padding:8px 14px;border-radius:16px;background:#fff;color:#2e2216;font:800 18px "Cairo",sans-serif;box-shadow:0 8px 20px rgba(0,0,0,.25);
-  transform:translate(-50%,-100%) scale(0);transition:transform .4s cubic-bezier(.3,1.6,.5,1) .25s;direction:ltr;text-align:center;line-height:1.2}
+.bubble{position:absolute;z-index:300;padding:8px 14px;border-radius:16px;background:#fff;color:#2e2216;font:800 15.5px "Cairo",sans-serif;box-shadow:0 8px 20px rgba(0,0,0,.25);white-space:pre-line;unicode-bidi:plaintext;width:max-content;max-width:min(240px,78%);pointer-events:none;
+  transform:translate(-50%,-100%) scale(0);transition:transform .35s cubic-bezier(.3,1.6,.5,1),left .3s,top .3s;text-align:center;line-height:1.45}
 .bubble small{display:block;font-size:12px;font-weight:600;color:#9a7f5e}
 .bubble.show{transform:translate(-50%,-100%) scale(1)}
 .puff{position:absolute;z-index:200;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff,rgba(255,255,255,0) 70%);animation:puff .6s ease-out forwards}
@@ -1396,17 +1400,13 @@ $("#lightbox").addEventListener("touchend", e => { if (tx === null) return; cons
 function timo() {
   const T = DATA.timo;
   if (!T) { $("#timo").hidden = true; return; }
-  const hunt = $("#hunt"), hint = $("#huntHint");
-  let r = Math.random;
-  const tx = 12 + r() * 76, ty = 48 + r() * 36;
+  const hunt = $("#hunt"), hint = $("#huntHint"), r = Math.random;
+  // clouds in the back, then six clouds Timo can hide behind
+  const spots = [[16, 60], [48, 52], [82, 62], [30, 82], [66, 84], [88, 40]].map(([x, y]) => [x + (r() - .5) * 6, y + (r() - .5) * 6]);
   let html = "";
-  for (let i = 0; i < 16; i++) {
-    const w = 60 + r() * 90, x = r() * 100, y = 40 + r() * 62;
-    html += `<span class="drift" style="left:${x}%;top:${y}%;width:${w}px;height:${w * .45}px;margin-left:${-w / 2}px;z-index:${Math.round(y)}"></span>`;
-  }
-  // the drift Timo hides behind
-  html += `<span class="drift" style="left:${tx}%;top:${ty + 6}%;width:110px;height:44px;margin-left:-55px;z-index:${Math.round(ty) + 3}"></span>`;
-  html += `<button class="timo" id="timoCat" type="button" aria-label="Timo" style="left:${tx}%;top:${ty + 8}%;z-index:${Math.round(ty) + 2}">
+  for (let k = 0; k < 10; k++) { const w = 60 + r() * 80, x = r() * 100, y = 30 + r() * 70; html += `<span class="drift" style="left:${x}%;top:${y}%;width:${w}px;height:${w * .45}px;margin-left:${-w / 2}px;z-index:${Math.round(y / 2)}"></span>`; }
+  spots.forEach(([x, y], k) => { html += `<span class="drift" style="left:${x}%;top:${y + 6}%;width:112px;height:46px;margin-left:-56px;z-index:${100 + k * 2 + 1}"></span>`; });
+  html += `<button class="timo" id="timoCat" type="button" aria-label="Timo"><span class="peek">
     <svg viewBox="0 0 60 60"><g stroke="#d9e3f4" stroke-width="1">
       <text class="crown" x="30" y="4" font-size="16" text-anchor="middle" stroke="none">👑</text>
       ${[...Array(12)].map((_, k) => { const a = k / 12 * 6.283; return `<circle cx="${(30 + Math.cos(a) * 13).toFixed(1)}" cy="${(27 + Math.sin(a) * 13).toFixed(1)}" r="5.5" fill="#fbfdff"/>`; }).join("")}
@@ -1418,12 +1418,37 @@ function timo() {
       <path d="M28.6 29.6h2.8l-1.4 1.6z" fill="#ff9fb2"/>
       <path d="M30 31.2q-1.5 2-3 1M30 31.2q1.5 2 3 1" stroke="#e7b9c2" stroke-width=".8" fill="none"/>
       <path d="M22 30h-7M22 31.5l-6.5 2M38 30h7M38 31.5l6.5 2" stroke="#e3e8f2" stroke-width=".6"/>
-    </svg></button>
-  <div class="bubble" id="timoBubble" style="left:${tx}%;top:${ty - 18}%">ROAR! 🦁<small>(meow)</small></div>`;
+    </svg></span></button>
+  <div class="bubble" id="timoBubble"></div>`;
   hunt.innerHTML = html;
-  const cat = $("#timoCat");
+  const cat = $("#timoCat"), bubble = $("#timoBubble");
+  let at = Math.floor(r() * spots.length), bubbleT = 0;
+  const place = (k, fast) => {
+    at = k; const [x, y] = spots[k];
+    cat.classList.toggle("dash", !!fast);
+    cat.style.left = x + "%"; cat.style.top = (y + 8) + "%"; cat.style.zIndex = 100 + k * 2;
+  };
+  const say = (text, ms, lift = 12) => {
+    clearTimeout(bubbleT);
+    const [x, y] = spots[at]; bubble.textContent = text;
+    // keep the whole bubble inside the snowy box
+    const W = hunt.clientWidth, w = bubble.offsetWidth, cx = x / 100 * W;
+    bubble.style.left = Math.min(W - w / 2 - 8, Math.max(w / 2 + 8, cx)) + "px";
+    bubble.style.top = Math.max(bubble.offsetHeight + 8, (y - lift) / 100 * hunt.clientHeight) + "px";
+    bubble.classList.add("show");
+    if (ms) bubbleT = setTimeout(() => bubble.classList.remove("show"), ms);
+  };
+  place(at);
+  // each time he ducks behind a cloud, he pops up behind another one
+  const peek = cat.querySelector(".peek");
+  peek.addEventListener("animationiteration", () => {
+    if (found || cat.classList.contains("caught")) return;
+    let k; do { k = Math.floor(r() * spots.length); } while (k === at);
+    place(k);
+  });
   const misses = ["مش هنا ❄️", "ده تلج عادي 😅", "تيمو بيضحك عليكي دلوقتي 😼", "سخنة… لا بردت 🥶", "The king is a master of disguise 🥷"];
-  let miss = 0, found = false;
+  const dodgeLines = shuffle([...(T.dodges || ["😼 Too slow!"])]);
+  let miss = 0, found = false, dodges = 0;
   const reveal = () => {
     $("#royal").hidden = false;
     const box = $("#portraits");
@@ -1440,13 +1465,29 @@ function timo() {
   };
   const win = () => {
     if (found) return; found = true; store.set("timoFound", true); award("timo");
-    cat.classList.add("found"); $("#timoBubble").classList.add("show"); hunt.classList.remove("hinting");
+    cat.classList.add("found"); hunt.classList.remove("hinting");
     hint.textContent = "You found the king! 👑\nمعرض صوره الملكي اتفتح تحت";
     hint.insertAdjacentHTML("beforeend", `<div class="share">${waBtn(`🦁 لقيت تيمو مستخبي في تلج لابلاند ❄️\nThe king says ROAR (meow) 👑`)}</div>`);
     setTimeout(reveal, 900);
   };
   let pokes = 0;
-  cat.onclick = e => { e.stopPropagation(); if (found) { if (++pokes === 5) egg("timo"); return; } win(); };
+  cat.onclick = e => {
+    e.stopPropagation();
+    if (found) { say(pokes % 2 ? "ROAR! 🦁" : "😾 الملوك مبتتزغدش", 1400); if (++pokes === 5) egg("timo"); return; }
+    if (dodges < 2) {
+      // he slips away to the farthest cloud with a cheeky line
+      say(dodgeLines[dodges % dodgeLines.length], 1700); dodges++;
+      hint.textContent = dodges === 1 ? "😹 زاغ منك! حاولي تاني" : "قربتي… مرة كمان 👀";
+      setTimeout(() => {
+        const far = spots.map((p, k) => [k, Math.hypot(p[0] - spots[at][0], p[1] - spots[at][1])]).sort((a, b) => b[1] - a[1])[Math.floor(r() * 2)][0];
+        place(far, true);
+      }, 450);
+      return;
+    }
+    // he gives in: hops to the middle cloud, then the crown
+    cat.classList.add("caught"); spots[1] = [50, 70]; place(1, true);
+    setTimeout(() => { say(T.caught || "ROAR! (meow) 👑", 0, 30); win(); }, 420);
+  };
   hunt.onclick = e => {
     if (found) return;
     const b = hunt.getBoundingClientRect(), p = document.createElement("span");
@@ -1455,10 +1496,10 @@ function timo() {
     hint.textContent = misses[miss++ % misses.length];
     if (miss >= 3) hunt.classList.add("hinting");
     if (miss === 3) setTimeout(() => { if (!found) hint.textContent = "Hint: دوري على عينين زرق 👀"; }, 900);
-    if (miss >= 6) { hint.innerHTML = `مستخبي جامد… <br><button class="btn ghost" type="button" id="showTimo">Show me 🙈</button>`; $("#showTimo").onclick = ev => { ev.stopPropagation(); win(); }; }
+    if (miss >= 6) { hint.innerHTML = `مستخبي جامد… <br><button class="btn ghost" type="button" id="showTimo">Show me 🙈</button>`; $("#showTimo").onclick = ev => { ev.stopPropagation(); cat.classList.add("caught"); spots[1] = [50, 70]; place(1, true); setTimeout(() => { say(T.caught || "ROAR! (meow) 👑", 0, 30); win(); }, 420); }; }
   };
   setTimeout(() => { if (!found && !miss) { hunt.classList.add("hinting"); hint.textContent = "Hint: دوري على عينين زرق 👀"; } }, 15000);
-  if (store.get("timoFound", false)) { found = true; cat.classList.add("found"); $("#timoBubble").classList.add("show"); hint.textContent = "The king says hi 👑"; reveal(); }
+  if (store.get("timoFound", false)) { found = true; spots[1] = [50, 70]; place(1); cat.classList.add("found"); say("The king says hi 👑", 0, 30); hint.textContent = "The king says hi 👑"; reveal(); }
   $("#timoLetterBtn").onclick = () => modal(`<span class="pill challenge">🐾 From Timo</span><p class="body paw">${esc(T.letter || "")}</p>`);
 }
 
