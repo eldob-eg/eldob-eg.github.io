@@ -476,6 +476,28 @@ body.s-autumn .ga{stop-color:#e0a25a}body.s-autumn .gb{stop-color:#8a4a24}body.s
 .pal{display:flex;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap}
 .pal button{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.25)}
 .pal button.on{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+/* ---- today ---- */
+.today-sec{padding-top:0;padding-bottom:20px;margin-top:-28vh;position:relative;z-index:3}
+.today{padding:16px 14px 12px}
+.t-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;direction:ltr}
+.t-head b{font:600 22px var(--script)}
+.t-head span{font-size:12.5px;color:var(--muted)}
+.t-row{display:flex;align-items:center;gap:12px;padding:10px 6px;border-top:1px solid var(--line)}
+.t-row .ic{width:38px;height:38px;flex:none;border-radius:12px;display:grid;place-items:center;font-size:20px;background:rgba(255,255,255,.07)}
+.t-row .tx{flex:1;min-width:0}
+.t-row .tx b{display:block;font-size:15px;direction:ltr;text-align:right}
+.t-row .tx small{display:block;color:var(--muted);font-size:12.5px;unicode-bidi:plaintext}
+.t-row .go{flex:none;padding:8px 14px;border-radius:999px;font-weight:800;font-size:13.5px;color:#2b1705;background:linear-gradient(135deg,#ffe3a3,#f3ad5f);direction:ltr}
+.t-row.ok .go{background:rgba(94,255,196,.16);color:var(--aurora);border:1px solid rgba(94,255,196,.4)}
+.t-row.ok .ic{background:rgba(94,255,196,.14)}
+.t-done{text-align:center;margin-top:8px;color:var(--aurora);font:600 16px var(--script);white-space:pre-line;unicode-bidi:plaintext}
+.flashy{animation:flashy 2.2s ease}
+@keyframes flashy{0%,60%{box-shadow:0 0 0 3px var(--gold),0 0 40px rgba(246,213,142,.6);border-radius:24px}}
+/* ---- lighter on slow phones / pause what is off screen ---- */
+.off,.off *{animation-play-state:paused!important}
+body.lite .card,body.lite .lock-card,body.lite #music,body.lite #menuBtn,body.lite #songBtn,body.lite .modal{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.lite .card{background:rgba(10,18,46,.88)}
+body.lite .name{filter:none}
 footer{text-align:center;padding:40px 18px 34vh;color:var(--muted);font-size:14px;line-height:2}
 footer .heart{font-family:var(--script);font-size:24px;color:var(--text)}
 footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-decoration:underline}
@@ -557,6 +579,10 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     <p class="sub" data-k="heroSub"></p>
     <p class="greet" id="greet" hidden></p>
     <a class="cue" href="#since">Scroll down ❄</a>
+  </section>
+
+  <section class="sec today-sec" id="today">
+    <div class="today card"><div class="t-head"><b>Today in Lapland</b><span id="tDate"></span></div><div id="tList"></div><p class="t-done" id="tDone"></p></div>
   </section>
 
   <section class="sec reveal" id="since">
@@ -837,6 +863,9 @@ const now = () => new Date(Date.now() + OFFSET);
 const REDUCE = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const SEASON = (m => m >= 10 || m <= 2 ? "winter" : m <= 4 ? "spring" : m <= 7 ? "summer" : "autumn")(now().getMonth());
 document.body.classList.add("s-" + SEASON);
+const PERF = { lite: !!((navigator.deviceMemory && navigator.deviceMemory <= 3) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)) };
+const goLite = () => { if (!PERF.lite) { PERF.lite = true; document.body.classList.add("lite"); } };
+if (PERF.lite) document.body.classList.add("lite");
 const SEASON_AURORA = { winter: 1, autumn: .9, spring: .45, summer: 0 }[SEASON];
 const store = {
   get(k, d) { try { const v = localStorage.getItem("lap." + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
@@ -986,7 +1015,7 @@ let AURORA = 1;
   let last = 0;
   function frame(ms) {
     requestAnimationFrame(frame);
-    if (hidden || ms - last < 40) return; last = ms;
+    if (hidden || ms - last < (PERF.lite ? 90 : 40)) return; last = ms;
     const t = ms / 1000;
     x.clearRect(0, 0, W, H); x.globalCompositeOperation = "lighter";
     for (const r of ribbons) {
@@ -1015,12 +1044,17 @@ let AURORA = 1;
   const size = () => { W = c.width = innerWidth * dpr; H = c.height = innerHeight * dpr; };
   size(); addEventListener("resize", size);
   for (let i = 0; i < N; i++) flakes.push(make(false));
+  let prev = 0, slow = 0;
   function frame(ms) {
     requestAnimationFrame(frame);
-    if (hidden) return;
+    if (hidden) { prev = 0; return; }
+    // if frames keep running long, switch the whole page to the lighter mode
+    if (prev) { const dt = ms - prev; slow = dt > 34 ? slow + 1 : Math.max(0, slow - 2); if (slow > 90) goLite(); }
+    prev = ms;
     const wind = Math.sin(ms / 5000) * 0.5 * dpr;
     x.clearRect(0, 0, W, H);
-    for (const f of flakes) {
+    const lim = PERF.lite ? Math.ceil(flakes.length * .45) : flakes.length;
+    for (let fi = 0; fi < lim; fi++) { const f = flakes[fi];
       f.d += 0.012; f.rot += .02;
       if (SEASON === "summer") { f.y -= .25 * dpr; f.x += Math.sin(f.d * 2) * .4 * dpr; if (f.y < -10) f.y = H + 10; }
       else { f.y += (0.25 + f.r * (SEASON === "winter" ? 0.22 : 0.1)); f.x += wind + Math.sin(f.d) * (SEASON === "winter" ? .35 : .9) * dpr; }
@@ -1232,7 +1266,7 @@ const get = (o, path) => path.split(".").reduce((a, k) => a && a[k], o);
 function render() {
   document.querySelectorAll("[data-k]").forEach(el => el.textContent = get(DATA, el.dataset.k) || "");
   document.title = `Lapland ❄️ ${DATA.her}`;
-  greet(); seasonTag(); sinceInit(); monthly(); passport(); timeline(); letter(); gallery(); tree(); scratch(); globe(); timo(); diary(); game(); quiz(); arcade(); wrapped(); openWhen(); playlist(); menu(); eggs(); songs(); constellation(); snowman(); painter(); advent(); passportCatchUp(); wish(); newYear(); eleven();
+  greet(); seasonTag(); sinceInit(); monthly(); passport(); timeline(); letter(); gallery(); tree(); scratch(); globe(); timo(); diary(); game(); quiz(); arcade(); wrapped(); openWhen(); playlist(); menu(); eggs(); songs(); constellation(); snowman(); painter(); advent(); passportCatchUp(); wish(); newYear(); eleven(); todayInit();
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
   document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 }
@@ -1593,7 +1627,7 @@ function playlist() {
 
 /* ---- menu ---- */
 function menu() {
-  const items = [["hero", "❄️ Home"], ["story", "📖 Our story"], ["letter", "💌 11:11"], ["passport", "🛂 Passport"], ["memories", "📸 Us"], ["treeSec", "🎄 Tree"], ["scratchSec", "🎫 Scratch"], ["globe", "🔮 Snow globe"], ["starsSec", "✨ Stars"], ["snowSec", "⛄ Snowman"], ["paintSec", "🎨 Paint"], ["timo", "🦁 Timo"],
+  const items = [["hero", "❄️ Home"], ["today", "📅 Today"], ["story", "📖 Our story"], ["letter", "💌 11:11"], ["passport", "🛂 Passport"], ["memories", "📸 Us"], ["treeSec", "🎄 Tree"], ["scratchSec", "🎫 Scratch"], ["globe", "🔮 Snow globe"], ["starsSec", "✨ Stars"], ["snowSec", "⛄ Snowman"], ["paintSec", "🎨 Paint"], ["timo", "🦁 Timo"],
     ["quiz", "🧠 Quiz"], ["arcade", "🎮 Arcade"], ["wrapped", "🎧 Wrapped"], ["openwhen", "✉️ Open when"], ["playlist", "🎶 Playlist"], ["advent", "🎁 Doors"], ["wish", "✨ Wish"], ["newyear", "🎆 New Year"], ["y2027", "🌟 2027"]];
   $("#menuBtn").onclick = () => {
     const vis = items.filter(([id]) => id === "hero" || (document.getElementById(id) && !document.getElementById(id).hidden));
@@ -2059,11 +2093,12 @@ function painter() {
     g.addColorStop(0, `rgba(${c},0)`); g.addColorStop(.7, `rgba(${c},.35)`); g.addColorStop(.95, `rgba(${c},.9)`); g.addColorStop(1, `rgba(${c},0)`);
     x.globalCompositeOperation = "lighter"; x.fillStyle = g; x.fillRect(px - 3 * dpr, py - h, 6 * dpr, h + 10 * dpr);
   };
-  const fade = () => { x.globalCompositeOperation = "destination-out"; x.fillStyle = "rgba(0,0,0,.012)"; x.fillRect(0, 0, W, H); raf = requestAnimationFrame(fade); };
+  let lastPaint = 0;
+  const fade = () => { x.globalCompositeOperation = "destination-out"; x.fillStyle = "rgba(0,0,0,.012)"; x.fillRect(0, 0, W, H); raf = performance.now() - lastPaint < 9000 ? requestAnimationFrame(fade) : 0; };
   const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * dpr, (e.clientY - r.top) * dpr]; };
   cv.addEventListener("pointerdown", e => { down = true; cv.setPointerCapture(e.pointerId); last = pos(e); if (!raf) raf = requestAnimationFrame(fade); });
   cv.addEventListener("pointermove", e => {
-    if (!down) return; const p = pos(e), dx = p[0] - last[0], dy = p[1] - last[1], n = Math.max(1, Math.hypot(dx, dy) / (4 * dpr));
+    if (!down) return; lastPaint = performance.now(); if (!raf) raf = requestAnimationFrame(fade); const p = pos(e), dx = p[0] - last[0], dy = p[1] - last[1], n = Math.max(1, Math.hypot(dx, dy) / (4 * dpr));
     for (let k = 1; k <= n; k++) ray(last[0] + dx * k / n, last[1] + dy * k / n);
     last = p;
     if (++painted === 60) $("#paintShare").innerHTML = waBtn("🎨 رسمت شفق في سما لابلاند ✨\\nاستنى السكرين شوت 📸");
@@ -2076,11 +2111,55 @@ function painter() {
   };
 }
 
+/* ---- Today in Lapland: what is new today, one tap away ---- */
+function renderToday() {
+  if (!DATA) return;
+  const t = now(), d = dayIndex(), met = parseLocal(DATA.met), rows = [];
+  const months = (t.getFullYear() - met.getFullYear()) * 12 + t.getMonth() - met.getMonth() - (t.getDate() < met.getDate() ? 1 : 0);
+  $("#tDate").textContent = t.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+  if (t.getDate() === met.getDate() && months >= 2)
+    rows.push({ i: "🎉", t: months % 12 === 0 ? `${months / 12} year today!` : `${months} months today!`, s: "النهارده 11… يوم بتاعنا 🤍", go: months === 2 ? "advent" : "since", ok: months === 2 ? (store.get("doors", []) || []).includes(11) : store.get("month" + months, false) });
+  const y = parseLocal(DATA.newYear).getFullYear() - 1;
+  if (t.getFullYear() === y && t.getMonth() === 11)
+    rows.push({ i: "🎁", t: `Door ${t.getDate()}`, s: "باب النهارده مستنيكي", go: "advent", door: true, ok: (store.get("doors", []) || []).includes(t.getDate()) });
+  else if (t < new Date(y, 11, 1))
+    rows.push({ i: "🎁", t: "Doors open Dec 1", s: `فاضل ${Math.ceil((new Date(y, 11, 1) - t) / 864e5)} يوم`, go: "advent", info: true });
+  if (DATA.scratch) rows.push({ i: "🎫", t: "Scratch card", s: "مفاجأة النهارده تحت الفضي", go: "scratchSec", ok: store.get("scratchDay", null) === d });
+  if (DATA.diary) rows.push({ i: "📔", t: "Timo's diary", s: "صفحة جديدة من الملك", go: "diary", ok: store.get("diaryDay", null) === d });
+  if (DATA.openWhen) { const o = store.get("owDay", null); rows.push({ i: "✉️", t: "Open when…", s: `${DATA.openWhen.length} جوابات جديدة النهارده`, go: "openwhen", ok: !!(o && o.day === d && o.read.length) }); }
+  const NY = parseLocal(DATA.newYear);
+  if (t < NY) { const nd = Math.ceil((NY - t) / 864e5); rows.push({ i: "🎆", t: "New Year", s: nd <= 1 ? "الليلة!! افتحي الموقع قبل 12 بدقيقة 👀" : `فاضل ${nd} يوم`, go: "newyear", info: true }); }
+  const nx = new Date(t); nx.setSeconds(0, 0);
+  const cand = [11, 23].map(hh => { const c = new Date(t); c.setHours(hh, 11, 0, 0); if (c <= t) c.setDate(c.getDate() + 1); return c; }).sort((a, b) => a - b)[0];
+  const mins = Math.round((cand - t) / 6e4);
+  rows.push({ i: "⏱️", t: "Next 11:11", s: mins < 60 ? `بعد ${mins} دقيقة… جهزي أمنيتك ✨` : `بعد ${Math.floor(mins / 60)} ساعة و ${mins % 60} دقيقة`, go: "letter", info: true });
+  if (DATA.passport) { const n = Object.keys(store.get("stamps", {})).length; rows.push({ i: "🛂", t: `Passport ${n} / ${DATA.passport.stamps.length}`, s: n < DATA.passport.stamps.length ? "لسه في أختام مستنياكي" : "Official citizen 🏛️", go: "passport", info: true }); }
+  $("#tList").innerHTML = rows.map((r, k) => `<div class="t-row${r.ok ? " ok" : ""}"><span class="ic">${r.i}</span><span class="tx"><b></b><small></small></span><button class="go" type="button" data-k="${k}">${r.ok ? "✔ Done" : r.info ? "View ›" : "Go ›"}</button></div>`).join("");
+  $("#tList").querySelectorAll(".t-row").forEach((el, k) => { el.querySelector("b").textContent = rows[k].t; el.querySelector("small").textContent = rows[k].s; });
+  $("#tList").onclick = e => {
+    const b = e.target.closest(".go"); if (!b) return; const r = rows[+b.dataset.k], el = document.getElementById(r.go); if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: r.go === "diary" ? "center" : "start" });
+    const target = r.door ? document.querySelector(".door.today") || el : el;
+    setTimeout(() => { target.classList.remove("flashy"); void target.offsetWidth; target.classList.add("flashy"); }, 600);
+  };
+  const tasks = rows.filter(r => !r.info), done = tasks.filter(r => r.ok).length;
+  $("#tDone").textContent = tasks.length && done === tasks.length ? "All done for today 🎉\nبكرة في حاجات جديدة ✨" : "";
+}
+function todayInit() {
+  renderToday(); setInterval(renderToday, 20000);
+  // the diary counts as read once she actually sees it
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { store.set("diaryDay", dayIndex()); renderToday(); } }), { threshold: .6 });
+  if ($("#diary")) io.observe($("#diary"));
+  // pause animations in sections that are off screen
+  const off = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle("off", !e.isIntersecting)), { rootMargin: "200px" });
+  document.querySelectorAll("#app > section, #app > footer").forEach(el => off.observe(el));
+}
+
 /* ---- modal ---- */
 function modal(html, cls = "") {
   $("#mcard").className = "mcard " + cls; $("#mbody").innerHTML = html; $("#modal").classList.add("show");
 }
-const closeModal = () => $("#modal").classList.remove("show");
+const closeModal = () => { $("#modal").classList.remove("show"); if (DATA) setTimeout(renderToday, 300); };
 $("#modal .x").onclick = closeModal;
 $("#modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
 addEventListener("keydown", e => { if (e.key === "Escape") { closeModal(); lbClose(); } if ($("#lightbox").classList.contains("show")) { if (e.key === "ArrowRight") lightbox(lbI - 1); if (e.key === "ArrowLeft") lightbox(lbI + 1); } });
