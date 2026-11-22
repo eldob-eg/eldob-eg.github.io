@@ -189,6 +189,15 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .door .face small{position:absolute;bottom:5px;font-size:11px;font-weight:600;opacity:.7}
 .door.locked .face{filter:saturate(.45) brightness(.7)}
 .door.today .face{outline:2px solid var(--gold);outline-offset:2px;animation:glow 1.8s ease-in-out infinite}
+.door.special .face{background:linear-gradient(160deg,#f6d58e,#b8862b 55%,#7d5d18)!important;color:#3b2a12}
+.door.special .face::after{content:"♥";position:absolute;top:16px;right:8px;font-size:12px;color:#9c1840}
+.mcard.paperm{background:repeating-linear-gradient(180deg,transparent 0 37px,rgba(120,150,200,.16) 37px 38px),linear-gradient(170deg,#fffdf6,#f8efdc)}
+.mcard.paperm .when{direction:ltr;font-weight:800;letter-spacing:.12em;color:#b5182f;font-size:14px;margin:4px 0 10px}
+.mcard.paperm .body{font-size:19.5px;line-height:38px;text-align:start}
+.emo{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:12px}
+.emo button{width:44px;height:44px;border-radius:12px;font-size:22px;background:rgba(255,255,255,.08);border:1px solid var(--line)}
+.emo-pick{min-height:44px;margin-top:12px;font-size:30px;letter-spacing:4px}
+.wish-opts{display:flex;flex-direction:column;align-items:center;gap:4px}
 @keyframes glow{50%{box-shadow:0 0 26px rgba(246,213,142,.75)}}
 .door.opened .face{transform:rotateY(-108deg)}
 .door.wiggle{animation:wiggle .5s}
@@ -1630,7 +1639,7 @@ addEventListener("keydown", e => { if (e.key === "Escape") { closeModal(); lbClo
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 /* ---- advent calendar ---- */
-const KIND = { note: ["💌", "Sweet note", ""], coupon: ["🎟️", "Coupon for you", "coupon"], challenge: ["🎯", "Today's challenge", "challenge"] };
+const KIND = { note: ["💌", "Sweet note", ""], coupon: ["🎟️", "Coupon for you", "coupon"], challenge: ["🎯", "Today's challenge", "challenge"], letter: ["💌", "A letter for you", "paperm"] };
 function advent() {
   const year = parseLocal(DATA.newYear).getFullYear() - 1, list = DATA.advent || [];
   const box = $("#doors"); box.innerHTML = "";
@@ -1645,12 +1654,17 @@ function advent() {
   order.forEach(n => {
     const it = list[n - 1], k = KIND[it.kind] || KIND.note, unlocked = t >= new Date(year, 11, n);
     const d = document.createElement("button"); d.type = "button";
-    d.className = "door" + (unlocked ? "" : " locked") + (n === todayN ? " today" : "") + (opened.has(n) ? " opened" : "");
+    d.className = "door" + (unlocked ? "" : " locked") + (n === todayN ? " today" : "") + (opened.has(n) ? " opened" : "") + (it.kind === "letter" ? " special" : "");
     d.innerHTML = `<span class="in">${k[0]}</span><span class="face">${n}<small>${unlocked ? (n === todayN ? "Today" : "") : "🔒"}</small></span>`;
     d.onclick = () => {
       if (!unlocked) { d.classList.remove("wiggle"); void d.offsetWidth; d.classList.add("wiggle"); toast(`Too early 🤫 استني لحد ${n} December`); return; }
       const first = !opened.has(n);
       opened.add(n); store.set("doors", [...opened]); d.classList.add("opened");
+      if (it.kind === "letter") {
+        setTimeout(() => { FW.start(4000); modal(`<span class="pill coupon">💌 ${esc(it.title || "A letter for you")}</span><p class="when">${esc(it.when || "")}</p><p class="body">${esc(it.text)}</p><p class="sign">— ${esc(DATA.from || "أنا")} 🤍</p>` +
+          waBtn(`💌 قريت جواب الشهرين 🤍\n${it.when || ""}\nHappy two months يا ${DATA.from || ""}`), "paperm"); }, first ? 650 : 0);
+        return;
+      }
       setTimeout(() => modal(`<span class="pill ${k[2]}">${k[0]} ${k[1]}</span><p class="day">December ${n}</p><p class="body">${esc(it.text)}</p>` +
         (it.kind === "coupon" ? `<p class="foot">Valid forever… استخدميه وقت ما تحبي 😉</p>` : "") +
         waBtn(it.kind === "coupon" ? `🎟️ فتحت باب ${n} ديسمبر وطلعلي كوبون:\n«${it.text.replace(/\n/g, " ")}»\nI'm using it 😏` : it.kind === "challenge" ? `🎯 باب ${n} ديسمبر — التحدي:\n«${firstLine(it.text)}»\nChallenge accepted 💪` : `🎁 فتحت باب ${n} ديسمبر 💌\n«${firstLine(it.text)}»`), k[2]), first ? 650 : 0);
@@ -1679,7 +1693,22 @@ function wish() {
     const w = store.get("wishes", []); w.push(text); store.set("wishes", w);
     setTimeout(() => {
       ta.classList.remove("fold"); ta.value = "";
-      $("#wishOut").innerHTML = `<p class="wish-reply">${esc(DATA.wishReply || "Your wish is on its way ✨")}</p>${waBtn("✨ My wish for 2027:\n" + text)}`;
+      const S = DATA.wishShy || {};
+      $("#wishOut").innerHTML = `<p class="wish-reply">${esc(DATA.wishReply || "Your wish is on its way ✨")}</p>
+        <div class="wish-opts">${waBtn("✨ My wish for 2027:\n" + text)}
+        <button class="btn ghost" type="button" id="shyBtn" style="margin-top:10px">مكسوفة؟ ابعتيها إيموجي بس 🙈</button>
+        <button class="btn ghost" type="button" id="secretBtn" style="margin-top:10px">خليها سر 🤫</button></div><div id="shyBox"></div>`;
+      $("#secretBtn").onclick = () => { $("#wishOut .wish-opts").hidden = true; $("#shyBox").innerHTML = `<p class="wish-reply">${esc(S.secret || "🤫")}</p>`; };
+      $("#shyBtn").onclick = () => {
+        let pick = [];
+        $("#shyBox").innerHTML = `<p class="note" style="margin-top:14px;color:var(--muted)">اختاري لحد 6 إيموجي يلخصوا أمنيتك… وخليه يخمّن 😏</p>
+          <div class="emo">${(S.emojis || []).map(e => `<button type="button">${e}</button>`).join("")}</div>
+          <div class="emo-pick" id="emoPick"></div><div class="share" id="emoSend"></div>
+          <button class="btn ghost" type="button" id="emoClear" style="margin-top:8px" dir="ltr">Clear ↺</button>`;
+        const upd = () => { $("#emoPick").textContent = pick.join(" "); $("#emoSend").innerHTML = pick.length ? waBtn("✨ أمنيتي لـ 2027… بالإيموجي بس 🙈\n\n" + pick.join(" ") + "\n\nخمّن 😏 وأنا هقولك سخن ولا بارد") : ""; };
+        $("#shyBox .emo").onclick = e => { const b = e.target.closest("button"); if (b && pick.length < 6) { pick.push(b.textContent); upd(); } };
+        $("#emoClear").onclick = () => { pick = []; upd(); };
+      };
       show();
     }, 900);
   };
