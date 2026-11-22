@@ -413,7 +413,7 @@ footer .heart{cursor:pointer}
 .diary h3{font:600 22px var(--script);color:#7a4a2a}
 .diary .d8{font-size:12.5px;color:#9a7f5e;direction:ltr}
 .diary p.txt{font:19px/34px var(--script);white-space:pre-line;unicode-bidi:plaintext;margin-top:6px}
-#songBtn{position:fixed;left:16px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:40;width:44px;height:44px;border-radius:50%;font-size:19px;
+#songBtn{position:fixed;left:17px;bottom:calc(142px + env(safe-area-inset-bottom));z-index:40;width:44px;height:44px;border-radius:50%;font-size:19px;
   background:rgba(12,22,54,.7);border:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .songs-pick{display:flex;flex-direction:column;gap:8px;margin-top:12px}
 .songs-pick button{padding:13px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:#fff;font-weight:700;direction:ltr}
@@ -498,11 +498,24 @@ body.s-autumn .ga{stop-color:#e0a25a}body.s-autumn .gb{stop-color:#8a4a24}body.s
 body.lite .card,body.lite .lock-card,body.lite #music,body.lite #menuBtn,body.lite #songBtn,body.lite .modal{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 body.lite .card{background:rgba(10,18,46,.88)}
 body.lite .name{filter:none}
+/* ---- pages & tab bar ---- */
+#app{display:flex;flex-direction:column;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+#app>section,#app>footer{width:100%}
+.nopage{display:none!important}
+.pg-head{padding-top:calc(46px + env(safe-area-inset-top));padding-bottom:6px;text-align:center}
+.pg-head .h{font-size:clamp(34px,9vw,52px)}
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:42;display:grid;grid-template-columns:repeat(4,1fr);padding:6px 6px calc(6px + env(safe-area-inset-bottom));
+  background:rgba(6,11,32,.9);border-top:1px solid var(--line);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+#tabs button{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:14px;font-size:22px;color:var(--muted);transition:.2s}
+#tabs button span{font-size:11.5px;font-weight:700;direction:ltr}
+#tabs button.on{color:#fff;background:rgba(255,255,255,.08)}
+#tabs button.on span{color:var(--gold)}
+#tabs button.dot::after{content:"";position:absolute;top:6px;right:calc(50% - 20px);width:9px;height:9px;border-radius:50%;background:#ff5b6e;box-shadow:0 0 8px #ff5b6e}
 footer{text-align:center;padding:40px 18px 34vh;color:var(--muted);font-size:14px;line-height:2}
 footer .heart{font-family:var(--script);font-size:24px;color:var(--text)}
 footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-decoration:underline}
 
-#music{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;width:50px;height:50px;border-radius:50%;font-size:22px;
+#music{position:fixed;left:14px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:40;width:50px;height:50px;border-radius:50%;font-size:22px;
   background:rgba(12,22,54,.7);border:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 20px rgba(0,0,0,.35)}
 #music.nudge{animation:pulse 1.4s ease-in-out infinite;border-color:var(--gold)}
 #fw{position:fixed;inset:0;width:100%;height:100%;z-index:68;pointer-events:none}
@@ -534,7 +547,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
 #lightbox .prev{right:12px}#lightbox .next{left:12px}
 #lightbox .x{position:absolute;top:14px;left:14px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);font-size:20px}
 
-#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));z-index:60;transform:translate(-50%,20px);opacity:0;pointer-events:none;
+#toast{position:fixed;left:50%;bottom:calc(150px + env(safe-area-inset-bottom));z-index:60;transform:translate(-50%,20px);opacity:0;pointer-events:none;
   padding:12px 20px;border-radius:999px;background:rgba(12,22,54,.92);border:1px solid var(--line);font-size:15px;white-space:nowrap;transition:.35s}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 .shoot{position:fixed;top:10vh;right:-20vw;z-index:44;width:160px;height:2px;pointer-events:none;border-radius:2px;
@@ -834,6 +847,19 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     <div style="display:flex;justify-content:center;margin-top:22px"><button class="btn ghost" id="replayNY" type="button" dir="ltr">Replay midnight 🎆</button></div>
   </section>
 
+  <section class="sec pg-head" id="pgSurprises">
+    <p class="kicker">Lapland surprises</p>
+    <h2 class="h" dir="ltr">Surprises 🎁</h2>
+    <p class="sub">أبواب ديسمبر، والكارت، والجوابات، والشجرة، والأمنية…
+كل يوم في حاجة جديدة هنا ✨</p>
+  </section>
+
+  <section class="sec pg-head" id="pgGames">
+    <p class="kicker">Game corner</p>
+    <h2 class="h" dir="ltr">Games 🎮</h2>
+    <p class="sub">العبي… وكل حاجة بتكسبيها بتاخدي عليها ختم في الباسبور 🛂</p>
+  </section>
+
   <footer>
     <p class="heart">Made just for you ❄️🤍</p>
     <p>من مصر… all the way to Lapland</p>
@@ -847,6 +873,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
 <canvas id="fw"></canvas>
 <button id="music" type="button" aria-label="الموسيقى" hidden>🔔</button>
 <button id="menuBtn" type="button" hidden>❄ Menu</button>
+<nav id="tabs" hidden><button type="button" data-p="home">🏠<span>Home</span></button><button type="button" data-p="surprises">🎁<span>Surprises</span></button><button type="button" data-p="games">🎮<span>Games</span></button><button type="button" data-p="timo">🦁<span>Timo</span></button></nav>
 <button id="songBtn" type="button" hidden aria-label="Choose a song">🎶</button>
 <div id="wrap" hidden><div class="wbars" id="wbars"></div><button class="x" type="button" id="wclose" aria-label="Close">✕</button><div class="wslide" id="wslide"></div></div>
 <div class="modal" id="modal"><div class="mcard" id="mcard"><button class="x" type="button" aria-label="اقفلي">✕</button><div id="mbody"></div></div></div>
@@ -1245,7 +1272,7 @@ function enter(r, withFlash) {
   setTimeout(() => {
     $("#lock").classList.add("gone");
     setTimeout(() => $("#lock").hidden = true, 800);
-    $("#app").hidden = false; $("#music").hidden = false; $("#menuBtn").hidden = false; scrollTo(0, 0);
+    $("#app").hidden = false; $("#music").hidden = false; scrollTo(0, 0);
     render(); setMusicBtn();
   }, withFlash ? 600 : 0);
 }
@@ -1266,7 +1293,7 @@ const get = (o, path) => path.split(".").reduce((a, k) => a && a[k], o);
 function render() {
   document.querySelectorAll("[data-k]").forEach(el => el.textContent = get(DATA, el.dataset.k) || "");
   document.title = `Lapland ❄️ ${DATA.her}`;
-  greet(); seasonTag(); sinceInit(); monthly(); passport(); timeline(); letter(); gallery(); tree(); scratch(); globe(); timo(); diary(); game(); quiz(); arcade(); wrapped(); openWhen(); playlist(); menu(); eggs(); songs(); constellation(); snowman(); painter(); advent(); passportCatchUp(); wish(); newYear(); eleven(); todayInit();
+  pagesInit(); greet(); seasonTag(); sinceInit(); monthly(); passport(); timeline(); letter(); gallery(); tree(); scratch(); globe(); timo(); diary(); game(); quiz(); arcade(); wrapped(); openWhen(); playlist(); menu(); eggs(); songs(); constellation(); snowman(); painter(); advent(); passportCatchUp(); wish(); newYear(); eleven(); todayInit();
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
   document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 }
@@ -1671,7 +1698,7 @@ function arcade() {
   const games = [["memory", "🃏 Memory", memoryGame], ["padel", "🎾 Padel", padelGame], ["clock", "⏱️ 11:11", clockGame], ["words", "🔤 Words", wordsGame], ["king", "🐟 Feed the King", null]];
   let stop = null;
   const open = id => {
-    if (id === "king") { $("#game").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+    if (id === "king") { goTo("game", "center"); return; }
     if (stop) stop(); stop = null;
     tabs.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.g === id));
     stop = games.find(g => g[0] === id)[2](area, A) || null;
@@ -1920,7 +1947,9 @@ function scratch() {
   const cv = $("#sCv"), x = cv.getContext("2d"), dpr = Math.min(devicePixelRatio || 1, 2);
   const share = () => $("#sShare").innerHTML = waBtn("🎫 Scratch card النهارده طلعلي:\n«" + prize.replace(/\n/g, " ") + "»");
   if (store.get("scratchDay", null) === d) { cv.style.display = "none"; share(); return; }
-  const r = cv.getBoundingClientRect(), W = r.width * dpr, H = r.height * dpr;
+  let W = 0, H = 0;
+  const cover = () => {
+  const r = cv.getBoundingClientRect(); W = r.width * dpr; H = r.height * dpr;
   cv.width = W; cv.height = H;
   const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#c9ced8"); g.addColorStop(.5, "#eef1f6"); g.addColorStop(1, "#aab1bf");
   x.fillStyle = g; x.fillRect(0, 0, W, H);
@@ -1928,6 +1957,8 @@ function scratch() {
   x.fillStyle = "#5a6275"; x.font = `700 ${20 * dpr}px "Playfair Display", serif`; x.textAlign = "center"; x.textBaseline = "middle";
   x.fillText("Scratch me ✨", W / 2, H / 2 - 10 * dpr); x.font = `${13 * dpr}px Cairo, sans-serif`; x.fillText("❄ ❄ ❄", W / 2, H / 2 + 18 * dpr);
   x.globalCompositeOperation = "destination-out";
+  };
+  if (cv.clientWidth) cover(); else { const ro = new ResizeObserver(() => { if (cv.clientWidth && !W) { cover(); ro.disconnect(); } }); ro.observe(cv); }
   let down = false, moves = 0, done = false;
   const scr = e => {
     if (!down || done) return; const b = cv.getBoundingClientRect();
@@ -2085,7 +2116,7 @@ function painter() {
   let pi = 4, W, H, down = false, last = null, raf = 0, hue = 0, painted = 0;
   $("#pal").innerHTML = pals.map((p, i) => `<button type="button" data-i="${i}" class="${i === pi ? "on" : ""}" style="background:${i === 4 ? "conic-gradient(#5effc4,#7fd8ff,#c59bff,#ff8cbe,#5effc4)" : `rgb(${p[1][0]})`}" aria-label="${p[0]}"></button>`).join("") +
     `<button type="button" id="pClear" style="width:auto;padding:0 14px;border-radius:20px;background:rgba(255,255,255,.08);color:#fff;direction:ltr">Clear ↺</button>`;
-  const size = () => { const r = box.getBoundingClientRect(); W = cv.width = r.width * dpr; H = cv.height = r.height * dpr; };
+  const size = () => { const r = box.getBoundingClientRect(); if (!r.width || (W === r.width * dpr && H === r.height * dpr)) return; W = cv.width = r.width * dpr; H = cv.height = r.height * dpr; };
   size(); addEventListener("resize", size);
   const ray = (px, py) => {
     const P = pals[pi][1], c = P[(hue++ >> 3) % P.length], h = (70 + Math.random() * 70) * dpr;
@@ -2137,10 +2168,9 @@ function renderToday() {
   $("#tList").innerHTML = rows.map((r, k) => `<div class="t-row${r.ok ? " ok" : ""}"><span class="ic">${r.i}</span><span class="tx"><b></b><small></small></span><button class="go" type="button" data-k="${k}">${r.ok ? "✔ Done" : r.info ? "View ›" : "Go ›"}</button></div>`).join("");
   $("#tList").querySelectorAll(".t-row").forEach((el, k) => { el.querySelector("b").textContent = rows[k].t; el.querySelector("small").textContent = rows[k].s; });
   $("#tList").onclick = e => {
-    const b = e.target.closest(".go"); if (!b) return; const r = rows[+b.dataset.k], el = document.getElementById(r.go); if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: r.go === "diary" ? "center" : "start" });
+    const b = e.target.closest(".go"); if (!b) return; const r = rows[+b.dataset.k], el = goTo(r.go, r.go === "diary" ? "center" : "start"); if (!el) return;
     const target = r.door ? document.querySelector(".door.today") || el : el;
-    setTimeout(() => { target.classList.remove("flashy"); void target.offsetWidth; target.classList.add("flashy"); }, 600);
+    setTimeout(() => { target.classList.remove("flashy"); void target.offsetWidth; target.classList.add("flashy"); }, 700);
   };
   const tasks = rows.filter(r => !r.info), done = tasks.filter(r => r.ok).length;
   $("#tDone").textContent = tasks.length && done === tasks.length ? "All done for today 🎉\nبكرة في حاجات جديدة ✨" : "";
@@ -2154,6 +2184,49 @@ function todayInit() {
   const off = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle("off", !e.isIntersecting)), { rootMargin: "200px" });
   document.querySelectorAll("#app > section, #app > footer").forEach(el => off.observe(el));
 }
+
+/* ---- pages: Home, Surprises, Games, Timo ---- */
+const PAGES = {
+  home: ["hero", "today", "since", "story", "letter", "memories", "newyear", "y2027"],
+  surprises: ["pgSurprises", "advent", "scratchSec", "openwhen", "treeSec", "wish", "wrapped", "playlist"],
+  games: ["pgGames", "passport", "arcade", "quiz", "starsSec", "snowSec", "paintSec", "globe"],
+  timo: ["timo"]
+};
+let PAGE = "home";
+function pagesInit() {
+  const hero = document.querySelector("#app > .hero"); if (hero) hero.id = hero.id || "hero";
+  for (const [p, ids] of Object.entries(PAGES)) ids.forEach((id, k) => { const el = document.getElementById(id); if (el) { el.dataset.page = p; el.style.order = k; } });
+  const ft = document.querySelector("#app > footer"); if (ft) ft.style.order = 999;
+  $("#tabs").hidden = false;
+  $("#tabs").onclick = e => { const b = e.target.closest("button"); if (b) { if (b.dataset.p === PAGE) scrollTo({ top: 0, behavior: "smooth" }); else location.hash = b.dataset.p; } };
+  addEventListener("hashchange", route);
+  route();
+}
+function showPage(p, top = true) {
+  if (!PAGES[p]) p = "home";
+  PAGE = p; document.body.dataset.page = p;
+  document.querySelectorAll("#app > section[data-page]").forEach(el => el.classList.toggle("nopage", el.dataset.page !== p));
+  $("#tabs").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.p === p));
+  if (top) scrollTo(0, 0);
+  dispatchEvent(new Event("resize"));
+}
+function route() {
+  if (suppressRoute) { suppressRoute = false; return; }
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (PAGES[h]) return showPage(h);
+  const el = h && document.getElementById(h);
+  if (el) return goTo(h);
+  showPage("home");
+}
+// open the page that holds an element, then bring it into view
+function goTo(id, block = "start") {
+  const el = document.getElementById(id); if (!el) return null;
+  const sec = el.closest("[data-page]"), p = sec ? sec.dataset.page : "home";
+  if (p !== PAGE) { showPage(p, false); if (location.hash.slice(1) !== p) { suppressRoute = true; location.hash = p; } }
+  requestAnimationFrame(() => setTimeout(() => el.scrollIntoView({ behavior: "smooth", block }), 30));
+  return el;
+}
+let suppressRoute = false;
 
 /* ---- modal ---- */
 function modal(html, cls = "") {
@@ -2290,7 +2363,7 @@ function story(letterHTML) {
   if (N.gift) steps.push(() => `<span class="pill" style="background:#5a1a2e;color:#ffd1dc">🎁 Last surprise</span><p class="body">${esc(N.gift)}</p><div class="pass">${esc(N.password || "")}</div><div class="share">${waBtn("🎁 قولت كلمة السر لأختي…\nTimo Hoor Asd El8aba 🦁\nوأخدت الهدية!! 🤍")}</div>`);
   const show = i => {
     modal(steps[i]() + next(i + 1 < steps.length ? i + 1 : -1), "night");
-    $("#mbody [data-step]").onclick = e => { const n = +e.target.dataset.step; if (n < 0) { closeModal(); $("#y2027").scrollIntoView({ behavior: "smooth" }); } else show(n); };
+    $("#mbody [data-step]").onclick = e => { const n = +e.target.dataset.step; if (n < 0) { closeModal(); goTo("y2027"); } else show(n); };
     const p = $("#storyPlay"); if (p) p.onclick = () => playVoice(p);
   };
   show(0);
