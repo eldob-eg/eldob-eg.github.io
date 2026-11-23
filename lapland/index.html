@@ -1327,7 +1327,7 @@ function enter(r, withFlash) {
 }
 
 /* ---- apology gate: the site stays shut until she types the sorry line ---- */
-const GATE = { on: true, show: "أنا آسفة يا سلومتي 🥺", accept: ["انا اسفه يا سلومتي", "انا اسفه يا سلموتي"] };
+const GATE = { on: false, show: "أنا آسفة يا سلومتي 🥺", accept: ["انا اسفه يا سلومتي", "انا اسفه يا سلموتي"] };
 const normAr = t => String(t).normalize("NFKC").replace(/[\u064B-\u065F\u0670\u0640]/g, "").replace(/[أإآٱ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي")
   .replace(/[^\u0621-\u064Aa-z0-9]/gi, "").toLowerCase();
 function gateThen(next) {
@@ -2343,21 +2343,28 @@ function goTo(id, block = "start") {
 }
 let suppressRoute = false;
 
-/* ---- the first morning visit gets a sunrise from him ---- */
+/* ---- every morning: a sunrise and a new message from him ---- */
 function morning() {
-  const M = DATA.morning; if (!M || !M.text) return;
-  const key = "morning_" + (M.id || "1"), h = now().getHours();
+  const M = DATA.mornings; if (!M || !(M.list || []).length) return;
+  const t = now(), h = t.getHours(), d = dayIndex(), key = "dawn_" + d;
   if (store.get(key, false) || h < 5 || h >= 13) return;
   store.set(key, true);
-  const d = document.createElement("div"); d.id = "dawn";
-  d.innerHTML = `<div class="sky2"></div><div class="rays"></div><div class="sun"></div><div class="hills"></div><button class="x" type="button" aria-label="Close">✕</button>
-    <div class="mcard2"><p class="body"></p><p class="sign"></p><div class="share">${waBtn(M.reply || "☀️ صباح النور")}</div></div>`;
-  d.querySelector(".body").textContent = M.text; d.querySelector(".sign").textContent = "— " + (DATA.from || "") + " 🤍";
-  document.body.appendChild(d);
-  const close = () => { d.style.opacity = 0; setTimeout(() => d.remove(), 800); };
-  d.querySelector(".x").onclick = close;
-  requestAnimationFrame(() => requestAnimationFrame(() => d.classList.add("up")));
-  setTimeout(() => d.classList.add("card"), 3600);
+  const md = String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0");
+  const text = (M.special || {})[md] || M.list[((d % M.list.length) + M.list.length) % M.list.length];
+  const skies = ["#3a4fa8 0%,#c77dba 38%,#ff9e7a 62%,#ffd59a 82%,#fff1c9 100%", "#2f5aa8 0%,#7fb0e8 40%,#ffd3a0 72%,#fff3d6 100%",
+    "#4a3f9a 0%,#a77bd8 35%,#ff9fb2 65%,#ffe0c2 100%", "#1f4f8a 0%,#58a6c9 40%,#ffc48a 70%,#ffe9b8 100%"];
+  const dd = document.createElement("div"); dd.id = "dawn";
+  dd.innerHTML = `<div class="sky2" style="background:linear-gradient(180deg,${skies[d % skies.length]})"></div><div class="rays"></div><div class="sun"></div><div class="hills"></div>
+    <button class="x" type="button" aria-label="Close">✕</button>
+    <div class="mcard2"><p class="day" dir="ltr" style="color:#b0703a;margin-bottom:6px"></p><p class="body"></p><p class="sign"></p>
+    <div class="share">${waBtn((M.reply || "☀️ صباح النور") + "\\n«" + firstLine(text).replace(/[\\u2066\\u2069]/g, "") + "»")}</div></div>`;
+  dd.querySelector(".day").textContent = t.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }) + " ☀️";
+  dd.querySelector(".body").textContent = text; dd.querySelector(".sign").textContent = "— " + (DATA.from || "") + " 🤍";
+  document.body.appendChild(dd);
+  const close = () => { dd.style.opacity = 0; setTimeout(() => dd.remove(), 800); };
+  dd.querySelector(".x").onclick = close;
+  requestAnimationFrame(() => requestAnimationFrame(() => dd.classList.add("up")));
+  setTimeout(() => dd.classList.add("card"), 3600);
 }
 
 /* ---- modal ---- */
