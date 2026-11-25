@@ -652,6 +652,52 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
   background:linear-gradient(90deg,transparent,#fff);box-shadow:0 0 10px #fff;transform:rotate(-18deg);animation:shoot 1.6s ease-in forwards}
 @keyframes shoot{to{transform:translate(-130vw,42vh) rotate(-18deg);opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+/* ===== wow pack: intro, magic touch, catch-a-star, tilt, heartbeat ===== */
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:80;pointer-events:none}
+#intro{position:fixed;inset:0;z-index:96;display:grid;place-items:center;overflow:hidden;transition:opacity 1.1s ease;
+  background:radial-gradient(120% 90% at 50% 42%,#0c1a4a 0%,#040817 62%,#01020a 100%)}
+#intro.out{opacity:0;pointer-events:none}
+#introCv{position:absolute;inset:0;width:100%;height:100%}
+#intro .i-glow{position:absolute;inset:-25%;opacity:0;filter:blur(34px);transition:opacity 2.4s ease;animation:iglow 7s ease-in-out infinite alternate;
+  background:radial-gradient(38% 26% at 30% 34%,rgba(94,255,196,.5),transparent 70%),radial-gradient(36% 26% at 72% 30%,rgba(197,155,255,.45),transparent 70%),radial-gradient(48% 30% at 50% 48%,rgba(127,216,255,.32),transparent 70%)}
+#intro.gold .i-glow{background:radial-gradient(38% 26% at 30% 34%,rgba(255,211,110,.45),transparent 70%),radial-gradient(36% 26% at 72% 30%,rgba(255,150,90,.35),transparent 70%),radial-gradient(48% 30% at 50% 48%,rgba(255,240,190,.3),transparent 70%)}
+#intro.p2 .i-glow{opacity:1}
+@keyframes iglow{to{transform:translate(4%,-3%) scale(1.08)}}
+#intro .i-in{position:relative;text-align:center;width:min(560px,92vw)}
+#intro .i-k{font:32px "Great Vibes",cursive;direction:ltr;color:#c8fbe9;opacity:0;transform:translateY(14px);transition:1.1s .2s;text-shadow:0 0 18px rgba(94,255,196,.6)}
+#intro.gold .i-k{color:#ffe9b0;text-shadow:0 0 18px rgba(255,211,110,.7)}
+#intro .i-name{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 0 16px rgba(255,236,170,.65))}
+#intro .i-name text{font:700 200px "Aref Ruqaa",serif;fill:url(#igr);fill-opacity:0;stroke:#fff6d0;stroke-width:2.2;stroke-dasharray:1500;stroke-dashoffset:1500}
+#intro.p2 .i-name text{animation:idraw 2.6s ease forwards,ifill 1.5s 2s ease forwards}
+@keyframes idraw{to{stroke-dashoffset:0}}
+@keyframes ifill{to{fill-opacity:1;stroke-opacity:.25}}
+#intro .i-nick{font:36px "Great Vibes",cursive;direction:ltr;color:#ffd1e3;opacity:0;transition:1s 3s;margin-top:-10px;text-shadow:0 0 14px rgba(255,160,200,.6)}
+#intro .i-day{margin-top:12px;color:#dbe6ff;opacity:0;transition:1s 3.6s;font-size:16.5px;unicode-bidi:plaintext}
+#intro.p2 .i-nick,#intro.p2 .i-day{opacity:1}
+#intro .i-tap{position:absolute;left:0;right:0;bottom:calc(38px + env(safe-area-inset-bottom));text-align:center;direction:ltr;color:rgba(220,235,255,.6);font-size:13px;letter-spacing:.2em;opacity:0;transition:1s 4.4s}
+#intro.p2 .i-tap{opacity:1}
+.catch{position:fixed;right:-200px;width:180px;height:46px;z-index:45;border:0;padding:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transform:rotate(-16deg);animation:catchfly 4.2s linear forwards}
+.catch i{position:absolute;left:14px;right:0;top:50%;height:2.5px;margin-top:-1px;border-radius:2px;background:linear-gradient(90deg,#fff,rgba(255,240,180,.55) 30%,transparent)}
+.catch::before{content:"";position:absolute;left:3px;top:50%;width:16px;height:16px;margin-top:-8px;border-radius:50%;
+  background:radial-gradient(circle,#fff 30%,#ffe9a0 55%,transparent 72%);box-shadow:0 0 18px 7px rgba(255,233,160,.7);animation:twk .35s ease-in-out infinite alternate}
+@keyframes catchfly{to{transform:translate(calc(-100vw - 260px),40vh) rotate(-16deg)}}
+@keyframes twk{to{transform:scale(1.35)}}
+#land{left:-30px;right:-30px;width:calc(100% + 60px)}
+.tilt-chip{margin:18px auto 0;padding:9px 16px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--line);font-weight:700;font-size:14px;color:#dbe6ff;animation:bob 2.6s ease-in-out infinite}
+.hb{--bpm:1.1s;position:relative;width:210px;height:210px;margin:6px auto 0;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hb svg{width:100%;height:100%;overflow:visible}
+.hb .ring{fill:none;stroke:rgba(255,255,255,.12);stroke-width:5}
+.hb .prog{fill:none;stroke:#ff8fb1;stroke-width:6;stroke-linecap:round;transform:rotate(-90deg);transform-origin:100px 100px;filter:drop-shadow(0 0 8px #ff6b81)}
+.hb .ht{fill:url(#hbg);transform-origin:100px 108px;animation:beat var(--bpm) ease-in-out infinite;filter:drop-shadow(0 0 16px rgba(255,107,129,.5));transition:filter .4s}
+.hb.hold .ht{filter:drop-shadow(0 0 34px rgba(255,107,129,1))}
+.hb.full .ht{animation:hpop .9s ease}
+.hb .hl{position:absolute;left:0;right:0;top:44%;text-align:center;font-weight:800;font-size:13px;letter-spacing:.12em;color:rgba(255,255,255,.9);direction:ltr;pointer-events:none}
+@keyframes beat{0%,45%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1.04)}}
+@keyframes hpop{45%{transform:scale(1.4)}}
+.hb-msg{text-align:center;font:21px/1.9 var(--script);margin-top:14px;white-space:pre-line;unicode-bidi:plaintext;min-height:1.9em}
+#hbShare{margin-top:12px}
 </style>
 </head>
 <body>
@@ -701,6 +747,7 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     <p class="nick" data-k="nick"></p>
     <p class="sub" data-k="heroSub"></p>
     <p class="greet" id="greet" hidden></p>
+    <button class="tilt-chip" id="tiltBtn" type="button" hidden>📱 حرّكي الموبايل… والسما تتحرك معاكي ✨</button>
     <a class="cue" href="#since">Scroll down ❄</a>
   </section>
 
@@ -720,6 +767,16 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
     <p class="since-from" id="sinceFrom"></p>
     <p class="since-line" data-k="sinceLine"></p>
     <p class="next-m" id="nextM"></p>
+  </section>
+
+  <section class="sec reveal" id="heartSec">
+    <p class="kicker">Hold my heart</p>
+    <h2 class="h" data-k="heart.title"></h2>
+    <p class="sub" data-k="heart.hint"></p>
+    <div class="hb" id="hb" role="button" aria-label="Hold the heart"><svg viewBox="0 0 200 200"><defs><radialGradient id="hbg" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#ffb3c7"/><stop offset=".55" stop-color="#ff5f86"/><stop offset="1" stop-color="#c2185b"/></radialGradient></defs>
+      <circle class="ring" cx="100" cy="100" r="92"/><circle class="prog" id="hbProg" cx="100" cy="100" r="92"/>
+      <path class="ht" d="M100 160 C 40 118, 22 86, 44 60 C 64 37, 92 46, 100 68 C 108 46, 136 37, 156 60 C 178 86, 160 118, 100 160 Z"/></svg><span class="hl">HOLD</span></div>
+    <p class="hb-msg" id="hbMsg"></p><div class="share" id="hbShare"></div>
   </section>
 
   <section class="sec reveal" id="story">
@@ -1041,6 +1098,12 @@ footer button{margin-top:10px;font-size:13px;color:rgba(200,220,255,.55);text-de
 </main>
 
 <div id="flash"></div>
+<canvas id="fx"></canvas>
+<div id="intro" hidden><canvas id="introCv"></canvas><div class="i-glow"></div>
+  <div class="i-in"><p class="i-k"></p>
+    <svg class="i-name" viewBox="0 0 600 250" aria-hidden="true"><defs><linearGradient id="igr" x1="0" x2="1"><stop offset="0" stop-color="#5effc4"/><stop offset=".35" stop-color="#7fd8ff"/><stop offset=".65" stop-color="#c59bff"/><stop offset="1" stop-color="#ffe3a3"/></linearGradient></defs><text x="300" y="180" text-anchor="middle"></text></svg>
+    <p class="i-nick"></p><p class="i-day"></p></div>
+  <p class="i-tap"></p></div>
 <div id="final" aria-live="polite"><div class="f-name" id="fName"></div><div class="f-num" id="fNum">10</div><div class="f-sub" dir="ltr">2027 is almost here…</div></div>
 <canvas id="fw"></canvas>
 <button id="music" type="button" aria-label="الموسيقى" hidden>🔔</button>
@@ -1476,7 +1539,10 @@ function enter(r, withFlash) {
     $("#lock").classList.add("gone");
     setTimeout(() => $("#lock").hidden = true, 800);
     $("#app").hidden = false; $("#music").hidden = false; scrollTo(0, 0);
+    const di = dayIndex(), play = !NOINTRO && !REDUCE && (withFlash || store.get("introDay", -1) !== di);
+    if (play) { store.set("introDay", di); INTRO_ON = true; }
     render(); setMusicBtn();
+    if (play) intro();
   }, withFlash ? 600 : 0);
 }
 
@@ -1539,7 +1605,7 @@ const get = (o, path) => path.split(".").reduce((a, k) => a && a[k], o);
 function render() {
   document.querySelectorAll("[data-k]").forEach(el => el.textContent = get(DATA, el.dataset.k) || "");
   document.title = `Lapland ❄️ ${DATA.her}`;
-  themeInit(); pagesInit(); greet(); seasonTag(); sinceInit(); monthly(); passport(); timeline(); letter(); gallery(); tree(); scratch(); globe(); timo(); diary(); game(); quiz(); arcade(); wrapped(); openWhen(); playlist(); menu(); eggs(); songs(); constellation(); snowman(); painter(); advent(); passportCatchUp(); wish(); newYear(); eleven(); todayInit(); setTimeout(morning, 700);
+  themeInit(); pagesInit(); greet(); seasonTag(); sinceInit(); monthly(); passport(); timeline(); letter(); gallery(); tree(); scratch(); globe(); timo(); diary(); game(); quiz(); arcade(); wrapped(); openWhen(); playlist(); menu(); eggs(); songs(); constellation(); snowman(); painter(); advent(); passportCatchUp(); wish(); newYear(); eleven(); todayInit(); heartHold(); starCatcher(); tiltInit(); setTimeout(() => afterIntro(morning), 700);
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
   document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 }
@@ -2479,7 +2545,7 @@ function todayInit() {
 
 /* ---- pages: Home, Surprises, Games, Timo ---- */
 const PAGES = {
-  home: ["hero", "today", "eidCard", "since", "story", "letter", "memories", "newyear", "y2027"],
+  home: ["hero", "today", "eidCard", "since", "heartSec", "story", "letter", "memories", "newyear", "y2027"],
   surprises: ["pgSurprises", "ramHead", "prayers", "rdoorsSec", "khatma", "iftarDua", "advent", "scratchSec", "openwhen", "treeSec", "wish", "wrapped", "playlist"],
   games: ["pgGames", "passport", "lanternSec", "ramQuizSec", "arcade", "quiz", "starsSec", "snowSec", "paintSec", "globe"],
   timo: ["timo"]
@@ -3000,6 +3066,212 @@ function eleven() {
     setTimeout(() => modal(`<span class="pill" style="background:#1f3a7a;color:#c9f5ff">✨ 11:11</span><p class="body">${esc(DATA.eleven)}</p>`, "night"), 900);
   };
   check(); setInterval(check, 5000);
+}
+
+/* ================= wow pack ================= */
+const NOINTRO = /[?&]nointro\b/.test(location.search);
+let INTRO_ON = false;
+const introQ = [];
+function afterIntro(f) { if (INTRO_ON) introQ.push(f); else f(); }
+
+/* sparkles that follow her finger: snow in winter, petals in spring, gold stars in Ramadan, confetti on Eid */
+const FX = (() => {
+  const c = $("#fx"), x = c.getContext("2d"), dpr = Math.min(devicePixelRatio || 1, 2);
+  let W, H, ps = [], run = false;
+  const size = () => { W = c.width = innerWidth * dpr; H = c.height = innerHeight * dpr; };
+  size(); addEventListener("resize", size);
+  const PALS = { winter: ["#ffffff", "#c9f3ff", "#7fd8ff", "#5effc4"], spring: ["#ffc9dc", "#ff9ec2", "#ffffff", "#c5f2b0"], summer: ["#ffe28a", "#ffd36e", "#fff3b0", "#ff9e6b"],
+    autumn: ["#ff8a3d", "#e2473b", "#ffc04d", "#c2571a"], gold: ["#ffd36e", "#f6d58e", "#fff3c4", "#ffb84d"], eid: ["#ff6b81", "#5effc4", "#7fd8ff", "#ffd36e", "#c59bff"],
+    love: ["#ff6b81", "#ff9ec2", "#ffd1e3", "#ffffff"] };
+  const SHAPES = { winter: ["flake", "spark", "spark"], spring: ["petal", "petal", "spark"], summer: ["spark", "dot"], autumn: ["leaf", "leaf", "spark"],
+    gold: ["star", "spark", "spark"], eid: ["conf", "conf", "star"], love: ["heart", "heart", "spark"] };
+  const kind = () => THEME === "ramadan" ? "gold" : (THEME === "eidFitr" || THEME === "eidAdha") ? "eid" : THEME === "xmas2026" ? "winter" : (PALS[SEASON] ? SEASON : "winter");
+  function draw(p) {
+    const r = p.r;
+    switch (p.sh) {
+      case "spark": x.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, q = i % 2 ? r * .28 : r; x.lineTo(Math.cos(a) * q, Math.sin(a) * q); } x.fill(); break;
+      case "star": x.beginPath(); for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 - Math.PI / 2, q = i % 2 ? r * .42 : r; x.lineTo(Math.cos(a) * q, Math.sin(a) * q); } x.fill(); break;
+      case "flake": x.lineWidth = Math.max(1, r * .22); x.lineCap = "round"; x.beginPath(); for (let i = 0; i < 3; i++) { const a = i * Math.PI / 3; x.moveTo(-Math.cos(a) * r, -Math.sin(a) * r); x.lineTo(Math.cos(a) * r, Math.sin(a) * r); } x.stroke(); break;
+      case "petal": x.beginPath(); x.ellipse(0, 0, r, r * .55, 0, 0, 6.283); x.fill(); break;
+      case "leaf": x.beginPath(); x.moveTo(-r, 0); x.quadraticCurveTo(0, -r * .8, r, 0); x.quadraticCurveTo(0, r * .8, -r, 0); x.fill(); break;
+      case "heart": x.beginPath(); x.moveTo(0, r * .45); x.bezierCurveTo(-r * 1.1, -r * .25, -r * .45, -r * 1.05, 0, -r * .4); x.bezierCurveTo(r * .45, -r * 1.05, r * 1.1, -r * .25, 0, r * .45); x.fill(); break;
+      case "conf": x.fillRect(-r * .6, -r * .28, r * 1.2, r * .56); break;
+      default: x.beginPath(); x.arc(0, 0, r * .5, 0, 6.283); x.fill();
+    }
+  }
+  function frame() {
+    x.clearRect(0, 0, W, H);
+    for (let i = ps.length - 1; i >= 0; i--) {
+      const p = ps[i];
+      p.vy += p.g; p.vx *= .982; p.vy *= .982; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life -= p.dec;
+      if (p.life <= 0) { ps.splice(i, 1); continue; }
+      x.globalAlpha = Math.min(1, p.life * 1.7); x.fillStyle = x.strokeStyle = p.col;
+      x.save(); x.translate(p.x, p.y); x.rotate(p.rot); x.scale(.6 + .4 * p.life, .6 + .4 * p.life); draw(p); x.restore();
+    }
+    x.globalAlpha = 1;
+    if (ps.length) requestAnimationFrame(frame); else { run = false; x.clearRect(0, 0, W, H); }
+  }
+  function add(px, py, n, k, power) {
+    const pal = PALS[k] || PALS.winter, sh = SHAPES[k] || SHAPES.winter, pw = power || 1;
+    if (PERF.lite) n = Math.ceil(n * .55);
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * 6.283, v = (.5 + Math.random() * 2.6) * dpr * pw;
+      ps.push({ x: px * dpr, y: py * dpr, vx: Math.cos(a) * v, vy: Math.sin(a) * v - dpr * pw, g: (k === "summer" ? -.01 : .04) * dpr,
+        life: 1, dec: .008 + Math.random() * .013, r: (4 + Math.random() * 6) * dpr * (k === "love" ? 1.7 : 1),
+        col: pal[Math.random() * pal.length | 0], sh: sh[Math.random() * sh.length | 0], rot: Math.random() * 6.28, vr: (Math.random() - .5) * .22 });
+    }
+    if (ps.length > 700) ps.splice(0, ps.length - 700);
+    if (!run) { run = true; requestAnimationFrame(frame); }
+  }
+  return { burst: (px, py, k, n, pw) => add(px, py, n || 20, k || kind(), pw), trail: (px, py) => add(px, py, 2, kind(), .35) };
+})();
+(function magicTouch() {
+  if (REDUCE) return;
+  let down = false, lx = 0, ly = 0, lt = 0;
+  const skip = t => t && t.closest && t.closest("canvas, input, textarea, select, .scard, .hb, .catch, #intro");
+  addEventListener("pointerdown", e => { down = !skip(e.target); if (!down) return; lx = e.clientX; ly = e.clientY; FX.burst(lx, ly); }, { passive: true, capture: true });
+  addEventListener("pointermove", e => {
+    if (!down) return; const t = performance.now();
+    if (t - lt < 28 || Math.hypot(e.clientX - lx, e.clientY - ly) < 10) return;
+    lt = t; lx = e.clientX; ly = e.clientY; FX.trail(lx, ly);
+  }, { passive: true });
+  ["pointerup", "pointercancel"].forEach(ev => addEventListener(ev, () => down = false, { passive: true }));
+})();
+
+/* the cinematic opening: a warp through the stars, the aurora blooms, and her name is written in light */
+function intro() {
+  const el = $("#intro"), I = DATA.intro || {}, gold = THEME === "ramadan" || THEME === "eidFitr" || THEME === "eidAdha";
+  el.classList.toggle("gold", gold);
+  if (gold) el.querySelectorAll("#igr stop").forEach((s, i) => s.setAttribute("stop-color", ["#ffe9a8", "#ffd36e", "#ffb36b", "#fff3c4"][i]));
+  el.querySelector(".i-k").textContent = gold ? (THEME === "ramadan" ? "Ramadan Kareem" : "Eid Mubarak") : (I.kicker || "Welcome home");
+  el.querySelector("text").textContent = DATA.her || "";
+  el.querySelector(".i-nick").textContent = DATA.nick || "";
+  el.querySelector(".i-day").textContent = (I.day || "").replace("{n}", dayIndex() + 1);
+  el.querySelector(".i-tap").textContent = I.tap || "tap ✨";
+  el.hidden = false; el.classList.remove("out", "p2");
+  const cv = $("#introCv"), x = cv.getContext("2d"), dpr = Math.min(devicePixelRatio || 1, 2);
+  const W = cv.width = innerWidth * dpr, H = cv.height = innerHeight * dpr, cx = W / 2, cy = H * .42, R = Math.hypot(W, H) * .6;
+  const cols = gold ? ["#fff3c4", "#ffd36e", "#ffffff"] : ["#ffffff", "#c9f3ff", "#c59bff", "#5effc4"];
+  const st = [...Array(PERF.lite ? 170 : 340)].map(() => ({ a: Math.random() * 6.283, d: .02 + Math.random() * .9, c: cols[Math.random() * cols.length | 0] }));
+  let t0 = 0, prev = 0, raf = 0, closed = false;
+  const spd = t => t < 1.3 ? .25 + 3.6 * (t / 1.3) ** 2 : t < 2 ? 3.85 - 3.5 * ((t - 1.3) / .7) : .12;
+  function frame(ms) {
+    if (!t0) t0 = prev = ms;
+    const t = (ms - t0) / 1000, dt = Math.min(.05, (ms - prev) / 1000), k = spd(t); prev = ms;
+    x.clearRect(0, 0, W, H); x.lineCap = "round";
+    for (const s of st) {
+      const d0 = s.d; s.d += s.d * k * dt + .004 * dt;
+      if (s.d > 1.25) { s.d = .02 + Math.random() * .12; continue; }
+      const r1 = s.d * R, r0 = Math.max(0, r1 - Math.max(1.5 * dpr, (s.d - d0) * R * 5));
+      x.globalAlpha = Math.min(1, s.d * 1.8); x.strokeStyle = s.c; x.lineWidth = (.5 + s.d * 2.2) * dpr;
+      x.beginPath(); x.moveTo(cx + Math.cos(s.a) * r0, cy + Math.sin(s.a) * r0); x.lineTo(cx + Math.cos(s.a) * r1 + .1, cy + Math.sin(s.a) * r1); x.stroke();
+    }
+    x.globalAlpha = 1;
+    if (t > 1.75 && !el.classList.contains("p2")) el.classList.add("p2");
+    if (!closed) raf = requestAnimationFrame(frame);
+  }
+  raf = requestAnimationFrame(frame);
+  const close = () => {
+    if (closed) return; closed = true; clearTimeout(auto);
+    el.classList.add("out"); FX.burst(innerWidth / 2, innerHeight * .42, gold ? "gold" : undefined, 46, 1.6);
+    setTimeout(() => { cancelAnimationFrame(raf); el.hidden = true; INTRO_ON = false; introQ.splice(0).forEach(f => { try { f(); } catch {} }); }, 1100);
+  };
+  const auto = setTimeout(close, 7600);
+  setTimeout(() => { el.onclick = close; }, 700);
+}
+
+/* catch a shooting star: every half a minute or so one crosses the sky; tapping it makes a wish */
+function starCatcher() {
+  const S = DATA.wishStars; if (!S || REDUCE || starCatcher.on) return; starCatcher.on = true;
+  const busy = () => hidden || INTRO_ON || document.querySelector(".modal.show, #dawn, .catch") || !$("#wrap").hidden;
+  const fly = () => {
+    if (busy()) return;
+    const b = document.createElement("button"); b.type = "button"; b.className = "catch"; b.setAttribute("aria-label", "Shooting star");
+    b.style.top = (7 + Math.random() * 20) + "vh"; b.innerHTML = "<i></i>";
+    b.onclick = e => {
+      e.stopPropagation(); const r = b.getBoundingClientRect();
+      FX.burst(r.left + 16, r.top + r.height / 2, "gold", 44, 1.5); b.remove();
+      const n = store.get("caught", 0) + 1; store.set("caught", n);
+      const line = n === 11 && S.eleven ? S.eleven : S.lines[(n - 1) % S.lines.length];
+      if (n === 11) FW.start(4500);
+      setTimeout(() => modal(`<span class="pill" style="background:#2a2a6a;color:#fff1b0">🌠 ${esc(S.title)}</span><p class="day">${esc(S.count.replace("{n}", n))}</p>
+        <p class="body">${esc(line)}</p><div class="share">${waBtn(S.share)}</div>`, "night"), 450);
+    };
+    document.body.appendChild(b); setTimeout(() => b.remove(), 4400);
+  };
+  const loop = () => setTimeout(() => { fly(); loop(); }, (22 + Math.random() * 26) * 1000);
+  setTimeout(() => { fly(); loop(); }, 15000);
+}
+
+/* tilt the phone and the sky moves with her (parallax); a mouse does the same on a computer */
+function tiltInit() {
+  if (REDUCE || tiltInit.on) return; tiltInit.on = true;
+  const els = [[".stars.s1", 5], [".stars.s2", 9], [".stars.s3", 13], [".moon", 18], ["#sky", 7], ["#land", 24]]
+    .map(([q, k]) => [document.querySelector(q), k]).filter(a => a[0]);
+  let tx = 0, ty = 0, cx = 0, cy = 0, run = false, baseB = null;
+  const tick = () => {
+    cx += (tx - cx) * .07; cy += (ty - cy) * .07;
+    for (const [e, k] of els) e.style.translate = `${(-cx * k).toFixed(2)}px ${(-cy * k * .55).toFixed(2)}px`;
+    if (Math.abs(tx - cx) + Math.abs(ty - cy) > .003) requestAnimationFrame(tick); else run = false;
+  };
+  const set = (a, b) => { tx = Math.max(-1, Math.min(1, a)); ty = Math.max(-1, Math.min(1, b)); if (!run) { run = true; requestAnimationFrame(tick); } };
+  let got = false;
+  const onOri = e => {
+    if (e.gamma == null || hidden) return;
+    if (!got) { got = true; $("#tiltBtn").hidden = true; }
+    if (baseB == null) baseB = e.beta; baseB += (e.beta - baseB) * .02;
+    set(e.gamma / 22, (e.beta - baseB) / 18);
+  };
+  const listen = () => addEventListener("deviceorientation", onOri);
+  if (matchMedia("(hover: hover) and (pointer: fine)").matches) addEventListener("mousemove", e => set((e.clientX / innerWidth - .5) * 2, (e.clientY / innerHeight - .5) * 2), { passive: true });
+  const DOE = window.DeviceOrientationEvent;
+  if (!DOE) return;
+  listen();
+  if (typeof DOE.requestPermission !== "function") return;
+  // iPhone: motion needs a yes from her once; after that it is asked again silently on her first tap
+  const ask = () => DOE.requestPermission().then(r => { if (r === "granted") { store.set("tilt", true); $("#tiltBtn").hidden = true; return true; } }).catch(() => {});
+  if (store.get("tilt", false)) {
+    const once = () => { removeEventListener("touchend", once, true); ask(); };
+    addEventListener("touchend", once, { capture: true, passive: true });
+  } else setTimeout(() => {
+    if (got) return;
+    const b = $("#tiltBtn"); b.hidden = false;
+    b.onclick = e => { e.stopPropagation(); ask().then(ok => { if (ok) toast("حرّكي الموبايل يمين وشمال… ✨"); }); };
+  }, 1500);
+}
+
+/* hold my heart: keep a finger on it and it beats faster until it bursts into hearts */
+function heartHold() {
+  const H = DATA.heart, box = $("#hb"); if (!H || !box || box.dataset.on) return; box.dataset.on = 1;
+  const prog = $("#hbProg"), C = 2 * Math.PI * 92, DUR = 3400;
+  prog.style.strokeDasharray = C; prog.style.strokeDashoffset = C;
+  let t0 = 0, raf = 0, beat = 0, done = false;
+  const step = ms => {
+    const p = Math.min(1, (ms - t0) / DUR);
+    prog.style.strokeDashoffset = C * (1 - p);
+    box.style.setProperty("--bpm", (1.1 - p * .72).toFixed(2) + "s");
+    if (ms - beat > 1050 - p * 700) { beat = ms; try { navigator.vibrate && navigator.vibrate([35, 110, 25]); } catch {} }
+    if (p >= 1) return finish();
+    raf = requestAnimationFrame(step);
+  };
+  const start = e => { if (done) return; e.preventDefault(); box.classList.add("hold"); prog.style.transition = ""; t0 = performance.now(); beat = 0; raf = requestAnimationFrame(step); };
+  const stop = () => {
+    if (done || !t0) return; cancelAnimationFrame(raf); t0 = 0;
+    box.classList.remove("hold"); box.style.setProperty("--bpm", "1.1s");
+    prog.style.transition = "stroke-dashoffset .6s"; prog.style.strokeDashoffset = C;
+    $("#hbMsg").textContent = H.again;
+  };
+  function finish() {
+    done = true; t0 = 0; box.classList.remove("hold"); box.classList.add("full"); box.style.setProperty("--bpm", ".55s");
+    const r = box.getBoundingClientRect();
+    FX.burst(r.left + r.width / 2, r.top + r.height / 2, "love", 70, 1.9);
+    try { navigator.vibrate && navigator.vibrate([60, 80, 60, 80, 200]); } catch {}
+    $("#hbMsg").textContent = H.done; $("#hbShare").innerHTML = waBtn(H.share);
+    setTimeout(() => { box.classList.remove("full"); prog.style.transition = "stroke-dashoffset 1.2s"; prog.style.strokeDashoffset = C; box.style.setProperty("--bpm", "1.1s"); done = false; }, 5000);
+  }
+  box.addEventListener("pointerdown", start);
+  ["pointerup", "pointerleave", "pointercancel"].forEach(ev => box.addEventListener(ev, stop));
+  box.addEventListener("contextmenu", e => e.preventDefault());
 }
 
 $("#forget").onclick = () => { store.del("k"); location.reload(); };
