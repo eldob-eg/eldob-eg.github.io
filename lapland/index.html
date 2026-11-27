@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#050a1c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lapland">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <title>Lapland ❄️</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>❄️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -3273,6 +3279,9 @@ function heartHold() {
   ["pointerup", "pointerleave", "pointercancel"].forEach(ev => box.addEventListener(ev, stop));
   box.addEventListener("contextmenu", e => e.preventDefault());
 }
+
+/* installed on the home screen it opens like an app, and still opens with no internet */
+try { if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost") && window.top === window) navigator.serviceWorker.register("sw.js").catch(() => {}); } catch {}
 
 $("#forget").onclick = () => { store.del("k"); location.reload(); };
 </script>
